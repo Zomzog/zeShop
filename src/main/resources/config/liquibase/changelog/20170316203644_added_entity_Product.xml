@@ -29,14 +29,32 @@
             <column name="description" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="true" />
+            </column>
+            <column name="price" type="FLOAT">
+                <constraints nullable="true" />
+            </column>
+            <column name="available" type="boolean">
+                <constraints nullable="true" />
+            </column>
 
-            <column name="creation_date" type="timestamp">
+            <column name="created_date" type="timestamp">
                 <constraints nullable="false" />
+            </column>
+            <column name="updated_date" type="timestamp">
+                <constraints nullable="true" />
             </column>
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        <dropDefaultValue tableName="product" columnName="creation_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="product" columnName="created_date" columnDataType="datetime"/>
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/products.csv"
+                  separator=";"
+                  tableName="product">
+            <column name="created_date" type="timestamp"/>
+        </loadData>
         
     </changeSet>
 </databaseChangeLog>

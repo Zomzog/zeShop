@@ -1,13 +1,20 @@
 package bzh.zomzog.zeshop.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Product.
@@ -31,15 +38,27 @@ public class Product implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "quantity")
+    private int quantity;
+
+    // @Column(name = "price")
+    private float price;
+
+    @Column(name = "available")
+    private boolean available;
+
     @NotNull
-    @Column(name = "creation_date", nullable = false)
-    private ZonedDateTime creationDate;
+    @Column(name = "created_date", nullable = false)
+    private ZonedDateTime createdDate;
+
+    @Column(name = "updated_date", nullable = false)
+    private ZonedDateTime updatedDate;
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -47,12 +66,12 @@ public class Product implements Serializable {
         return name;
     }
 
-    public Product name(String name) {
+    public Product name(final String name) {
         this.name = name;
         return this;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -60,37 +79,136 @@ public class Product implements Serializable {
         return description;
     }
 
-    public Product description(String description) {
+    public Product description(final String description) {
         this.description = description;
         return this;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
-    public ZonedDateTime getCreationDate() {
-        return creationDate;
+    public ZonedDateTime getCreatedDate() {
+        return createdDate;
     }
 
-    public Product creationDate(ZonedDateTime creationDate) {
-        this.creationDate = creationDate;
+    public void setCreatedDate(final ZonedDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Product createdDate(final ZonedDateTime createdDate) {
+        this.createdDate = createdDate;
         return this;
     }
 
-    public void setCreationDate(ZonedDateTime creationDate) {
-        this.creationDate = creationDate;
+    /**
+     * @return the quantity
+     */
+    public int getQuantity() {
+        return quantity;
+    }
+
+    /**
+     * @param quantity
+     *            the quantity to set
+     */
+    public Product quantity(final int quantity) {
+        this.quantity = quantity;
+        return this;
+    }
+
+    /**
+     * @param quantity
+     *            the quantity to set
+     */
+    public void setQuantity(final int quantity) {
+        this.quantity = quantity;
+    }
+
+    /**
+     * @return the price
+     */
+    public float getPrice() {
+        return price;
+    }
+
+    /**
+     * @param price
+     *            the price to set
+     */
+    public void setPrice(final float price) {
+        this.price = price;
+    }
+
+    /**
+     * @param price
+     *            the price to set
+     * @return
+     */
+    public Product price(final float price) {
+        this.price = price;
+        return this;
+    }
+
+    /**
+     * @return the available
+     */
+    public boolean isAvailable() {
+        return available;
+    }
+
+    /**
+     * @param available
+     *            the available to set
+     */
+    public void setAvailable(final boolean available) {
+        this.available = available;
+    }
+
+    /**
+     * @param available
+     *            the available to set
+     * @return
+     */
+    public Product available(final boolean available) {
+        this.available = available;
+        return this;
+    }
+
+    /**
+     * @return the updatedDate
+     */
+    public ZonedDateTime getUpdatedDate() {
+        return updatedDate;
+    }
+
+    /**
+     * @param updatedDate
+     *            the updatedDate to set
+     */
+    public void setUpdatedDate(final ZonedDateTime updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    /**
+     * @param updatedDate
+     *            the updatedDate to set
+     * @return
+     */
+    public Product updatedDate(final ZonedDateTime updatedDate) {
+        this.updatedDate = updatedDate;
+        return this;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Product product = (Product) o;
+        final Product product = (Product) o;
         if (product.id == null || id == null) {
             return false;
         }
@@ -102,13 +220,15 @@ public class Product implements Serializable {
         return Objects.hashCode(id);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
-        return "Product{" +
-            "id=" + id +
-            ", name='" + name + "'" +
-            ", description='" + description + "'" +
-            ", creationDate='" + creationDate + "'" +
-            '}';
+        return "Product [id=" + id + ", name=" + name + ", description=" + description + ", quantity=" + quantity
+                + ", price=" + price + ", available=" + available + ", createdDate=" + createdDate + ", updatedDate="
+                + updatedDate + "]";
     }
 }
