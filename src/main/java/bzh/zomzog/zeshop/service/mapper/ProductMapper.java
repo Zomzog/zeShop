@@ -20,11 +20,11 @@ public interface ProductMapper {
 
     List<ProductDTO> productsToProductDTOs(List<Product> products);
 
-    @Mappings({ @Mapping(target = "createdDate", ignore = true), })
+    @Mappings({ @Mapping(target = "createdDate", ignore = true), @Mapping(target = "updatedDate", ignore = true), })
     Product productDTOToProduct(ProductDTO productDTO);
 
     List<Product> productDTOsToProducts(List<ProductDTO> productDTOs);
 
-    @Mappings({ @Mapping(target = "createdDate", ignore = true), })
+    @Mappings({ @Mapping(target = "createdDate", ignore = true), @Mapping(target = "updatedDate", ignore = true), })
     Product update(ProductDTO productDTO, @MappingTarget Product product);
 }

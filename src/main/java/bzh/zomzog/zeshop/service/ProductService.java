@@ -93,6 +93,7 @@ public class ProductService {
         log.debug("Request to save Product : {}", productDTO);
         Product product = productRepository.findOne(productDTO.getId());
         product = productMapper.update(productDTO, product);
+        product.setUpdatedDate(ZonedDateTime.now());
         product = productRepository.save(product);
         final ProductDTO result = productMapper.productToProductDTO(product);
         return result;

@@ -32,7 +32,7 @@
             <column name="quantity" type="INT">
                 <constraints nullable="true" />
             </column>
-            <column name="price" type="FLOAT">
+            <column name="price" type="${floatType}">
                 <constraints nullable="true" />
             </column>
             <column name="available" type="boolean">
@@ -54,6 +54,7 @@
                   separator=";"
                   tableName="product">
             <column name="created_date" type="timestamp"/>
+            <column name="updated_date" type="timestamp"/>
         </loadData>
         
     </changeSet>

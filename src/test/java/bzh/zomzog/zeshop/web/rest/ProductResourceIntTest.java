@@ -58,8 +58,8 @@ public class ProductResourceIntTest {
     private static final int DEFAULT_QUANTITY = 0;
     private static final int UPDATED_QUANTITY = 100;
 
-    private static final float DEFAULT_PRICE = 0.5f;
-    private static final float UPDATED_PRICE = 120.00f;
+    private static final Float DEFAULT_PRICE = 0.5f;
+    private static final Float UPDATED_PRICE = 120.00f;
 
     private static final boolean DEFAULT_AVAILABLE = true;
     private static final boolean UPDATED_AVAILABLE = false;
@@ -193,23 +193,6 @@ public class ProductResourceIntTest {
 
     @Test
     @Transactional
-    public void checkCreationDateIsRequired() throws Exception {
-        final int databaseSizeBeforeTest = productRepository.findAll().size();
-        // set the field null
-        product.setCreatedDate(null);
-
-        // Create the Product, which fails.
-        final ProductDTO productDTO = productMapper.productToProductDTO(product);
-
-        restProductMockMvc.perform(post("/api/products").contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(productDTO))).andExpect(status().isBadRequest());
-
-        final List<Product> productList = productRepository.findAll();
-        assertThat(productList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllProducts() throws Exception {
         // Initialize the database
         productRepository.saveAndFlush(product);
@@ -221,7 +204,7 @@ public class ProductResourceIntTest {
                 .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
                 .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
                 .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY)))
-                .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE)))
+                .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())))
                 .andExpect(jsonPath("$.[*].available").value(hasItem(DEFAULT_AVAILABLE)))
                 .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
                 .andExpect(jsonPath("$.[*].updatedDate").value(hasItem(sameInstant(DEFAULT_UPDATED_DATE))));
@@ -240,7 +223,7 @@ public class ProductResourceIntTest {
                 .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
                 .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
                 .andExpect(jsonPath("$.quantity").value(DEFAULT_QUANTITY))
-                .andExpect(jsonPath("$.price").value(DEFAULT_PRICE))
+                .andExpect(jsonPath("$.price").value(DEFAULT_PRICE.doubleValue()))
                 .andExpect(jsonPath("$.available").value(DEFAULT_AVAILABLE))
                 .andExpect(jsonPath("$.createdDate").value(sameInstant(DEFAULT_CREATED_DATE)))
                 .andExpect(jsonPath("$.updatedDate").value(sameInstant(DEFAULT_UPDATED_DATE)));
@@ -282,9 +265,9 @@ public class ProductResourceIntTest {
         final Product testProduct = productList.get(productList.size() - 1);
         assertThat(testProduct.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testProduct.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testProduct.getQuantity()).isEqualTo(DEFAULT_QUANTITY);
-        assertThat(testProduct.getPrice()).isEqualTo(DEFAULT_PRICE);
-        assertThat(testProduct.isAvailable()).isEqualTo(DEFAULT_AVAILABLE);
+        assertThat(testProduct.getQuantity()).isEqualTo(UPDATED_QUANTITY);
+        assertThat(testProduct.getPrice()).isEqualTo(UPDATED_PRICE);
+        assertThat(testProduct.isAvailable()).isEqualTo(UPDATED_AVAILABLE);
         assertThat(testProduct.getCreatedDate()).isNotEqualTo(UPDATED_CREATED_DATE);
         assertThat(testProduct.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
         assertThat(testProduct.getUpdatedDate()).isNotEqualTo(UPDATED_UPDATED_DATE);
