@@ -42,6 +42,8 @@ public class CacheConfiguration {
             cm.createCache(bzh.zomzog.zeshop.domain.User.class.getName() + ".authorities", jcacheConfiguration);
             cm.createCache(bzh.zomzog.zeshop.domain.SocialUserConnection.class.getName(), jcacheConfiguration);
             cm.createCache(bzh.zomzog.zeshop.domain.Product.class.getName(), jcacheConfiguration);
+            cm.createCache(bzh.zomzog.zeshop.domain.Cart.class.getName(), jcacheConfiguration);
+            cm.createCache(bzh.zomzog.zeshop.domain.Cart.class.getName() + ".products", jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }
