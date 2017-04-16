@@ -1,9 +1,9 @@
 package bzh.zomzog.zeshop.service;
 
-import bzh.zomzog.zeshop.domain.Authority;
-import bzh.zomzog.zeshop.domain.User;
-import bzh.zomzog.zeshop.repository.AuthorityRepository;
-import bzh.zomzog.zeshop.repository.UserRepository;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.Set;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -16,10 +16,10 @@ import org.springframework.social.connect.UserProfile;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
+import bzh.zomzog.zeshop.domain.Authority;
+import bzh.zomzog.zeshop.domain.User;
+import bzh.zomzog.zeshop.repository.AuthorityRepository;
+import bzh.zomzog.zeshop.repository.UserRepository;
 
 @Service
 public class SocialService {
@@ -36,9 +36,9 @@ public class SocialService {
 
     private final MailService mailService;
 
-    public SocialService(UsersConnectionRepository usersConnectionRepository, AuthorityRepository authorityRepository,
-            PasswordEncoder passwordEncoder, UserRepository userRepository,
-            MailService mailService) {
+    public SocialService(final UsersConnectionRepository usersConnectionRepository,
+            final AuthorityRepository authorityRepository, final PasswordEncoder passwordEncoder,
+            final UserRepository userRepository, final MailService mailService) {
 
         this.usersConnectionRepository = usersConnectionRepository;
         this.authorityRepository = authorityRepository;
@@ -47,30 +47,30 @@ public class SocialService {
         this.mailService = mailService;
     }
 
-    public void deleteUserSocialConnection(String login) {
-        ConnectionRepository connectionRepository = usersConnectionRepository.createConnectionRepository(login);
-        connectionRepository.findAllConnections().keySet().stream()
-            .forEach(providerId -> {
-                connectionRepository.removeConnections(providerId);
-                log.debug("Delete user social connection providerId: {}", providerId);
-            });
+    public void deleteUserSocialConnection(final String login) {
+        final ConnectionRepository connectionRepository = usersConnectionRepository.createConnectionRepository(login);
+        connectionRepository.findAllConnections().keySet().stream().forEach(providerId -> {
+            connectionRepository.removeConnections(providerId);
+            log.debug("Delete user social connection providerId: {}", providerId);
+        });
     }
 
-    public void createSocialUser(Connection<?> connection, String langKey) {
+    public void createSocialUser(final Connection<?> connection, final String langKey) {
         if (connection == null) {
             log.error("Cannot create social user because connection is null");
             throw new IllegalArgumentException("Connection cannot be null");
         }
-        UserProfile userProfile = connection.fetchUserProfile();
-        String providerId = connection.getKey().getProviderId();
-        String imageUrl = connection.getImageUrl();
-        User user = createUserIfNotExist(userProfile, langKey, providerId, imageUrl);
+        final UserProfile userProfile = connection.fetchUserProfile();
+        final String providerId = connection.getKey().getProviderId();
+        final String imageUrl = connection.getImageUrl();
+        final User user = createUserIfNotExist(userProfile, langKey, providerId, imageUrl);
         createSocialConnection(user.getLogin(), connection);
         mailService.sendSocialRegistrationValidationEmail(user, providerId);
     }
 
-    private User createUserIfNotExist(UserProfile userProfile, String langKey, String providerId, String imageUrl) {
-        String email = userProfile.getEmail();
+    private User createUserIfNotExist(final UserProfile userProfile, final String langKey, final String providerId,
+            final String imageUrl) {
+        final String email = userProfile.getEmail();
         String userName = userProfile.getUsername();
         if (!StringUtils.isBlank(userName)) {
             userName = userName.toLowerCase(Locale.ENGLISH);
@@ -84,26 +84,26 @@ public class SocialService {
             throw new IllegalArgumentException("Email cannot be null with an existing login");
         }
         if (!StringUtils.isBlank(email)) {
-            Optional<User> user = userRepository.findOneByEmail(email);
+            final Optional<User> user = userRepository.findOneByEmail(email);
             if (user.isPresent()) {
                 log.info("User already exist associate the connection to this account");
                 return user.get();
             }
         }
 
-        String login = getLoginDependingOnProviderId(userProfile, providerId);
-        String encryptedPassword = passwordEncoder.encode(RandomStringUtils.random(10));
-        Set<Authority> authorities = new HashSet<>(1);
+        final String login = getLoginDependingOnProviderId(userProfile, providerId);
+        final String encryptedPassword = passwordEncoder.encode(RandomStringUtils.random(10));
+        final Set<Authority> authorities = new HashSet<>(1);
         authorities.add(authorityRepository.findOne("ROLE_USER"));
 
-        User newUser = new User();
+        final User newUser = new User();
         newUser.setLogin(login);
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(userProfile.getFirstName());
         newUser.setLastName(userProfile.getLastName());
         newUser.setEmail(email);
         newUser.setActivated(true);
-        newUser.setAuthorities(authorities);
+        newUser.getAuthorities().addAll(authorities);
         newUser.setLangKey(langKey);
         newUser.setImageUrl(imageUrl);
 
@@ -111,10 +111,11 @@ public class SocialService {
     }
 
     /**
-     * @return login if provider manage a login like Twitter or Github otherwise email address.
-     *         Because provider like Google or Facebook didn't provide login or login like "12099388847393"
+     * @return login if provider manage a login like Twitter or Github otherwise
+     *         email address. Because provider like Google or Facebook didn't
+     *         provide login or login like "12099388847393"
      */
-    private String getLoginDependingOnProviderId(UserProfile userProfile, String providerId) {
+    private String getLoginDependingOnProviderId(final UserProfile userProfile, final String providerId) {
         switch (providerId) {
             case "twitter":
                 return userProfile.getUsername().toLowerCase();
@@ -123,8 +124,8 @@ public class SocialService {
         }
     }
 
-    private void createSocialConnection(String login, Connection<?> connection) {
-        ConnectionRepository connectionRepository = usersConnectionRepository.createConnectionRepository(login);
+    private void createSocialConnection(final String login, final Connection<?> connection) {
+        final ConnectionRepository connectionRepository = usersConnectionRepository.createConnectionRepository(login);
         connectionRepository.addConnection(connection);
     }
 }

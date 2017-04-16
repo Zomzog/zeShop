@@ -25,8 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 
+import bzh.zomzog.zeshop.exception.BadParameterException;
 import bzh.zomzog.zeshop.service.CartService;
-import bzh.zomzog.zeshop.service.dto.CartDTO;
+import bzh.zomzog.zeshop.service.dto.cart.CartDTO;
 import bzh.zomzog.zeshop.web.rest.util.HeaderUtil;
 import bzh.zomzog.zeshop.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -93,7 +94,7 @@ public class CartResource {
         if (cartDTO.getId() == null) {
             return createCart(cartDTO);
         }
-        final CartDTO result = cartService.save(cartDTO);
+        final CartDTO result = cartService.update(cartDTO);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, cartDTO.getId().toString()))
                 .body(result);
     }
@@ -146,6 +147,16 @@ public class CartResource {
         log.debug("REST request to delete Cart : {}", id);
         cartService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+    @PutMapping("/carts/{cartId}/product/{productId}")
+    @Timed
+    public ResponseEntity<CartDTO> addToCart(@PathVariable final Long cartId, @PathVariable final Long productId)
+            throws URISyntaxException, BadParameterException {
+        log.debug("REST request to add to  Cart : {} product {}", cartId, productId);
+        final CartDTO result = cartService.addToCart(cartId, productId);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, cartId.toString()))
+                .body(result);
     }
 
 }

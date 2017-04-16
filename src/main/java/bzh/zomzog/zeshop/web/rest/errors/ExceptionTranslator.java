@@ -12,10 +12,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import bzh.zomzog.zeshop.exception.BadParameterException;
 
 /**
- * Controller advice to translate the server side exceptions to client-friendly json structures.
+ * Controller advice to translate the server side exceptions to client-friendly
+ * json structures.
  */
 @ControllerAdvice
 public class ExceptionTranslator {
@@ -23,16 +29,16 @@ public class ExceptionTranslator {
     @ExceptionHandler(ConcurrencyFailureException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
-    public ErrorVM processConcurrencyError(ConcurrencyFailureException ex) {
+    public ErrorVM processConcurrencyError(final ConcurrencyFailureException ex) {
         return new ErrorVM(ErrorConstants.ERR_CONCURRENCY_FAILURE);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorVM processValidationError(MethodArgumentNotValidException ex) {
-        BindingResult result = ex.getBindingResult();
-        List<FieldError> fieldErrors = result.getFieldErrors();
+    public ErrorVM processValidationError(final MethodArgumentNotValidException ex) {
+        final BindingResult result = ex.getBindingResult();
+        final List<FieldError> fieldErrors = result.getFieldErrors();
 
         return processFieldErrors(fieldErrors);
     }
@@ -40,21 +46,21 @@ public class ExceptionTranslator {
     @ExceptionHandler(CustomParameterizedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ParameterizedErrorVM processParameterizedValidationError(CustomParameterizedException ex) {
+    public ParameterizedErrorVM processParameterizedValidationError(final CustomParameterizedException ex) {
         return ex.getErrorVM();
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
-    public ErrorVM processAccessDeniedException(AccessDeniedException e) {
+    public ErrorVM processAccessDeniedException(final AccessDeniedException e) {
         return new ErrorVM(ErrorConstants.ERR_ACCESS_DENIED, e.getMessage());
     }
 
-    private ErrorVM processFieldErrors(List<FieldError> fieldErrors) {
-        ErrorVM dto = new ErrorVM(ErrorConstants.ERR_VALIDATION);
+    private ErrorVM processFieldErrors(final List<FieldError> fieldErrors) {
+        final ErrorVM dto = new ErrorVM(ErrorConstants.ERR_VALIDATION);
 
-        for (FieldError fieldError : fieldErrors) {
+        for (final FieldError fieldError : fieldErrors) {
             dto.add(fieldError.getObjectName(), fieldError.getField(), fieldError.getCode());
         }
 
@@ -64,15 +70,24 @@ public class ExceptionTranslator {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public ErrorVM processMethodNotSupportedException(HttpRequestMethodNotSupportedException exception) {
+    public ErrorVM processMethodNotSupportedException(final HttpRequestMethodNotSupportedException exception) {
         return new ErrorVM(ErrorConstants.ERR_METHOD_NOT_SUPPORTED, exception.getMessage());
     }
 
+    @ExceptionHandler(BadParameterException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorVM notFoundException(final BadParameterException exception) {
+        final ErrorVM dto = new ErrorVM(ErrorConstants.ERR_BAD_PARAMETER_ERROR);
+        dto.add(exception.getObjectName(), exception.getFieldName(), exception.getValue() + " invalid");
+        return new ErrorVM(ErrorConstants.ERR_BAD_PARAMETER_ERROR, exception.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorVM> processRuntimeException(Exception ex) {
+    public ResponseEntity<ErrorVM> processRuntimeException(final Exception ex) {
         BodyBuilder builder;
         ErrorVM errorVM;
-        ResponseStatus responseStatus = AnnotationUtils.findAnnotation(ex.getClass(), ResponseStatus.class);
+        final ResponseStatus responseStatus = AnnotationUtils.findAnnotation(ex.getClass(), ResponseStatus.class);
         if (responseStatus != null) {
             builder = ResponseEntity.status(responseStatus.value());
             errorVM = new ErrorVM("error." + responseStatus.value().value(), responseStatus.reason());

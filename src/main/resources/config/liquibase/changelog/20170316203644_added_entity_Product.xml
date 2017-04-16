@@ -56,6 +56,5 @@
             <column name="created_date" type="timestamp"/>
             <column name="updated_date" type="timestamp"/>
         </loadData>
-        
     </changeSet>
 </databaseChangeLog>

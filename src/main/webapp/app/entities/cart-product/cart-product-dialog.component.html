@@ -1,0 +1,97 @@
+
+
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+
+    <div class="modal-header">
+        <h4 class="modal-title" id="myCartProductLabel" jhiTranslate="zeShopApp.cartProduct.home.createOrEditLabel">Create or edit a Cart Product</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                (click)="clear()">&times;</button>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" [hidden]="!cartProduct.id">
+            <label for="id" jhiTranslate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                   [(ngModel)]="cartProduct.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="zeShopApp.cartProduct.quantity" for="field_quantity">Quantity</label>
+            <input type="number" class="form-control" name="quantity" id="field_quantity"
+                [(ngModel)]="cartProduct.quantity"
+            required min="1" />
+            <div [hidden]="!(editForm.controls.quantity?.dirty && editForm.controls.quantity?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.quantity?.errors?.required" jhiTranslate="entity.validation.required">
+                   This field is required.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.quantity?.errors?.min" jhiTranslate="entity.validation.min" translateValues="{ min: 1 }">
+                    This field should be at least 1.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.quantity?.errors?.number" jhiTranslate="entity.validation.number">
+                    This field should be a number.
+                </small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-control-label" jhiTranslate="zeShopApp.cartProduct.addedDate" for="field_addedDate">Added Date</label>
+            <div class="d-flex">
+                <input id="field_addedDate" type="datetime-local" class="form-control" name="addedDate" [(ngModel)]="cartProduct.addedDate"
+                required  />
+            </div>
+            <div [hidden]="!(editForm.controls.addedDate?.dirty && editForm.controls.addedDate?.invalid)">
+                <small class="form-text text-danger"
+                   [hidden]="!editForm.controls.addedDate?.errors?.required" jhiTranslate="entity.validation.required">
+                   This field is required.
+                </small>
+                <small class="form-text text-danger"
+                    [hidden]="!editForm.controls.addedDate?.errors?.ZonedDateTimelocal" jhiTranslate="entity.validation.ZonedDateTimelocal">
+                    This field should be a date and time.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label jhiTranslate="zeShopApp.cartProduct.cart" for="field_cart">Cart</label>
+            <select class="form-control" id="field_cart" name="cart" [(ngModel)]="cartProduct.cartId"  required>
+                <option [ngValue]="null"></option>
+                <option [ngValue]="cartOption.id" *ngFor="let cartOption of carts; trackBy: trackCartById">{{cartOption.id}}</option>
+            </select>
+        </div>
+        <div [hidden]="!(editForm.controls.cart?.dirty && editForm.controls.cart?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.cart?.errors?.required" jhiTranslate="entity.validation.required">
+                This field is required.
+            </small>
+        </div>
+        <div class="form-group">
+            <label jhiTranslate="zeShopApp.cartProduct.product" for="field_product">Product</label>
+            <select class="form-control" id="field_product" name="product" [(ngModel)]="cartProduct.productId"  required>
+                <option [ngValue]="null"></option>
+                <option [ngValue]="productOption.id" *ngFor="let productOption of products; trackBy: trackProductById">{{productOption.id}}</option>
+            </select>
+        </div>
+        <div [hidden]="!(editForm.controls.product?.dirty && editForm.controls.product?.invalid)">
+            <small class="form-text text-danger"
+                [hidden]="!editForm.controls.product?.errors?.required" jhiTranslate="entity.validation.required">
+                This field is required.
+            </small>
+        </div>
+        <div class="form-group">
+            <label jhiTranslate="zeShopApp.cartProduct.productCustomization" for="field_productCustomization">Product Customization</label>
+            <select class="form-control" id="field_productCustomization" name="productCustomization" [(ngModel)]="cartProduct.productCustomizationId">
+                <option [ngValue]="null"></option>
+                <option [ngValue]="productCustomizationOption.id" *ngFor="let productCustomizationOption of productcustomizations; trackBy: trackProductCustomizationById">{{productCustomizationOption.id}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="clear()">
+            <span class="fa fa-ban"></span>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+            <span class="fa fa-save"></span>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

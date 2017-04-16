@@ -8,4 +8,3 @@ Feature: Product management
     Scenario: Retrive all products
         When I search all products
         Then the request is successful
-        And result contains 3 items

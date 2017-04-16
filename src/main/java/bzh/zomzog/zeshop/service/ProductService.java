@@ -1,7 +1,5 @@
 package bzh.zomzog.zeshop.service;
 
-import java.time.ZonedDateTime;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -9,10 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import bzh.zomzog.zeshop.domain.Product;
+import bzh.zomzog.zeshop.domain.product.Product;
 import bzh.zomzog.zeshop.repository.ProductRepository;
-import bzh.zomzog.zeshop.service.dto.ProductDTO;
-import bzh.zomzog.zeshop.service.mapper.ProductMapper;
+import bzh.zomzog.zeshop.service.dto.product.ProductDTO;
+import bzh.zomzog.zeshop.service.mapper.product.ProductMapper;
 
 /**
  * Service Implementation for managing Product.
@@ -42,8 +40,6 @@ public class ProductService {
     public ProductDTO save(final ProductDTO productDTO) {
         log.debug("Request to save Product : {}", productDTO);
         Product product = productMapper.productDTOToProduct(productDTO);
-        // Fixe created date to now
-        product.setCreatedDate(ZonedDateTime.now());
         product = productRepository.save(product);
         final ProductDTO result = productMapper.productToProductDTO(product);
         return result;
@@ -89,11 +85,17 @@ public class ProductService {
         productRepository.delete(id);
     }
 
+    /**
+     * Update a product.
+     *
+     * @param productDTO
+     *            the entity to save
+     * @return the persisted entity
+     */
     public ProductDTO update(final ProductDTO productDTO) {
         log.debug("Request to save Product : {}", productDTO);
         Product product = productRepository.findOne(productDTO.getId());
         product = productMapper.update(productDTO, product);
-        product.setUpdatedDate(ZonedDateTime.now());
         product = productRepository.save(product);
         final ProductDTO result = productMapper.productToProductDTO(product);
         return result;

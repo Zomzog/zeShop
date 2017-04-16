@@ -1,6 +1,5 @@
 package bzh.zomzog.zeshop.web.rest;
 
-import static bzh.zomzog.zeshop.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -33,11 +32,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import bzh.zomzog.zeshop.ZeShopApp;
-import bzh.zomzog.zeshop.domain.Product;
+import bzh.zomzog.zeshop.domain.product.Product;
 import bzh.zomzog.zeshop.repository.ProductRepository;
 import bzh.zomzog.zeshop.service.ProductService;
-import bzh.zomzog.zeshop.service.dto.ProductDTO;
-import bzh.zomzog.zeshop.service.mapper.ProductMapper;
+import bzh.zomzog.zeshop.service.dto.product.ProductDTO;
+import bzh.zomzog.zeshop.service.mapper.product.ProductMapper;
 import bzh.zomzog.zeshop.web.rest.errors.ExceptionTranslator;
 
 /**
@@ -205,9 +204,7 @@ public class ProductResourceIntTest {
                 .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
                 .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY)))
                 .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())))
-                .andExpect(jsonPath("$.[*].available").value(hasItem(DEFAULT_AVAILABLE)))
-                .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
-                .andExpect(jsonPath("$.[*].updatedDate").value(hasItem(sameInstant(DEFAULT_UPDATED_DATE))));
+                .andExpect(jsonPath("$.[*].available").value(hasItem(DEFAULT_AVAILABLE)));
     }
 
     @Test
@@ -224,9 +221,7 @@ public class ProductResourceIntTest {
                 .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
                 .andExpect(jsonPath("$.quantity").value(DEFAULT_QUANTITY))
                 .andExpect(jsonPath("$.price").value(DEFAULT_PRICE.doubleValue()))
-                .andExpect(jsonPath("$.available").value(DEFAULT_AVAILABLE))
-                .andExpect(jsonPath("$.createdDate").value(sameInstant(DEFAULT_CREATED_DATE)))
-                .andExpect(jsonPath("$.updatedDate").value(sameInstant(DEFAULT_UPDATED_DATE)));
+                .andExpect(jsonPath("$.available").value(DEFAULT_AVAILABLE));
     }
 
     @Test
@@ -244,7 +239,7 @@ public class ProductResourceIntTest {
         final int databaseSizeBeforeUpdate = productRepository.findAll().size();
 
         // Update the product
-        final Product updatedProduct = productRepository.findOne(product.getId());
+        final Product updatedProduct = productRepository.findOneWithEagerRelationships(product.getId());
         updatedProduct//
                 .name(UPDATED_NAME)//
                 .description(UPDATED_DESCRIPTION)//
@@ -269,7 +264,6 @@ public class ProductResourceIntTest {
         assertThat(testProduct.getPrice()).isEqualTo(UPDATED_PRICE);
         assertThat(testProduct.isAvailable()).isEqualTo(UPDATED_AVAILABLE);
         assertThat(testProduct.getCreatedDate()).isNotEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testProduct.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
         assertThat(testProduct.getUpdatedDate()).isNotEqualTo(UPDATED_UPDATED_DATE);
         assertThat(testProduct.getUpdatedDate()).isAfter(now);
     }

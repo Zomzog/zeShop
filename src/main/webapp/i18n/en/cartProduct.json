@@ -1,0 +1,25 @@
+{
+    "zeShopApp": {
+        "cartProduct" : {
+            "home": {
+                "title": "Cart Products",
+                "createLabel": "Create a new Cart Product",
+                "createOrEditLabel": "Create or edit a Cart Product"
+            },
+            "created": "A new Cart Product is created with identifier {{ param }}",
+            "updated": "A Cart Product is updated with identifier {{ param }}",
+            "deleted": "A Cart Product is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete Cart Product {{ id }}?"
+            },
+            "detail": {
+                "title": "Cart Product"
+            },
+            "quantity": "Quantity",
+            "addedDate": "Added Date",
+            "cart": "Cart",
+            "product": "Product",
+            "productCustomization": "Product Customization"
+        }
+    }
+}

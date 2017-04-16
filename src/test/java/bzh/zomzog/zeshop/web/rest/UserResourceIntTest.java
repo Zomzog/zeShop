@@ -279,7 +279,7 @@ public class UserResourceIntTest {
         final Set<String> autorities = new HashSet<>();
         autorities.add("ROLE_USER");
         final ManagedUserVM managedUserVM = new ManagedUserVM(updatedUser.getId(), updatedUser.getLogin(),
-                UPDATED_PASSWORD, UPDATED_FIRSTNAME, UPDATED_LASTNAME, UPDATED_EMAIL, updatedUser.getActivated(),
+                UPDATED_PASSWORD, UPDATED_FIRSTNAME, UPDATED_LASTNAME, UPDATED_EMAIL, updatedUser.isActivated(),
                 UPDATED_IMAGEURL, UPDATED_LANGKEY, updatedUser.getCreatedBy(), updatedUser.getCreatedDate(),
                 updatedUser.getLastModifiedBy(), updatedUser.getLastModifiedDate(), autorities);
 
@@ -310,7 +310,7 @@ public class UserResourceIntTest {
         final Set<String> autorities = new HashSet<>();
         autorities.add("ROLE_USER");
         final ManagedUserVM managedUserVM = new ManagedUserVM(updatedUser.getId(), UPDATED_LOGIN, UPDATED_PASSWORD,
-                UPDATED_FIRSTNAME, UPDATED_LASTNAME, UPDATED_EMAIL, updatedUser.getActivated(), UPDATED_IMAGEURL,
+                UPDATED_FIRSTNAME, UPDATED_LASTNAME, UPDATED_EMAIL, updatedUser.isActivated(), UPDATED_IMAGEURL,
                 UPDATED_LANGKEY, updatedUser.getCreatedBy(), updatedUser.getCreatedDate(),
                 updatedUser.getLastModifiedBy(), updatedUser.getLastModifiedDate(), autorities);
 
@@ -362,7 +362,7 @@ public class UserResourceIntTest {
                                                                                                                         // used
                                                                                                                         // by
                                                                                                                         // anotherUser
-                updatedUser.getActivated(), updatedUser.getImageUrl(), updatedUser.getLangKey(),
+                updatedUser.isActivated(), updatedUser.getImageUrl(), updatedUser.getLangKey(),
                 updatedUser.getCreatedBy(), updatedUser.getCreatedDate(), updatedUser.getLastModifiedBy(),
                 updatedUser.getLastModifiedDate(), autorities);
 
@@ -405,7 +405,7 @@ public class UserResourceIntTest {
                                                                                                // by
                                                                                                // anotherUser
                 updatedUser.getPassword(), updatedUser.getFirstName(), updatedUser.getLastName(),
-                updatedUser.getEmail(), updatedUser.getActivated(), updatedUser.getImageUrl(), updatedUser.getLangKey(),
+                updatedUser.getEmail(), updatedUser.isActivated(), updatedUser.getImageUrl(), updatedUser.getLangKey(),
                 updatedUser.getCreatedBy(), updatedUser.getCreatedDate(), updatedUser.getLastModifiedBy(),
                 updatedUser.getLastModifiedDate(), autorities);
 

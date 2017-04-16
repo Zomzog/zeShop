@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 
 import bzh.zomzog.zeshop.service.ProductService;
-import bzh.zomzog.zeshop.service.dto.ProductDTO;
+import bzh.zomzog.zeshop.service.dto.product.ProductDTO;
 import bzh.zomzog.zeshop.web.rest.util.HeaderUtil;
 import bzh.zomzog.zeshop.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;

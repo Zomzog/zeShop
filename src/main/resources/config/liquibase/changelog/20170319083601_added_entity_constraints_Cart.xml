@@ -6,19 +6,8 @@
     <!--
         Added the constraints for entity Cart.
     -->
-    <changeSet id="20170319083601-2" author="jhipster">
-        
-        <addForeignKeyConstraint baseColumnNames="carts_id"
-                                 baseTableName="cart_product"
-                                 constraintName="fk_cart_product_carts_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="cart"/>
-        <addForeignKeyConstraint baseColumnNames="products_id"
-                                 baseTableName="cart_product"
-                                 constraintName="fk_cart_product_products_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="product"/>
-        
+    <changeSet id="20170319083601-2" author="zomzog">
+                
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="cart"
                                  constraintName="fk_cart_user_id"

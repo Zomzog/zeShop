@@ -1,16 +1,17 @@
 package bzh.zomzog.zeshop.service.dto;
 
-import bzh.zomzog.zeshop.config.Constants;
-
-import bzh.zomzog.zeshop.domain.Authority;
-import bzh.zomzog.zeshop.domain.User;
-
-import org.hibernate.validator.constraints.Email;
-
-import javax.validation.constraints.*;
 import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
+
+import bzh.zomzog.zeshop.config.Constants;
+import bzh.zomzog.zeshop.domain.Authority;
+import bzh.zomzog.zeshop.domain.User;
 
 /**
  * A DTO representing a user, with his authorities.
@@ -55,18 +56,17 @@ public class UserDTO {
         // Empty constructor needed for MapStruct.
     }
 
-    public UserDTO(User user) {
-        this(user.getId(), user.getLogin(), user.getFirstName(), user.getLastName(),
-            user.getEmail(), user.getActivated(), user.getImageUrl(), user.getLangKey(),
-            user.getCreatedBy(), user.getCreatedDate(), user.getLastModifiedBy(), user.getLastModifiedDate(),
-            user.getAuthorities().stream().map(Authority::getName)
-                .collect(Collectors.toSet()));
+    public UserDTO(final User user) {
+        this(user.getId(), user.getLogin(), user.getFirstName(), user.getLastName(), user.getEmail(),
+                user.isActivated(), user.getImageUrl(), user.getLangKey(), user.getCreatedBy(), user.getCreatedDate(),
+                user.getLastModifiedBy(), user.getLastModifiedDate(),
+                user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet()));
     }
 
-    public UserDTO(Long id, String login, String firstName, String lastName,
-        String email, boolean activated, String imageUrl, String langKey,
-        String createdBy, ZonedDateTime createdDate, String lastModifiedBy, ZonedDateTime lastModifiedDate,
-        Set<String> authorities) {
+    public UserDTO(final Long id, final String login, final String firstName, final String lastName, final String email,
+            final boolean activated, final String imageUrl, final String langKey, final String createdBy,
+            final ZonedDateTime createdDate, final String lastModifiedBy, final ZonedDateTime lastModifiedDate,
+            final Set<String> authorities) {
 
         this.id = id;
         this.login = login;
@@ -87,7 +87,7 @@ public class UserDTO {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -95,7 +95,7 @@ public class UserDTO {
         return login;
     }
 
-    public void setLogin(String login) {
+    public void setLogin(final String login) {
         this.login = login;
     }
 
@@ -139,7 +139,7 @@ public class UserDTO {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(ZonedDateTime lastModifiedDate) {
+    public void setLastModifiedDate(final ZonedDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 
@@ -149,19 +149,10 @@ public class UserDTO {
 
     @Override
     public String toString() {
-        return "UserDTO{" +
-            "login='" + login + '\'' +
-            ", firstName='" + firstName + '\'' +
-            ", lastName='" + lastName + '\'' +
-            ", email='" + email + '\'' +
-            ", imageUrl='" + imageUrl + '\'' +
-            ", activated=" + activated +
-            ", langKey='" + langKey + '\'' +
-            ", createdBy=" + createdBy +
-            ", createdDate=" + createdDate +
-            ", lastModifiedBy='" + lastModifiedBy + '\'' +
-            ", lastModifiedDate=" + lastModifiedDate +
-            ", authorities=" + authorities +
-            "}";
+        return "UserDTO{" + "login='" + login + '\'' + ", firstName='" + firstName + '\'' + ", lastName='" + lastName
+                + '\'' + ", email='" + email + '\'' + ", imageUrl='" + imageUrl + '\'' + ", activated=" + activated
+                + ", langKey='" + langKey + '\'' + ", createdBy=" + createdBy + ", createdDate=" + createdDate
+                + ", lastModifiedBy='" + lastModifiedBy + '\'' + ", lastModifiedDate=" + lastModifiedDate
+                + ", authorities=" + authorities + "}";
     }
 }

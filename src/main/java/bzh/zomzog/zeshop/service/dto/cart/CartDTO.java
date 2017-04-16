@@ -1,12 +1,10 @@
-package bzh.zomzog.zeshop.service.dto;
+package bzh.zomzog.zeshop.service.dto.cart;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * A DTO for the Cart entity.
@@ -20,12 +18,11 @@ public class CartDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
     private ZonedDateTime createdDate;
 
     private ZonedDateTime updatedDate;
 
-    private Set<ProductDTO> products = new HashSet<>();
+    private Set<CartProductDTO> products = new HashSet<>();
 
     private Long userId;
 
@@ -55,11 +52,11 @@ public class CartDTO implements Serializable {
         this.updatedDate = updatedDate;
     }
 
-    public Set<ProductDTO> getProducts() {
+    public Set<CartProductDTO> getProducts() {
         return products;
     }
 
-    public void setProducts(final Set<ProductDTO> products) {
+    public void setProducts(final Set<CartProductDTO> products) {
         this.products = products;
     }
 
