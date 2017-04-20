@@ -3,9 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>bzh.zomzog.zeshop</groupId>
-    <artifactId>ze-shop-auth</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+	<groupId>bzh.zomzog.zeshop</groupId>
+	<artifactId>ze-shop-auth</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>auth-service</name>
@@ -14,14 +14,19 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.2.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<version>1.5.2.RELEASE</version>
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+
+		<hikaricp.version>2.6.0</hikaricp.version>
+		<hazelcast-hibernate52.version>1.2</hazelcast-hibernate52.version>
+        <liquibase-hibernate5.version>3.6</liquibase-hibernate5.version>
+        <liquibase-slf4j.version>2.0.0</liquibase-slf4j.version>
 	</properties>
 
 	<dependencies>
@@ -55,18 +60,45 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>org.springframework.security</groupId>
-		    <artifactId>spring-security-jwt</artifactId>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-jwt</artifactId>
 		</dependency>
 
-	<dependency>
-		<groupId>com.h2database</groupId>
-		<artifactId>h2</artifactId>
-		<scope>runtime</scope>
-	</dependency>
-	<dependency>
-		<groupId>org.liquibase</groupId>
-		<artifactId>liquibase-core</artifactId>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>tools</artifactId>
+					<groupId>com.sun</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.hazelcast</groupId>
+			<artifactId>hazelcast</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.hazelcast</groupId>
+			<artifactId>hazelcast-hibernate52</artifactId>
+			<version>${hazelcast-hibernate52.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.hazelcast</groupId>
+			<artifactId>hazelcast-spring</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-hibernate5</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
             <exclusions>
                 <exclusion>
                     <artifactId>jetty-servlet</artifactId>
@@ -74,6 +106,13 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>com.mattbertolini</groupId>
+            <artifactId>liquibase-slf4j</artifactId>
+            <version>${liquibase-slf4j.version}</version>
+        </dependency>
+
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -91,7 +130,7 @@
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>Camden.SR5</version>
+				<version>Dalston.RELEASE</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -104,6 +143,45 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>${liquibase.version}</version>
+                <configuration>
+                    <changeLogFile>src/main/resources/config/liquibase/master.xml</changeLogFile>
+                    <diffChangeLogFile>src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
+                    <driver>org.h2.Driver</driver>
+                    <url>jdbc:h2:file:./target/h2db/db/zeShopAuth</url>
+                    <defaultSchemaName></defaultSchemaName>
+                    <username>zeShopAuth</username>
+                    <password></password>
+                    <referenceUrl>hibernate:spring:bzh.zomzog.zeshop.auth.domain?dialect=org.hibernate.dialect.H2Dialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy</referenceUrl>
+                    <verbose>true</verbose>
+                    <logging>debug</logging>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.javassist</groupId>
+                        <artifactId>javassist</artifactId>
+                        <version>${javassist.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.liquibase.ext</groupId>
+                        <artifactId>liquibase-hibernate5</artifactId>
+                        <version>${liquibase-hibernate5.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-data-jpa</artifactId>
+                        <version>${project.parent.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>javax.validation</groupId>
+                        <artifactId>validation-api</artifactId>
+                        <version>${validation-api.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
 		</plugins>
 	</build>
 

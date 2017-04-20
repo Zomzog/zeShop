@@ -78,6 +78,7 @@
             <column name="activated" type="boolean"/>
             <column name="created_date" type="timestamp"/>
         </loadData>
+        
         <dropDefaultValue tableName="account" columnName="created_date" columnDataType="datetime"/>
 
         <loadData encoding="UTF-8"
@@ -88,6 +89,8 @@
         <loadData encoding="UTF-8"
                   file="config/liquibase/accounts_authorities.csv"
                   separator=";"
-                  tableName="account_authority"/></changeSet>
+                  tableName="account_authority"/>
+
+    </changeSet>
 
 </databaseChangeLog>
