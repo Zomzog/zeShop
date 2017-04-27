@@ -1,6 +1,9 @@
 spring:
     application:
         name: auth-service
+    devtools:
+        restart:
+            enabled: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
 #        url: jdbc:h2:mem:zeShopAuth;DB_CLOSE_DELAY=-1
