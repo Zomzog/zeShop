@@ -22,9 +22,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import bzh.zomzog.zeshop.domain.AbstractAuditingEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
