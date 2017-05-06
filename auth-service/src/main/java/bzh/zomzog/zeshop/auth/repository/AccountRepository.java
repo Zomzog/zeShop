@@ -10,6 +10,9 @@ import bzh.zomzog.zeshop.auth.domain.Account;
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @EntityGraph(attributePaths = "authorities")
+    Optional<Account> findOneByLogin(String login);
+
+    @EntityGraph(attributePaths = "authorities")
     Account findOneWithAuthoritiesById(Long id);
 
     @EntityGraph(attributePaths = "authorities")

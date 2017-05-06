@@ -20,15 +20,7 @@ import org.hibernate.annotations.BatchSize;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import bzh.zomzog.zeshop.domain.AbstractAuditingEntity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "account")
 public class Account extends AbstractAuditingEntity {
@@ -78,8 +70,157 @@ public class Account extends AbstractAuditingEntity {
     @BatchSize(size = 20)
     private final Set<Authority> authorities = new HashSet<>();
 
+    public Account() {
+    }
+
     public Account(final String login, final String password) {
         this.login = login;
         this.password = password;
     }
+
+    /**
+     * @return the id
+     */
+    public Long getId() {
+        return this.id;
+    }
+
+    /**
+     * @param id
+     *            the id to set
+     */
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the login
+     */
+    public String getLogin() {
+        return this.login;
+    }
+
+    /**
+     * @param login
+     *            the login to set
+     */
+    public void setLogin(final String login) {
+        this.login = login;
+    }
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return this.password;
+    }
+
+    /**
+     * @param password
+     *            the password to set
+     */
+    public void setPassword(final String password) {
+        this.password = password;
+    }
+
+    /**
+     * @return the activated
+     */
+    public boolean isActivated() {
+        return this.activated;
+    }
+
+    /**
+     * @param activated
+     *            the activated to set
+     */
+    public void setActivated(final boolean activated) {
+        this.activated = activated;
+    }
+
+    /**
+     * @return the activationKey
+     */
+    public String getActivationKey() {
+        return this.activationKey;
+    }
+
+    /**
+     * @param activationKey
+     *            the activationKey to set
+     */
+    public void setActivationKey(final String activationKey) {
+        this.activationKey = activationKey;
+    }
+
+    /**
+     * @return the langKey
+     */
+    public String getLangKey() {
+        return this.langKey;
+    }
+
+    /**
+     * @param langKey
+     *            the langKey to set
+     */
+    public void setLangKey(final String langKey) {
+        this.langKey = langKey;
+    }
+
+    /**
+     * @return the resetKey
+     */
+    public String getResetKey() {
+        return this.resetKey;
+    }
+
+    /**
+     * @param resetKey
+     *            the resetKey to set
+     */
+    public void setResetKey(final String resetKey) {
+        this.resetKey = resetKey;
+    }
+
+    /**
+     * @return the resetDate
+     */
+    public ZonedDateTime getResetDate() {
+        return this.resetDate;
+    }
+
+    /**
+     * @param resetDate
+     *            the resetDate to set
+     */
+    public void setResetDate(final ZonedDateTime resetDate) {
+        this.resetDate = resetDate;
+    }
+
+    /**
+     * @return the authorities
+     */
+    public Set<Authority> getAuthorities() {
+        return this.authorities;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Account [" + (this.id != null ? "id=" + this.id + ", " : "")
+                + (this.login != null ? "login=" + this.login + ", " : "")
+                + (this.password != null ? "password=" + this.password + ", " : "") + "activated=" + this.activated
+                + ", "
+                + (this.activationKey != null ? "activationKey=" + this.activationKey + ", " : "")
+                + (this.langKey != null ? "langKey=" + this.langKey + ", " : "")
+                + (this.resetKey != null ? "resetKey=" + this.resetKey + ", " : "")
+                + (this.resetDate != null ? "resetDate=" + this.resetDate + ", " : "")
+                + (this.authorities != null ? "authorities=" + this.authorities : "") + "]";
+    }
+
 }

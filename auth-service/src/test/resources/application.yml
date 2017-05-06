@@ -1,0 +1,15 @@
+eureka:
+    client:
+        enabled: false
+        
+security:
+    basic:
+        enabled: false
+        
+liquibase:
+    change-log: classpath:config/liquibase/master.xml
+    contexts: test
+
+server:
+    port: 10344
+    address: localhost

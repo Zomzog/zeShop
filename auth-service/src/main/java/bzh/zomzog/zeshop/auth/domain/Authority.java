@@ -27,10 +27,18 @@ public class Authority implements Serializable {
     private String name;
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(final String name) {
+        this.name = name;
+    }
+
+    public Authority() {
+    }
+
+    public Authority(final String name) {
+        super();
         this.name = name;
     }
 
@@ -45,7 +53,7 @@ public class Authority implements Serializable {
 
         final Authority authority = (Authority) o;
 
-        if (name != null ? !name.equals(authority.name) : authority.name != null) {
+        if (this.name != null ? !this.name.equals(authority.name) : authority.name != null) {
             return false;
         }
 
@@ -54,11 +62,11 @@ public class Authority implements Serializable {
 
     @Override
     public int hashCode() {
-        return name != null ? name.hashCode() : 0;
+        return this.name != null ? this.name.hashCode() : 0;
     }
 
     @Override
     public String toString() {
-        return "Authority{" + "name='" + name + '\'' + "}";
+        return "Authority{" + "name='" + this.name + '\'' + "}";
     }
 }
