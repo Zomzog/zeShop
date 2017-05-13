@@ -1,4 +1,4 @@
-package bzh.zomzog.cart.config;
+package bzh.zomzog.zeshop.cart.config;
 
 import java.io.IOException;
 

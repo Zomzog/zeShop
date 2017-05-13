@@ -12,6 +12,8 @@ public final class Constants {
 
     public static final int PASSWORD_MAX_LENGTH = 100;
 
+    public static final String SYSTEM_ACCOUNT = "system";
+
     private Constants() {
     }
 }

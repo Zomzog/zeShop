@@ -1,4 +1,4 @@
-package bzh.zomzog.cart.config;
+package bzh.zomzog.zeshop.cart.zeshop.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @Configuration
 @EnableWebMvc
-@ComponentScan({ "bzh.zomzog.cart.web.controller" })
+@ComponentScan({ "bzh.zomzog.zeshop.cart.web.controller" })
 public class ResourceServerWebConfig extends WebMvcConfigurerAdapter {
     //
 }

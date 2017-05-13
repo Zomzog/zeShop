@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -31,7 +32,7 @@ public class Account extends AbstractAuditingEntity {
     private static final long serialVersionUID = -4053429559820897623L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -89,6 +90,15 @@ public class Account extends AbstractAuditingEntity {
      * @param id
      *            the id to set
      */
+    public Account id(final Long id) {
+        this.id = id;
+        return this;
+    }
+
+    /**
+     * @param id
+     *            the id to set
+     */
     public void setId(final Long id) {
         this.id = id;
     }
@@ -98,6 +108,15 @@ public class Account extends AbstractAuditingEntity {
      */
     public String getLogin() {
         return this.login;
+    }
+
+    /**
+     * @param login
+     *            the login to set
+     */
+    public Account login(final String login) {
+        this.login = login;
+        return this;
     }
 
     /**
@@ -119,6 +138,15 @@ public class Account extends AbstractAuditingEntity {
      * @param password
      *            the password to set
      */
+    public Account password(final String password) {
+        this.password = password;
+        return this;
+    }
+
+    /**
+     * @param password
+     *            the password to set
+     */
     public void setPassword(final String password) {
         this.password = password;
     }
@@ -128,6 +156,15 @@ public class Account extends AbstractAuditingEntity {
      */
     public boolean isActivated() {
         return this.activated;
+    }
+
+    /**
+     * @param activated
+     *            the activated to set
+     */
+    public Account activated(final boolean activated) {
+        this.activated = activated;
+        return this;
     }
 
     /**
@@ -149,6 +186,15 @@ public class Account extends AbstractAuditingEntity {
      * @param activationKey
      *            the activationKey to set
      */
+    public Account activationKey(final String activationKey) {
+        this.activationKey = activationKey;
+        return this;
+    }
+
+    /**
+     * @param activationKey
+     *            the activationKey to set
+     */
     public void setActivationKey(final String activationKey) {
         this.activationKey = activationKey;
     }
@@ -158,6 +204,15 @@ public class Account extends AbstractAuditingEntity {
      */
     public String getLangKey() {
         return this.langKey;
+    }
+
+    /**
+     * @param langKey
+     *            the langKey to set
+     */
+    public Account langKey(final String langKey) {
+        this.langKey = langKey;
+        return this;
     }
 
     /**
@@ -179,6 +234,15 @@ public class Account extends AbstractAuditingEntity {
      * @param resetKey
      *            the resetKey to set
      */
+    public Account resetKey(final String resetKey) {
+        this.resetKey = resetKey;
+        return this;
+    }
+
+    /**
+     * @param resetKey
+     *            the resetKey to set
+     */
     public void setResetKey(final String resetKey) {
         this.resetKey = resetKey;
     }
@@ -194,8 +258,27 @@ public class Account extends AbstractAuditingEntity {
      * @param resetDate
      *            the resetDate to set
      */
+    public Account resetDate(final ZonedDateTime resetDate) {
+        this.resetDate = resetDate;
+        return this;
+    }
+
+    /**
+     * @param resetDate
+     *            the resetDate to set
+     */
     public void setResetDate(final ZonedDateTime resetDate) {
         this.resetDate = resetDate;
+    }
+
+    /**
+     * @param authorities
+     *            the authorities to set
+     */
+    public Account authorities(final Set<Authority> authorities) {
+        this.authorities.clear();
+        this.authorities.addAll(authorities);
+        return this;
     }
 
     /**

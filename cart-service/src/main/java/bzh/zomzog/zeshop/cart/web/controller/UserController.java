@@ -1,4 +1,4 @@
-package bzh.zomzog.cart.web.controller;
+package bzh.zomzog.zeshop.cart.web.controller;
 
 import java.util.Map;
 

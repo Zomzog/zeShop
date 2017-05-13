@@ -9,15 +9,19 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import bzh.zomzog.zeshop.auth.exception.LoginAlreadyInUseException;
 import bzh.zomzog.zeshop.auth.service.AccountService;
 import bzh.zomzog.zeshop.auth.service.dto.AccountDTO;
 import bzh.zomzog.zeshop.auth.service.dto.ManagedAccountDTO;
 
+@RestController
+@Validated
 public class AccountResource {
 
     private final Logger log = LoggerFactory.getLogger(AccountResource.class);
@@ -42,6 +46,10 @@ public class AccountResource {
     public ResponseEntity<AccountDTO> registerAccount(@Valid @RequestBody final ManagedAccountDTO managedAccountDTO)
             throws LoginAlreadyInUseException {
 
+        if (managedAccountDTO.getId() != null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        // Lowercase the user login before comparing with database
         final HttpHeaders textPlainHeaders = new HttpHeaders();
         textPlainHeaders.setContentType(MediaType.TEXT_PLAIN);
 
@@ -162,7 +170,7 @@ public class AccountResource {
     // MediaType.TEXT_PLAIN_VALUE)
     // public ResponseEntity<String> requestPasswordReset(@RequestBody final
     // String mail) {
-    // return userService.requestPasswordReset(mail).map(user -> {
+    // return accountService.requestPasswordReset(mail).map(user -> {
     // mailService.sendPasswordResetMail(user);
     // return new ResponseEntity<>("e-mail was sent", HttpStatus.OK);
     // }).orElse(new ResponseEntity<>("e-mail address not registered",

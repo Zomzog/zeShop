@@ -7,10 +7,16 @@ import org.h2.tools.Server;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
 @Configuration
+@EnableJpaRepositories("bzh.zomzog.zeshop.auth.repository")
+@EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
+@EnableTransactionManagement
 public class DatabaseConfiguration {
     /**
      * Open the TCP port for the H2 database, so it is available remotely.

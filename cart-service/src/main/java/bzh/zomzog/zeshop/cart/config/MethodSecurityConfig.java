@@ -1,4 +1,4 @@
-package bzh.zomzog.cart.config;
+package bzh.zomzog.zeshop.cart.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;

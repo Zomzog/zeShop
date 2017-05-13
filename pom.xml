@@ -9,14 +9,12 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>auth-service</module>
-        <module>dataflow-service</module>
-        <module>zeShopMonolith</module>
-        <module>hystrix-dashboard</module>
-        <module>config-service</module>
-        <module>eureka-service</module>
         <module>common</module>
         <module>common-test</module>
+        <module>config-service</module>
+        <module>eureka-service</module>
+        <module>auth-service</module>
+        <module>dataflow-service</module>
 		<module>cart-service</module>
     </modules>
 </project>
