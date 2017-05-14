@@ -5,4 +5,14 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <include file="classpath:config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170316203645_added_entity_ProductCustomization.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170319083601_added_entity_Cart.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170319105955_added_entity_CartProduct.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170319105956_added_entity_ProductCustomization" relativeToChangelogFile="false"/>
+    <!-- Add liquibase changelogs here -->
+    <include file="classpath:config/liquibase/changelog/20170316203645_added_entity_constraints_ProductCustomization.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170319083601_added_entity_constraints_Cart.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170319105955_added_entity_constraints_CartProduct.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170319105956_added_entity_constraints_ProductCustomization" relativeToChangelogFile="false"/>
+    <!-- Add liquibase constraints changelogs here -->
 </databaseChangeLog>

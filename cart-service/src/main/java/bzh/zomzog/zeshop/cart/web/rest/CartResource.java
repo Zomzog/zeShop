@@ -1,4 +1,4 @@
-package bzh.zomzog.zeshop.cart.web;
+package bzh.zomzog.zeshop.cart.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,7 +22,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import bzh.zomzog.zeshop.cart.service.CartService;
+import bzh.zomzog.zeshop.cart.service.dto.cart.CartDTO;
 import bzh.zomzog.zeshop.exception.BadParameterException;
+import bzh.zomzog.zeshop.web.rest.utils.HeaderUtil;
+import bzh.zomzog.zeshop.web.rest.utils.PaginationUtil;
+import bzh.zomzog.zeshop.web.rest.utils.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 public class CartResource {
@@ -52,9 +58,7 @@ public class CartResource {
     public ResponseEntity<CartDTO> createCart(@Valid @RequestBody final CartDTO cartDTO) throws URISyntaxException {
         this.log.debug("REST request to save Cart : {}", cartDTO);
         if (cartDTO.getId() != null) {
-            return ResponseEntity.badRequest().headers(
-                    HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new cart cannot already have an ID"))
-                    .body(null);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         final CartDTO result = this.cartService.save(cartDTO);
         return ResponseEntity.created(new URI("/api/carts/" + result.getId()))

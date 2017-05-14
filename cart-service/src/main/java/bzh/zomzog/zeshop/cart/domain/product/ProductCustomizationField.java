@@ -7,30 +7,24 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import bzh.zomzog.zeshop.domain.enumeration.ProductCustomizationType;
+import bzh.zomzog.zeshop.cart.domain.enumeration.ProductCustomizationType;
 
 /**
  * A Product customization field.
  */
 @Entity
 @Table(name = "product_customization_field")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ProductCustomizationField {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
     @NotNull
-    private Product product;
+    private Long productId;
 
     @NotNull
     @Column(name = "name", nullable = false)
@@ -46,8 +40,8 @@ public class ProductCustomizationField {
         return this;
     }
 
-    public ProductCustomizationField product(final Product product) {
-        this.product = product;
+    public ProductCustomizationField product(final Long productId) {
+        this.productId = productId;
         return this;
     }
 
@@ -65,7 +59,7 @@ public class ProductCustomizationField {
      * @return the id
      */
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     /**
@@ -77,25 +71,25 @@ public class ProductCustomizationField {
     }
 
     /**
-     * @return the product
+     * @return the productId
      */
-    public Product getProduct() {
-        return product;
+    public Long getProduct() {
+        return this.productId;
     }
 
     /**
-     * @param product
-     *            the product to set
+     * @param productId
+     *            the productId to set
      */
-    public void setProduct(final Product product) {
-        this.product = product;
+    public void setProduct(final Long productId) {
+        this.productId = productId;
     }
 
     /**
      * @return the name
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
@@ -110,7 +104,7 @@ public class ProductCustomizationField {
      * @return the type
      */
     public ProductCustomizationType getType() {
-        return type;
+        return this.type;
     }
 
     /**
@@ -119,6 +113,19 @@ public class ProductCustomizationField {
      */
     public void setType(final ProductCustomizationType type) {
         this.type = type;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "ProductCustomizationField [" + (this.id != null ? "id=" + this.id + ", " : "")
+                + (this.productId != null ? "productId=" + this.productId + ", " : "")
+                + (this.name != null ? "name=" + this.name + ", " : "") + (this.type != null ? "type=" + this.type : "")
+                + "]";
     }
 
 }

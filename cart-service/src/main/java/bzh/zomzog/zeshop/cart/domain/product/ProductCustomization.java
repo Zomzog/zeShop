@@ -10,12 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 @Entity
 @Table(name = "product_customization")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ProductCustomization {
 
     @Id
@@ -34,7 +30,7 @@ public class ProductCustomization {
      * @return the id
      */
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     /**
@@ -49,7 +45,7 @@ public class ProductCustomization {
      * @return the customizations
      */
     public Set<ProductCustomizationData> getCustomizations() {
-        return customizations;
+        return this.customizations;
     }
 
 }

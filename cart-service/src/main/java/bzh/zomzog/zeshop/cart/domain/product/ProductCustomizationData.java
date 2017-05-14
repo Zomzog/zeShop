@@ -9,15 +9,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 /**
  * A Product customization field.
  */
 @Entity
 @Table(name = "product_customization_data")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ProductCustomizationData {
 
     @Id
@@ -60,7 +56,7 @@ public class ProductCustomizationData {
      * @return the id
      */
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     /**
@@ -75,7 +71,7 @@ public class ProductCustomizationData {
      * @return the field
      */
     public ProductCustomizationField getField() {
-        return field;
+        return this.field;
     }
 
     /**
@@ -90,7 +86,7 @@ public class ProductCustomizationData {
      * @return the customization
      */
     public ProductCustomization getCustomization() {
-        return customization;
+        return this.customization;
     }
 
     /**
@@ -105,7 +101,7 @@ public class ProductCustomizationData {
      * @return the value
      */
     public String getValue() {
-        return value;
+        return this.value;
     }
 
     /**

@@ -120,18 +120,4 @@ public class AccountResourceTests {
                 .andExpect(status().isBadRequest());
     }
 
-    @Test
-    public void initResetPassword() throws Exception {
-        Account account = new Account().password("password")
-                .login("login")
-                .activated(true)
-                .langKey("fr")
-                .authorities(new HashSet<>(Arrays.asList(new Authority("ROLE_USER"))));
-
-        account = this.accountRepository.save(account);
-
-        this.restMvc.perform(post("/account/reset_password/init")
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
-    }
 }

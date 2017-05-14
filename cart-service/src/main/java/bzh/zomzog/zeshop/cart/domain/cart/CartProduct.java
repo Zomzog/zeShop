@@ -17,18 +17,13 @@ import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import bzh.zomzog.zeshop.cart.domain.product.ProductCustomization;
-import bzh.zomzog.zeshop.domain.product.Product;
 
 /**
  * A CartProduct.
  */
 @Entity
 @Table(name = "cart_product")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class CartProduct implements Serializable {
 
     /**
@@ -44,9 +39,8 @@ public class CartProduct implements Serializable {
     @NotNull
     private Cart cart;
 
-    @ManyToOne(optional = false)
     @NotNull
-    private Product product;
+    private Long productId;
 
     @OneToOne
     @JoinColumn(unique = true)
@@ -64,14 +58,14 @@ public class CartProduct implements Serializable {
     @PrePersist
     void addedDate() {
         final ZonedDateTime now = ZonedDateTime.now();
-        addedDate = now;
-        cart.setUpdatedDate(now);
+        this.addedDate = now;
+        this.cart.setUpdatedDate(now);
     }
 
     @PreUpdate
     void updateDate() {
         final ZonedDateTime now = ZonedDateTime.now();
-        cart.setUpdatedDate(now);
+        this.cart.setUpdatedDate(now);
     }
 
     public CartProduct id(final Long id) {
@@ -79,8 +73,8 @@ public class CartProduct implements Serializable {
         return this;
     }
 
-    public CartProduct product(final Product product) {
-        this.product = product;
+    public CartProduct productId(final Long productId) {
+        this.productId = productId;
         return this;
     }
 
@@ -108,7 +102,7 @@ public class CartProduct implements Serializable {
      * @return the id
      */
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     /**
@@ -123,7 +117,7 @@ public class CartProduct implements Serializable {
      * @return the cart
      */
     public Cart getCart() {
-        return cart;
+        return this.cart;
     }
 
     /**
@@ -135,25 +129,25 @@ public class CartProduct implements Serializable {
     }
 
     /**
-     * @return the product
+     * @return the productId
      */
-    public Product getProduct() {
-        return product;
+    public Long getProductId() {
+        return this.productId;
     }
 
     /**
-     * @param product
-     *            the product to set
+     * @param productId
+     *            the productId to set
      */
-    public void setProduct(final Product product) {
-        this.product = product;
+    public void setProductId(final Long productId) {
+        this.productId = productId;
     }
 
     /**
      * @return the productCustomization
      */
     public ProductCustomization getProductCustomization() {
-        return productCustomization;
+        return this.productCustomization;
     }
 
     /**
@@ -168,7 +162,7 @@ public class CartProduct implements Serializable {
      * @return the quantity
      */
     public Long getQuantity() {
-        return quantity;
+        return this.quantity;
     }
 
     /*
@@ -178,11 +172,12 @@ public class CartProduct implements Serializable {
      */
     @Override
     public String toString() {
-        return "CartProduct [" + (id != null ? "id=" + id + ", " : "") + (cart != null ? "cart=" + cart + ", " : "")
-                + (product != null ? "product=" + product + ", " : "")
-                + (productCustomization != null ? "productCustomization=" + productCustomization + ", " : "")
-                + (quantity != null ? "quantity=" + quantity + ", " : "")
-                + (addedDate != null ? "addedDate=" + addedDate : "") + "]";
+        return "CartProduct [" + (this.id != null ? "id=" + this.id + ", " : "")
+                + (this.cart != null ? "cart=" + this.cart + ", " : "")
+                + (this.productId != null ? "productId=" + this.productId + ", " : "")
+                + (this.productCustomization != null ? "productCustomization=" + this.productCustomization + ", " : "")
+                + (this.quantity != null ? "quantity=" + this.quantity + ", " : "")
+                + (this.addedDate != null ? "addedDate=" + this.addedDate : "") + "]";
     }
 
     /*
@@ -194,12 +189,12 @@ public class CartProduct implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((addedDate == null) ? 0 : addedDate.hashCode());
-        result = prime * result + ((cart == null) ? 0 : cart.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((product == null) ? 0 : product.hashCode());
-        result = prime * result + ((productCustomization == null) ? 0 : productCustomization.hashCode());
-        result = prime * result + ((quantity == null) ? 0 : quantity.hashCode());
+        result = prime * result + ((this.addedDate == null) ? 0 : this.addedDate.hashCode());
+        result = prime * result + ((this.cart == null || this.cart.getId() == null) ? 0 : this.cart.getId().hashCode());
+        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+        result = prime * result + ((this.productId == null) ? 0 : this.productId.hashCode());
+        result = prime * result + ((this.productCustomization == null) ? 0 : this.productCustomization.hashCode());
+        result = prime * result + ((this.quantity == null) ? 0 : this.quantity.hashCode());
         return result;
     }
 
@@ -220,49 +215,49 @@ public class CartProduct implements Serializable {
             return false;
         }
         final CartProduct other = (CartProduct) obj;
-        if (other.id == null || id == null) {
+        if (other.id == null || this.id == null) {
             return false;
         }
-        if (addedDate == null) {
+        if (this.addedDate == null) {
             if (other.addedDate != null) {
                 return false;
             }
-        } else if (!addedDate.equals(other.addedDate)) {
+        } else if (!this.addedDate.equals(other.addedDate)) {
             return false;
         }
-        if (cart == null) {
+        if (this.cart == null) {
             if (other.cart != null) {
                 return false;
             }
-        } else if (!cart.equals(other.cart)) {
+        } else if (!this.cart.equals(other.cart)) {
             return false;
         }
-        if (id == null) {
+        if (this.id == null) {
             if (other.id != null) {
                 return false;
             }
-        } else if (!id.equals(other.id)) {
+        } else if (!this.id.equals(other.id)) {
             return false;
         }
-        if (product == null) {
-            if (other.product != null) {
+        if (this.productId == null) {
+            if (other.productId != null) {
                 return false;
             }
-        } else if (!product.equals(other.product)) {
+        } else if (!this.productId.equals(other.productId)) {
             return false;
         }
-        if (productCustomization == null) {
+        if (this.productCustomization == null) {
             if (other.productCustomization != null) {
                 return false;
             }
-        } else if (!productCustomization.equals(other.productCustomization)) {
+        } else if (!this.productCustomization.equals(other.productCustomization)) {
             return false;
         }
-        if (quantity == null) {
+        if (this.quantity == null) {
             if (other.quantity != null) {
                 return false;
             }
-        } else if (!quantity.equals(other.quantity)) {
+        } else if (!this.quantity.equals(other.quantity)) {
             return false;
         }
         return true;
@@ -280,7 +275,7 @@ public class CartProduct implements Serializable {
      * @return the addedDate
      */
     public ZonedDateTime getAddedDate() {
-        return addedDate;
+        return this.addedDate;
     }
 
     /**

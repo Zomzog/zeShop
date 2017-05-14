@@ -11,25 +11,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import bzh.zomzog.zeshop.domain.User;
 
 /**
  * A Cart.
  */
 @Entity
 @Table(name = "cart")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Cart implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,12 +38,9 @@ public class Cart implements Serializable {
     private ZonedDateTime updatedDate;
 
     @OneToMany(mappedBy = "cart", orphanRemoval = true, cascade = CascadeType.ALL)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private final Set<CartProduct> products = new HashSet<>();
 
-    @OneToOne
-    @JoinColumn(unique = true)
-    private User user;
+    private Long userId;
 
     @PrePersist
     void createdDate() {
@@ -126,18 +115,18 @@ public class Cart implements Serializable {
     }
 
     /**
-     * @return the user
+     * @return the userId
      */
-    public User getUser() {
-        return this.user;
+    public Long getUserId() {
+        return this.userId;
     }
 
     /**
-     * @param user
-     *            the user to set
+     * @param userId
+     *            the userId to set
      */
-    public void setUser(final User user) {
-        this.user = user;
+    public void setUserId(final Long userId) {
+        this.userId = userId;
     }
 
     /**
@@ -157,8 +146,9 @@ public class Cart implements Serializable {
         return "Cart [" + (this.id != null ? "id=" + this.id + ", " : "")
                 + (this.createdDate != null ? "createdDate=" + this.createdDate + ", " : "")
                 + (this.updatedDate != null ? "updatedDate=" + this.updatedDate + ", " : "")
-                + (this.products != null ? "products.size =" + this.products.size() + ", " : "")
-                + (this.user != null ? "user=" + this.user : "") + "]";
+                + (this.products != null ? "products=" + this.products + ", " : "")
+                + (this.userId != null ? "userId=" + this.userId : "")
+                + "]";
     }
 
     /*
@@ -172,8 +162,9 @@ public class Cart implements Serializable {
         int result = 1;
         result = prime * result + ((this.createdDate == null) ? 0 : this.createdDate.hashCode());
         result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+        result = prime * result + ((this.products == null) ? 0 : this.products.hashCode());
         result = prime * result + ((this.updatedDate == null) ? 0 : this.updatedDate.hashCode());
-        result = prime * result + ((this.user == null) ? 0 : this.user.hashCode());
+        result = prime * result + ((this.userId == null) ? 0 : this.userId.hashCode());
         return result;
     }
 
@@ -194,9 +185,6 @@ public class Cart implements Serializable {
             return false;
         }
         final Cart other = (Cart) obj;
-        if (other.id == null || this.id == null) {
-            return false;
-        }
         if (this.createdDate == null) {
             if (other.createdDate != null) {
                 return false;
@@ -205,9 +193,7 @@ public class Cart implements Serializable {
             return false;
         }
         if (this.id == null) {
-            if (other.id != null) {
-                return false;
-            }
+            return false;
         } else if (!this.id.equals(other.id)) {
             return false;
         }
@@ -225,11 +211,11 @@ public class Cart implements Serializable {
         } else if (!this.updatedDate.equals(other.updatedDate)) {
             return false;
         }
-        if (this.user == null) {
-            if (other.user != null) {
+        if (this.userId == null) {
+            if (other.userId != null) {
                 return false;
             }
-        } else if (!this.user.equals(other.user)) {
+        } else if (!this.userId.equals(other.userId)) {
             return false;
         }
         return true;

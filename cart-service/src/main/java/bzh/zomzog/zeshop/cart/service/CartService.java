@@ -1,6 +1,5 @@
 package bzh.zomzog.zeshop.cart.service;
 
-import org.apache.commons.math.stat.descriptive.summary.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -8,13 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import bzh.zomzog.zeshop.cart.domain.cart.Cart;
 import bzh.zomzog.zeshop.cart.domain.cart.CartProduct;
-import bzh.zomzog.zeshop.cart.service.dto.CartDTO;
-import bzh.zomzog.zeshop.domain.cart.Cart;
+import bzh.zomzog.zeshop.cart.repository.CartRepository;
+import bzh.zomzog.zeshop.cart.service.dto.cart.CartDTO;
+import bzh.zomzog.zeshop.cart.service.mapper.cart.CartMapper;
 import bzh.zomzog.zeshop.exception.BadParameterException;
-import bzh.zomzog.zeshop.repository.CartRepository;
-import bzh.zomzog.zeshop.repository.ProductRepository;
-import bzh.zomzog.zeshop.service.mapper.cart.CartMapper;
 
 /**
  * Service Implementation for managing Cart.
@@ -29,11 +27,9 @@ public class CartService {
 
     private final CartMapper cartMapper;
 
-    public CartService(final CartRepository cartRepository, final CartMapper cartMapper,
-            final ProductRepository productRepository) {
+    public CartService(final CartRepository cartRepository, final CartMapper cartMapper) {
         this.cartRepository = cartRepository;
         this.cartMapper = cartMapper;
-        this.productRepository = productRepository;
     }
 
     /**
@@ -63,7 +59,7 @@ public class CartService {
     public Page<CartDTO> findAll(final Pageable pageable) {
         this.log.debug("Request to get all Carts");
         final Page<Cart> result = this.cartRepository.findAll(pageable);
-        return result.map(cart -> cartMapper.cartToCartDTO(cart));
+        return result.map(cart -> this.cartMapper.cartToCartDTO(cart));
     }
 
     /**
@@ -119,15 +115,11 @@ public class CartService {
      */
     public CartDTO addToCart(final Long cartId, final Long productId) throws BadParameterException {
         final Cart cart = this.cartRepository.findOne(cartId);
-        final Product product = this.productRepository.findOne(productId);
         if (null == cart) {
             throw new BadParameterException("cart", "id", cartId.toString());
         }
-        if (null == product) {
-            throw new BadParameterException("product", "id", productId.toString());
-        }
         final CartProduct cartProduct = new CartProduct();
-        cartProduct.setProduct(product);
+        cartProduct.setProductId(productId);
         cartProduct.setQuantity(1L);
         cartProduct.setCart(cart);
         cart.getProducts().add(cartProduct);

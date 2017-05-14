@@ -1,5 +1,8 @@
 package bzh.zomzog.zeshop.cart.service.dto.product;
 
+import bzh.zomzog.zeshop.cart.domain.enumeration.ProductCustomizationType;
+import bzh.zomzog.zeshop.cart.domain.product.ProductCustomization;
+
 /**
  * DTO for {@link ProductCustomization}
  * 

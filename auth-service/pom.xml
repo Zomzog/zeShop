@@ -3,46 +3,27 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>bzh.zomzog.zeshop</groupId>
+	<parent>
+		<groupId>bzh.zomzog.zeshop</groupId>
+		<artifactId>ze-shop-master</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
 	<artifactId>ze-shop-auth</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>auth-service</name>
 	<description>Auth for zeShop</description>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.2.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
-	</parent>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-
-		<hikaricp.version>2.6.0</hikaricp.version>
-		<hazelcast-hibernate52.version>1.2</hazelcast-hibernate52.version>
-		<liquibase-hibernate5.version>3.6</liquibase-hibernate5.version>
-		<liquibase-slf4j.version>2.0.0</liquibase-slf4j.version>
-		<hibernate.version>5.2.8.Final</hibernate.version>
-		<org.mapstruct.version>1.1.0.Final</org.mapstruct.version>
-		<validation-api.version>1.1.0.Final</validation-api.version>
-		<maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>bzh.zomzog.zeshop</groupId>
 			<artifactId>ze-shop-common</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>bzh.zomzog.zeshop</groupId>
 			<artifactId>ze-shop-common-test</artifactId>
-			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -95,7 +76,6 @@
 		<dependency>
 			<groupId>com.hazelcast</groupId>
 			<artifactId>hazelcast-hibernate52</artifactId>
-			<version>${hazelcast-hibernate52.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.hazelcast</groupId>
@@ -118,20 +98,24 @@
 		<dependency>
 			<groupId>com.mattbertolini</groupId>
 			<artifactId>liquibase-slf4j</artifactId>
-			<version>${liquibase-slf4j.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct-jdk8</artifactId>
-			<version>${org.mapstruct.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>mapstruct</artifactId>
+					<groupId>org.mapstruct</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -166,7 +150,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -174,7 +157,7 @@
 						<path>
 							<groupId>org.mapstruct</groupId>
 							<artifactId>mapstruct-processor</artifactId>
-							<version>${org.mapstruct.version}</version>
+							<version>${mapstruct.version}</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
