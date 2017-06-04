@@ -2,6 +2,8 @@ package bzh.zomzog.zeshop.web.rest.errors;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.http.HttpStatus;
@@ -23,11 +25,13 @@ import bzh.zomzog.zeshop.exception.BadParameterException;
  * json structures.
  */
 public class CommonExceptionTranslator {
+    private final Logger log = LoggerFactory.getLogger(CommonExceptionTranslator.class);
 
     @ExceptionHandler(ConcurrencyFailureException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
     public ErrorVM processConcurrencyError(final ConcurrencyFailureException ex) {
+        this.log.error(ex.getClass().getName(), ex);
         return new ErrorVM(ErrorConstants.ERR_CONCURRENCY_FAILURE);
     }
 
@@ -35,6 +39,7 @@ public class CommonExceptionTranslator {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorVM processValidationError(final MethodArgumentNotValidException ex) {
+        this.log.error(ex.getClass().getName(), ex);
         final BindingResult result = ex.getBindingResult();
         final List<FieldError> fieldErrors = result.getFieldErrors();
 
@@ -45,14 +50,16 @@ public class CommonExceptionTranslator {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ParameterizedErrorVM processParameterizedValidationError(final CustomParameterizedException ex) {
+        this.log.error(ex.getClass().getName(), ex);
         return ex.getErrorVM();
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
-    public ErrorVM processAccessDeniedException(final AccessDeniedException e) {
-        return new ErrorVM(ErrorConstants.ERR_ACCESS_DENIED, e.getMessage());
+    public ErrorVM processAccessDeniedException(final AccessDeniedException ex) {
+        this.log.error(ex.getClass().getName(), ex);
+        return new ErrorVM(ErrorConstants.ERR_ACCESS_DENIED, ex.getMessage());
     }
 
     private ErrorVM processFieldErrors(final List<FieldError> fieldErrors) {
@@ -68,21 +75,24 @@ public class CommonExceptionTranslator {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public ErrorVM processMethodNotSupportedException(final HttpRequestMethodNotSupportedException exception) {
-        return new ErrorVM(ErrorConstants.ERR_METHOD_NOT_SUPPORTED, exception.getMessage());
+    public ErrorVM processMethodNotSupportedException(final HttpRequestMethodNotSupportedException ex) {
+        this.log.error(ex.getClass().getName(), ex);
+        return new ErrorVM(ErrorConstants.ERR_METHOD_NOT_SUPPORTED, ex.getMessage());
     }
 
     @ExceptionHandler(BadParameterException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorVM notFoundException(final BadParameterException exception) {
+    public ErrorVM notFoundException(final BadParameterException ex) {
+        this.log.error(ex.getClass().getName(), ex);
         final ErrorVM dto = new ErrorVM(ErrorConstants.ERR_BAD_PARAMETER_ERROR);
-        dto.add(exception.getObjectName(), exception.getFieldName(), exception.getValue() + " invalid");
-        return new ErrorVM(ErrorConstants.ERR_BAD_PARAMETER_ERROR, exception.getMessage());
+        dto.add(ex.getObjectName(), ex.getFieldName(), ex.getValue() + " invalid");
+        return new ErrorVM(ErrorConstants.ERR_BAD_PARAMETER_ERROR, ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorVM> processRuntimeException(final Exception ex) {
+        this.log.error(ex.getClass().getName(), ex);
         BodyBuilder builder;
         ErrorVM errorVM;
         final ResponseStatus responseStatus = AnnotationUtils.findAnnotation(ex.getClass(), ResponseStatus.class);
