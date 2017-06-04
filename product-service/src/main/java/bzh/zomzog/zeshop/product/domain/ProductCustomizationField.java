@@ -1,4 +1,4 @@
-package bzh.zomzog.zeshop.domain.product;
+package bzh.zomzog.zeshop.product.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,17 +11,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import bzh.zomzog.zeshop.domain.enums.ProductCustomizationType;
+import bzh.zomzog.zeshop.product.domain.enums.ProductCustomizationType;
 
 /**
  * A Product customization field.
  */
 @Entity
 @Table(name = "product_customization_field")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ProductCustomizationField {
 
     @Id
@@ -65,7 +61,7 @@ public class ProductCustomizationField {
      * @return the id
      */
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     /**
@@ -80,7 +76,7 @@ public class ProductCustomizationField {
      * @return the product
      */
     public Product getProduct() {
-        return product;
+        return this.product;
     }
 
     /**
@@ -95,7 +91,7 @@ public class ProductCustomizationField {
      * @return the name
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
@@ -110,7 +106,7 @@ public class ProductCustomizationField {
      * @return the type
      */
     public ProductCustomizationType getType() {
-        return type;
+        return this.type;
     }
 
     /**

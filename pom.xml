@@ -21,7 +21,7 @@
 		<module>config-service</module>
 		<module>eureka-service</module>
 		<module>auth-service</module>
-		<module>dataflow-service</module>
+		<module>product-service</module>
 		<module>cart-service</module>
 	</modules>
 

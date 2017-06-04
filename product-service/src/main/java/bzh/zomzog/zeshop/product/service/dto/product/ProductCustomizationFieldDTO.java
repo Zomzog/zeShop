@@ -1,7 +1,6 @@
-package bzh.zomzog.zeshop.service.dto.product;
+package bzh.zomzog.zeshop.product.service.dto.product;
 
-import bzh.zomzog.zeshop.domain.enums.ProductCustomizationType;
-import bzh.zomzog.zeshop.domain.product.ProductCustomization;
+import bzh.zomzog.zeshop.product.domain.enums.ProductCustomizationType;
 
 /**
  * DTO for {@link ProductCustomization}
@@ -23,7 +22,7 @@ public class ProductCustomizationFieldDTO {
      * @return the id
      */
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     /**
@@ -38,7 +37,7 @@ public class ProductCustomizationFieldDTO {
      * @return the productId
      */
     public Long getProductId() {
-        return productId;
+        return this.productId;
     }
 
     /**
@@ -53,7 +52,7 @@ public class ProductCustomizationFieldDTO {
      * @return the name
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
@@ -68,7 +67,7 @@ public class ProductCustomizationFieldDTO {
      * @return the type
      */
     public ProductCustomizationType getType() {
-        return type;
+        return this.type;
     }
 
     /**
@@ -86,9 +85,10 @@ public class ProductCustomizationFieldDTO {
      */
     @Override
     public String toString() {
-        return "ProductCustomizationDTO [" + (id != null ? "id=" + id + ", " : "")
-                + (productId != null ? "productId=" + productId + ", " : "")
-                + (name != null ? "name=" + name + ", " : "") + (type != null ? "type=" + type : "") + "]";
+        return "ProductCustomizationDTO [" + (this.id != null ? "id=" + this.id + ", " : "")
+                + (this.productId != null ? "productId=" + this.productId + ", " : "")
+                + (this.name != null ? "name=" + this.name + ", " : "") + (this.type != null ? "type=" + this.type : "")
+                + "]";
     }
 
 }

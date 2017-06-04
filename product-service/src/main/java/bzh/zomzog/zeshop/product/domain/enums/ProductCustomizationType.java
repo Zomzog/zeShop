@@ -1,4 +1,4 @@
-package bzh.zomzog.zeshop.domain.enumeration;
+package bzh.zomzog.zeshop.product.domain.enums;
 
 /**
  * Type of available customization

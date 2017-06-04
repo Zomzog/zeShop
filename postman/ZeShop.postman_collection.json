@@ -1,0 +1,366 @@
+{
+	"variables": [],
+	"info": {
+		"name": "ZeShop",
+		"_postman_id": "d8a785f4-ce00-fbf2-ff53-1b5ac13fe392",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Cart",
+			"description": "",
+			"item": [
+				{
+					"name": "Get oauth config copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "localhost:8040/cart/bars",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"pony\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Config",
+			"description": "",
+			"item": [
+				{
+					"name": "Get oauth config",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "localhost:8888/auth-service/default",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh config",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "localhost:8888/refresh",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Oauth",
+			"description": "",
+			"item": [
+				{
+					"name": "Get Token Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"globals.token = jsonData.access_token;"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "pony",
+								"password": "ponysecret",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "localhost:9191/uaa/oauth/token?password=admin&username=admin&grant_type=password&scope=openid&client_secret=ponysecret&client_id=pony",
+						"method": "POST",
+						"header": [
+							{
+								"key": "//password",
+								"value": "admin",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "//username",
+								"value": "admin",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "//grant_type",
+								"value": "password",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "//scope",
+								"value": "openid",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "//client_secret",
+								"value": "ponysecret",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "//client_id",
+								"value": "pony",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic cG9ueTpwb255c2VjcmV0",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Register new user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"globals.token = jsonData.access_token;"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "pony",
+								"password": "ponysecret",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "localhost:9191/uaa/oauth/token?password=admin&username=admin&grant_type=password&scope=openid&client_secret=ponysecret&client_id=pony",
+						"method": "POST",
+						"header": [
+							{
+								"key": "//password",
+								"value": "admin",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "//username",
+								"value": "admin",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "//grant_type",
+								"value": "password",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "//scope",
+								"value": "openid",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "//client_secret",
+								"value": "ponysecret",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "//client_id",
+								"value": "pony",
+								"description": "",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic cG9ueTpwb255c2VjcmV0",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"description": "",
+			"item": [
+				{
+					"name": "List products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "localhost:8041/product-service/products",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"pony\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Add product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "localhost:8041/product-service/products",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"pony\",\n\t\"description\": \"ponydescription\",\n\t\"quantity\": 1,\n\t\"price\": 1.5,\n\t\"available\": true,\n\t\"customizationFields\": [\n\t\t{\n\t\t\t\"name\": \"color\",\n\t\t\t\"type\": \"TEXT\"\n\t\t}\n\t\t]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
