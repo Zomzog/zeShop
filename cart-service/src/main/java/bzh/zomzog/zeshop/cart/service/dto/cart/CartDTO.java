@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * A DTO for the Cart entity.
  */
@@ -24,12 +26,12 @@ public class CartDTO implements Serializable {
 
     private Set<CartProductDTO> products = new HashSet<>();
 
-    private Long userId;
-
+    private Long   userId;
+    @NotNull
     private String userLogin;
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(final Long id) {
@@ -37,7 +39,7 @@ public class CartDTO implements Serializable {
     }
 
     public ZonedDateTime getCreatedDate() {
-        return createdDate;
+        return this.createdDate;
     }
 
     public void setCreatedDate(final ZonedDateTime createdDate) {
@@ -45,7 +47,7 @@ public class CartDTO implements Serializable {
     }
 
     public ZonedDateTime getUpdatedDate() {
-        return updatedDate;
+        return this.updatedDate;
     }
 
     public void setUpdatedDate(final ZonedDateTime updatedDate) {
@@ -53,7 +55,7 @@ public class CartDTO implements Serializable {
     }
 
     public Set<CartProductDTO> getProducts() {
-        return products;
+        return this.products;
     }
 
     public void setProducts(final Set<CartProductDTO> products) {
@@ -61,7 +63,7 @@ public class CartDTO implements Serializable {
     }
 
     public Long getUserId() {
-        return userId;
+        return this.userId;
     }
 
     public void setUserId(final Long userId) {
@@ -69,7 +71,7 @@ public class CartDTO implements Serializable {
     }
 
     public String getUserLogin() {
-        return userLogin;
+        return this.userLogin;
     }
 
     public void setUserLogin(final String userLogin) {
@@ -87,7 +89,7 @@ public class CartDTO implements Serializable {
 
         final CartDTO cartDTO = (CartDTO) o;
 
-        if (!Objects.equals(id, cartDTO.id)) {
+        if (!Objects.equals(this.id, cartDTO.id)) {
             return false;
         }
 
@@ -96,12 +98,13 @@ public class CartDTO implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(this.id);
     }
 
     @Override
     public String toString() {
-        return "CartDTO{" + "id=" + id + ", createdDate='" + createdDate + "'" + ", updatedDate='" + updatedDate + "'"
+        return "CartDTO{" + "id=" + this.id + ", createdDate='" + this.createdDate + "'" + ", updatedDate='"
+                + this.updatedDate + "'"
                 + '}';
     }
 }

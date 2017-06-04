@@ -39,12 +39,13 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/profile-info").permitAll()
-                .antMatchers("/api/**").authenticated()
+                .antMatchers("/cart/profile-info").permitAll()
                 .antMatchers("/cart/**").authenticated()
                 .antMatchers("/management/health").permitAll()
                 .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
-                .antMatchers("/swagger-resources/configuration/ui").permitAll();
+                .antMatchers("/swagger-resources/configuration/ui").permitAll()
+                // FIXEME Remove that
+                .antMatchers("/h2-console/**").permitAll();
     }
 
     @Bean

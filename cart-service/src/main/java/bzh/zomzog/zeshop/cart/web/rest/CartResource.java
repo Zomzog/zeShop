@@ -54,14 +54,14 @@ public class CartResource {
      * @throws URISyntaxException
      *             if the Location URI syntax is incorrect
      */
-    @PostMapping
+    @PostMapping("/carts")
     public ResponseEntity<CartDTO> createCart(@Valid @RequestBody final CartDTO cartDTO) throws URISyntaxException {
         this.log.debug("REST request to save Cart : {}", cartDTO);
         if (cartDTO.getId() != null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         final CartDTO result = this.cartService.save(cartDTO);
-        return ResponseEntity.created(new URI("/api/carts/" + result.getId()))
+        return ResponseEntity.created(new URI("/carts/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
     }
 
@@ -102,7 +102,7 @@ public class CartResource {
     public ResponseEntity<List<CartDTO>> getAllCarts(@ApiParam final Pageable pageable) {
         this.log.debug("REST request to get a page of Carts");
         final Page<CartDTO> page = this.cartService.findAll(pageable);
-        final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/carts");
+        final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/carts");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
