@@ -1,26 +1,15 @@
 package bzh.zomzog.zeshop.auth.domain;
 
+import bzh.zomzog.zeshop.domain.AbstractAuditingEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.BatchSize;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.BatchSize;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import bzh.zomzog.zeshop.domain.AbstractAuditingEntity;
 
 @Entity
 @Table(name = "account")
@@ -64,8 +53,8 @@ public class Account extends AbstractAuditingEntity {
     @ManyToMany
     @JoinTable(
             name = "account_authority",
-            joinColumns = { @JoinColumn(name = "account_id", referencedColumnName = "id") },
-            inverseJoinColumns = { @JoinColumn(name = "authority_name", referencedColumnName = "name") })
+            joinColumns = {@JoinColumn(name = "account_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
     // TODO add cache
     // @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @BatchSize(size = 20)
@@ -87,8 +76,7 @@ public class Account extends AbstractAuditingEntity {
     }
 
     /**
-     * @param id
-     *            the id to set
+     * @param id the id to set
      */
     public Account id(final Long id) {
         this.id = id;
@@ -96,8 +84,7 @@ public class Account extends AbstractAuditingEntity {
     }
 
     /**
-     * @param id
-     *            the id to set
+     * @param id the id to set
      */
     public void setId(final Long id) {
         this.id = id;
@@ -111,8 +98,7 @@ public class Account extends AbstractAuditingEntity {
     }
 
     /**
-     * @param login
-     *            the login to set
+     * @param login the login to set
      */
     public Account login(final String login) {
         this.login = login;
@@ -120,8 +106,7 @@ public class Account extends AbstractAuditingEntity {
     }
 
     /**
-     * @param login
-     *            the login to set
+     * @param login the login to set
      */
     public void setLogin(final String login) {
         this.login = login;
@@ -135,8 +120,7 @@ public class Account extends AbstractAuditingEntity {
     }
 
     /**
-     * @param password
-     *            the password to set
+     * @param password the password to set
      */
     public Account password(final String password) {
         this.password = password;
@@ -144,8 +128,7 @@ public class Account extends AbstractAuditingEntity {
     }
 
     /**
-     * @param password
-     *            the password to set
+     * @param password the password to set
      */
     public void setPassword(final String password) {
         this.password = password;
@@ -159,8 +142,7 @@ public class Account extends AbstractAuditingEntity {
     }
 
     /**
-     * @param activated
-     *            the activated to set
+     * @param activated the activated to set
      */
     public Account activated(final boolean activated) {
         this.activated = activated;
@@ -168,8 +150,7 @@ public class Account extends AbstractAuditingEntity {
     }
 
     /**
-     * @param activated
-     *            the activated to set
+     * @param activated the activated to set
      */
     public void setActivated(final boolean activated) {
         this.activated = activated;
@@ -183,8 +164,7 @@ public class Account extends AbstractAuditingEntity {
     }
 
     /**
-     * @param activationKey
-     *            the activationKey to set
+     * @param activationKey the activationKey to set
      */
     public Account activationKey(final String activationKey) {
         this.activationKey = activationKey;
@@ -192,8 +172,7 @@ public class Account extends AbstractAuditingEntity {
     }
 
     /**
-     * @param activationKey
-     *            the activationKey to set
+     * @param activationKey the activationKey to set
      */
     public void setActivationKey(final String activationKey) {
         this.activationKey = activationKey;
@@ -207,8 +186,7 @@ public class Account extends AbstractAuditingEntity {
     }
 
     /**
-     * @param langKey
-     *            the langKey to set
+     * @param langKey the langKey to set
      */
     public Account langKey(final String langKey) {
         this.langKey = langKey;
@@ -216,8 +194,7 @@ public class Account extends AbstractAuditingEntity {
     }
 
     /**
-     * @param langKey
-     *            the langKey to set
+     * @param langKey the langKey to set
      */
     public void setLangKey(final String langKey) {
         this.langKey = langKey;
@@ -231,8 +208,7 @@ public class Account extends AbstractAuditingEntity {
     }
 
     /**
-     * @param resetKey
-     *            the resetKey to set
+     * @param resetKey the resetKey to set
      */
     public Account resetKey(final String resetKey) {
         this.resetKey = resetKey;
@@ -240,8 +216,7 @@ public class Account extends AbstractAuditingEntity {
     }
 
     /**
-     * @param resetKey
-     *            the resetKey to set
+     * @param resetKey the resetKey to set
      */
     public void setResetKey(final String resetKey) {
         this.resetKey = resetKey;
@@ -255,8 +230,7 @@ public class Account extends AbstractAuditingEntity {
     }
 
     /**
-     * @param resetDate
-     *            the resetDate to set
+     * @param resetDate the resetDate to set
      */
     public Account resetDate(final ZonedDateTime resetDate) {
         this.resetDate = resetDate;
@@ -264,16 +238,14 @@ public class Account extends AbstractAuditingEntity {
     }
 
     /**
-     * @param resetDate
-     *            the resetDate to set
+     * @param resetDate the resetDate to set
      */
     public void setResetDate(final ZonedDateTime resetDate) {
         this.resetDate = resetDate;
     }
 
     /**
-     * @param authorities
-     *            the authorities to set
+     * @param authorities the authorities to set
      */
     public Account authorities(final Set<Authority> authorities) {
         this.authorities.clear();

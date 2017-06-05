@@ -1,5 +1,6 @@
 package bzh.zomzog.zeshop.auth.service.dto;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import bzh.zomzog.zeshop.configuration.Constants;
@@ -12,6 +13,7 @@ import bzh.zomzog.zeshop.configuration.Constants;
  */
 public class ManagedAccountDTO extends AccountDTO {
 
+    @NotNull
     @Size(min = Constants.PASSWORD_MIN_LENGTH, max = Constants.PASSWORD_MAX_LENGTH)
     private String password;
 

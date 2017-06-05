@@ -1,5 +1,6 @@
 package bzh.zomzog.zeshop.auth;
 
+import bzh.zomzog.zeshop.auth.configuration.AuthProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
@@ -10,7 +11,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableDiscoveryClient
 @SpringBootApplication
 @EnableResourceServer
-@EnableConfigurationProperties({ LiquibaseProperties.class })
+@EnableConfigurationProperties({LiquibaseProperties.class, AuthProperties.class})
 public class AuthServiceApplication {
 
     public static void main(final String[] args) {

@@ -39,3 +39,10 @@ spring:
 #            hibernate.cache.hazelcast.instance_name: zeShopAuth
 #            hibernate.cache.use_minimal_puts: true
 #            hibernate.cache.hazelcast.use_lite_member: true
+    mail:
+        host: localhost
+
+auth:
+  mail:
+    from: test@pony.test
+    baseUrl: http://localhost

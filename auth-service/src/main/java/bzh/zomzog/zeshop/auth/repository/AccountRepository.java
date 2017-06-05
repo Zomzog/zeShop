@@ -1,11 +1,10 @@
 package bzh.zomzog.zeshop.auth.repository;
 
-import java.util.Optional;
-
+import bzh.zomzog.zeshop.auth.domain.Account;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import bzh.zomzog.zeshop.auth.domain.Account;
+import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
@@ -17,4 +16,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @EntityGraph(attributePaths = "authorities")
     Optional<Account> findOneWithAuthoritiesByLogin(String login);
+
+    Optional<Account> findOneByActivationKey(String activationKey);
 }

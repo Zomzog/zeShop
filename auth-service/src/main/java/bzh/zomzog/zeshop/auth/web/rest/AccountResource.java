@@ -1,27 +1,22 @@
 package bzh.zomzog.zeshop.auth.web.rest;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import bzh.zomzog.zeshop.auth.domain.Account;
+import bzh.zomzog.zeshop.auth.exception.LoginAlreadyInUseException;
+import bzh.zomzog.zeshop.auth.service.AccountService;
+import bzh.zomzog.zeshop.auth.service.dto.AccountDTO;
+import bzh.zomzog.zeshop.auth.service.dto.ManagedAccountDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import bzh.zomzog.zeshop.auth.exception.LoginAlreadyInUseException;
-import bzh.zomzog.zeshop.auth.service.AccountService;
-import bzh.zomzog.zeshop.auth.service.dto.AccountDTO;
-import bzh.zomzog.zeshop.auth.service.dto.ManagedAccountDTO;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
-@Validated
 public class AccountResource {
 
     private final Logger log = LoggerFactory.getLogger(AccountResource.class);
@@ -35,19 +30,18 @@ public class AccountResource {
     /**
      * POST /register : register the user.
      *
-     * @param managedUserVM
-     *            the managed user View Model
+     * @param managedAccountDTO the managed user View Model
      * @return the ResponseEntity with status 201 (Created) if the user is
-     *         registered or 400 (Bad Request) if the login or e-mail is already
-     *         in use
+     * registered or 400 (Bad Request) if the login or e-mail is already
+     * in use
      * @throws LoginAlreadyInUseException
      */
-    @PostMapping(path = "/register", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
+    @PostMapping(path = "/register", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
     public ResponseEntity<AccountDTO> registerAccount(@Valid @RequestBody final ManagedAccountDTO managedAccountDTO)
             throws LoginAlreadyInUseException {
 
         if (managedAccountDTO.getId() != null) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         // Lowercase the user login before comparing with database
         final HttpHeaders textPlainHeaders = new HttpHeaders();
@@ -61,27 +55,22 @@ public class AccountResource {
     /**
      * GET /activate : activate the registered user.
      *
-     * @param key
-     *            the activation key
+     * @param key the activation key
      * @return the ResponseEntity with status 200 (OK) and the activated user in
-     *         body, or status 500 (Internal Server Error) if the user couldn't
-     *         be activated
+     * body, or status 500 (Internal Server Error) if the user couldn't
+     * be activated
      */
-    // @GetMapping("/activate")
-    // @Timed
-    // public ResponseEntity<String> activateAccount(@RequestParam(value =
-    // "key") final String key) {
-    // return userService.activateRegistration(key).map(user -> new
-    // ResponseEntity<String>(HttpStatus.OK))
-    // .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
-    // }
+    @PostMapping("/activate")
+    public ResponseEntity<String> activateAccount(@RequestParam(value = "key") final String key) {
+        final Account account = this.accountService.activateRegistration(key);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     /**
      * GET /authenticate : check if the user is authenticated, and return its
      * login.
      *
-     * @param request
-     *            the HTTP request
+     * @param request the HTTP request
      * @return the login if the user is authenticated
      */
     @GetMapping("/authenticate")

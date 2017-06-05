@@ -1,11 +1,10 @@
 package bzh.zomzog.zeshop.auth.service.dto;
 
-import java.util.Set;
+import bzh.zomzog.zeshop.configuration.Constants;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import bzh.zomzog.zeshop.configuration.Constants;
+import java.util.Set;
 
 /**
  * A DTO representing a account, with his authorities.
@@ -21,7 +20,7 @@ public class AccountDTO {
     private boolean activated = false;
 
     @Size(min = 2, max = 5)
-    private String langKey;
+    private String langKey = "fr";
 
     private Set<String> authorities;
 
@@ -58,8 +57,7 @@ public class AccountDTO {
     }
 
     /**
-     * @param id
-     *            the id to set
+     * @param id the id to set
      */
     public void setId(final Long id) {
         this.id = id;
@@ -73,8 +71,7 @@ public class AccountDTO {
     }
 
     /**
-     * @param login
-     *            the login to set
+     * @param login the login to set
      */
     public void setLogin(final String login) {
         this.login = login;
@@ -88,8 +85,7 @@ public class AccountDTO {
     }
 
     /**
-     * @param activated
-     *            the activated to set
+     * @param activated the activated to set
      */
     public void setActivated(final boolean activated) {
         this.activated = activated;
@@ -103,8 +99,7 @@ public class AccountDTO {
     }
 
     /**
-     * @param langKey
-     *            the langKey to set
+     * @param langKey the langKey to set
      */
     public void setLangKey(final String langKey) {
         this.langKey = langKey;
@@ -118,8 +113,7 @@ public class AccountDTO {
     }
 
     /**
-     * @param authorities
-     *            the authorities to set
+     * @param authorities the authorities to set
      */
     public void setAuthorities(final Set<String> authorities) {
         this.authorities = authorities;

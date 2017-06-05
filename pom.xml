@@ -1,107 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>bzh.zomzog.zeshop</groupId>
-	<artifactId>ze-shop-master</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>pom</packaging>
+    <groupId>bzh.zomzog.zeshop</groupId>
+    <artifactId>ze-shop-master</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-	<!-- Inherit defaults from Spring Boot -->
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.2.RELEASE</version>
-	</parent>
+    <!-- Inherit defaults from Spring Boot -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.2.RELEASE</version>
+    </parent>
 
-	<modules>
-		<module>common</module>
-		<module>common-test</module>
-		<module>config-service</module>
-		<module>eureka-service</module>
-		<module>auth-service</module>
-		<module>product-service</module>
-		<module>cart-service</module>
-	</modules>
+    <modules>
+        <module>common</module>
+        <module>common-test</module>
+        <module>config-service</module>
+        <module>eureka-service</module>
+        <module>auth-service</module>
+        <module>product-service</module>
+        <module>cart-service</module>
+    </modules>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
 
-		<hikaricp.version>2.6.0</hikaricp.version>
-		<hazelcast-hibernate52.version>1.2</hazelcast-hibernate52.version>
-		<liquibase-hibernate5.version>3.6</liquibase-hibernate5.version>
-		<liquibase-slf4j.version>2.0.0</liquibase-slf4j.version>
-		<hibernate.version>5.2.8.Final</hibernate.version>
-		<mapstruct.version>1.1.0.Final</mapstruct.version>
-		<validation-api.version>1.1.0.Final</validation-api.version>
-		<maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
+        <hikaricp.version>2.6.0</hikaricp.version>
+        <hazelcast-hibernate52.version>1.2</hazelcast-hibernate52.version>
+        <liquibase-hibernate5.version>3.6</liquibase-hibernate5.version>
+        <liquibase-slf4j.version>2.0.0</liquibase-slf4j.version>
+        <hibernate.version>5.2.8.Final</hibernate.version>
+        <mapstruct.version>1.1.0.Final</mapstruct.version>
+        <validation-api.version>1.1.0.Final</validation-api.version>
+        <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
 
-		<commons-lang3.version>3.5</commons-lang3.version>
-		<commons-io.version>2.4</commons-io.version>
-		<springfox.version>2.6.1</springfox.version>
-		<assertj.version>3.6.2</assertj.version>
-	</properties>
+        <commons-lang3.version>3.5</commons-lang3.version>
+        <commons-io.version>2.4</commons-io.version>
+        <springfox.version>2.6.1</springfox.version>
+        <assertj.version>3.6.2</assertj.version>
+    </properties>
 
 
-	<dependencyManagement>
-		<dependencies>
-			<!-- Project dependencies -->
-			<dependency>
-				<groupId>bzh.zomzog.zeshop</groupId>
-				<artifactId>ze-shop-common</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>bzh.zomzog.zeshop</groupId>
-				<artifactId>ze-shop-common-test</artifactId>
-				<version>${project.version}</version>
-			</dependency>
+    <dependencyManagement>
+        <dependencies>
+            <!-- Project dependencies -->
+            <dependency>
+                <groupId>bzh.zomzog.zeshop</groupId>
+                <artifactId>ze-shop-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>bzh.zomzog.zeshop</groupId>
+                <artifactId>ze-shop-common-test</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-			<!-- Database -->
-			<dependency>
-				<groupId>com.hazelcast</groupId>
-				<artifactId>hazelcast-hibernate52</artifactId>
-				<version>${hazelcast-hibernate52.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.mattbertolini</groupId>
-				<artifactId>liquibase-slf4j</artifactId>
-				<version>${liquibase-slf4j.version}</version>
-			</dependency>
+            <!-- Database -->
+            <dependency>
+                <groupId>com.hazelcast</groupId>
+                <artifactId>hazelcast-hibernate52</artifactId>
+                <version>${hazelcast-hibernate52.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mattbertolini</groupId>
+                <artifactId>liquibase-slf4j</artifactId>
+                <version>${liquibase-slf4j.version}</version>
+            </dependency>
 
-			<!-- commons -->
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-lang3</artifactId>
-				<version>${commons-lang3.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-io</groupId>
-				<artifactId>commons-io</artifactId>
-				<version>${commons-io.version}</version>
-			</dependency>
+            <!-- commons -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
 
-			<!-- test -->
-			<dependency>
-				<groupId>org.assertj</groupId>
-				<artifactId>assertj-core</artifactId>
-				<version>${assertj.version}</version>
-			</dependency>
+            <!-- test -->
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj.version}</version>
+            </dependency>
 
-			<!-- others -->
-			<dependency>
-				<groupId>org.mapstruct</groupId>
-				<artifactId>mapstruct-jdk8</artifactId>
-				<version>${mapstruct.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-swagger2</artifactId>
-				<version>${springfox.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+            <!-- others -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-jdk8</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${springfox.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
