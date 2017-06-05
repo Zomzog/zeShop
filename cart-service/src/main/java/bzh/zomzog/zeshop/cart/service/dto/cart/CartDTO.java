@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * A DTO for the Cart entity.
  */
@@ -26,8 +24,8 @@ public class CartDTO implements Serializable {
 
     private Set<CartProductDTO> products = new HashSet<>();
 
-    private Long   userId;
-    @NotNull
+    private Long userId;
+    
     private String userLogin;
 
     public Long getId() {
