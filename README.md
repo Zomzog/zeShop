@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/Zomzog/zeShop.svg?branch=master)](https://travis-ci.org/Zomzog/zeShop)
+[![Coverage Status](https://coveralls.io/repos/github/Zomzog/zeShop/badge.svg?branch=master)](https://coveralls.io/github/Zomzog/zeShop?branch=master)
 
 zeShop
 ===================
