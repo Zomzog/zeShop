@@ -7,7 +7,7 @@ spring:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
 #        url: jdbc:h2:mem:zeShopAuth;DB_CLOSE_DELAY=-1
-        url: jdbc:h2:file:./target/h2db/db/zeShopProduct;DB_CLOSE_DELAY=-1
+        url: jdbc:h2:file:./target/h2db/db/zeShopDb;DB_CLOSE_DELAY=-1
         driverClassName: org.h2.Driver
         username: zeShop
         password:
