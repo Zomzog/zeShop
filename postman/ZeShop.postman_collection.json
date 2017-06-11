@@ -2,17 +2,140 @@
 	"variables": [],
 	"info": {
 		"name": "ZeShop",
-		"_postman_id": "d8a785f4-ce00-fbf2-ff53-1b5ac13fe392",
+		"_postman_id": "a696d485-3e84-f502-39f2-6d63ea043d38",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
 		{
+			"name": "Auth",
+			"description": "",
+			"item": [
+				{
+					"name": "Get Token Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"globals.token = jsonData.access_token;",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "pony",
+								"password": "ponysecret",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "{{basePath}}:{{authPort}}/oauth/token?password=admin&username=admin&grant_type=password&scope=openid&client_secret=ponysecret&client_id=pony",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic cG9ueTpwb255c2VjcmV0",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Register new user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 201\"] = responseCode.code === 201;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{authPort}}/register",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"login\": \"pony{{$randomInt}}\",\n\t\"password\": \"pony\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Cart",
 			"description": "",
 			"item": [
 				{
-					"name": "Get oauth config copy",
+					"name": "Health",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{cartPort}}/health",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"pony\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create cart",
 					"event": [
 						{
 							"listen": "test",
@@ -26,8 +149,8 @@
 						}
 					],
 					"request": {
-						"url": "localhost:8040/cart/bars",
-						"method": "POST",
+						"url": "{{basePath}}:{{cartPort}}/cart-service/carts?random=r",
+						"method": "GET",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -63,13 +186,14 @@
 								"type": "text/javascript",
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);",
-									""
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
 								]
 							}
 						}
 					],
 					"request": {
-						"url": "localhost:8888/auth-service/default",
+						"url": "{{basePath}}:{{configPort}}/auth-service/default",
 						"method": "GET",
 						"header": [
 							{
@@ -95,14 +219,81 @@
 								"type": "text/javascript",
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);",
-									""
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
 								]
 							}
 						}
 					],
 					"request": {
-						"url": "localhost:8888/refresh",
+						"url": "{{basePath}}:{{configPort}}/refresh",
 						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get product config",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{configPort}}/product-service/default",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get gateway config",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{configPort}}/gateway-service/default",
+						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
@@ -121,166 +312,14 @@
 			]
 		},
 		{
-			"name": "Oauth",
+			"name": "Eureka",
 			"description": "",
-			"item": [
-				{
-					"name": "Get Token Admin",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"type": "text/javascript",
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"",
-									"globals.token = jsonData.access_token;"
-								]
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": {
-								"username": "pony",
-								"password": "ponysecret",
-								"saveHelperData": true,
-								"showPassword": false
-							}
-						},
-						"url": "localhost:9191/uaa/oauth/token?password=admin&username=admin&grant_type=password&scope=openid&client_secret=ponysecret&client_id=pony",
-						"method": "POST",
-						"header": [
-							{
-								"key": "//password",
-								"value": "admin",
-								"description": "",
-								"disabled": true
-							},
-							{
-								"key": "//username",
-								"value": "admin",
-								"description": "",
-								"disabled": true
-							},
-							{
-								"key": "//grant_type",
-								"value": "password",
-								"description": "",
-								"disabled": true
-							},
-							{
-								"key": "//scope",
-								"value": "openid",
-								"description": "",
-								"disabled": true
-							},
-							{
-								"key": "//client_secret",
-								"value": "ponysecret",
-								"description": "",
-								"disabled": true
-							},
-							{
-								"key": "//client_id",
-								"value": "pony",
-								"description": "",
-								"disabled": true
-							},
-							{
-								"key": "Authorization",
-								"value": "Basic cG9ueTpwb255c2VjcmV0",
-								"description": ""
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "Register new user",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"type": "text/javascript",
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"",
-									"globals.token = jsonData.access_token;"
-								]
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": {
-								"username": "pony",
-								"password": "ponysecret",
-								"saveHelperData": true,
-								"showPassword": false
-							}
-						},
-						"url": "localhost:9191/uaa/oauth/token?password=admin&username=admin&grant_type=password&scope=openid&client_secret=ponysecret&client_id=pony",
-						"method": "POST",
-						"header": [
-							{
-								"key": "//password",
-								"value": "admin",
-								"description": "",
-								"disabled": true
-							},
-							{
-								"key": "//username",
-								"value": "admin",
-								"description": "",
-								"disabled": true
-							},
-							{
-								"key": "//grant_type",
-								"value": "password",
-								"description": "",
-								"disabled": true
-							},
-							{
-								"key": "//scope",
-								"value": "openid",
-								"description": "",
-								"disabled": true
-							},
-							{
-								"key": "//client_secret",
-								"value": "ponysecret",
-								"description": "",
-								"disabled": true
-							},
-							{
-								"key": "//client_id",
-								"value": "pony",
-								"description": "",
-								"disabled": true
-							},
-							{
-								"key": "Authorization",
-								"value": "Basic cG9ueTpwb255c2VjcmV0",
-								"description": ""
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"description": ""
-					},
-					"response": []
-				}
-			]
+			"item": []
+		},
+		{
+			"name": "Gateway",
+			"description": "",
+			"item": []
 		},
 		{
 			"name": "Product",
@@ -295,13 +334,14 @@
 								"type": "text/javascript",
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);",
-									""
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
 								]
 							}
 						}
 					],
 					"request": {
-						"url": "localhost:8041/product-service/products",
+						"url": "{{basePath}}:{{productPort}}/product-service/products",
 						"method": "GET",
 						"header": [
 							{
@@ -332,13 +372,14 @@
 								"type": "text/javascript",
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);",
-									""
+									"",
+									"tests[\"Status code is 201\"] = responseCode.code === 201;"
 								]
 							}
 						}
 					],
 					"request": {
-						"url": "localhost:8041/product-service/products",
+						"url": "{{basePath}}:{{productPort}}/product-service/products",
 						"method": "POST",
 						"header": [
 							{
