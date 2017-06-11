@@ -33,3 +33,10 @@ spring:
 liquibase:
     change-log: classpath:config/liquibase/master.xml
     contexts: dev
+
+
+info:
+  id: ${spring.application.name}
+  build:
+    artifact: ${project.artifactId}
+    version: ${project.version}

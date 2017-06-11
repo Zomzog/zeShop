@@ -7,21 +7,60 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "auth", ignoreUnknownFields = false)
 public class AuthProperties {
-    private Mail mail;
+
+    private final Async async = new Async();
+    private final Mail mail = new Mail();
+
+    public Async getAsync() {
+        return this.async;
+    }
 
     public Mail getMail() {
         return this.mail;
     }
 
-    public void setMail(final Mail mail) {
-        this.mail = mail;
-    }
 
     @Override
     public String toString() {
         return "AuthProperties{" +
                 "mail=" + this.mail +
                 '}';
+    }
+
+    /**
+     * Properties for async tasks
+     */
+    public static class Async {
+
+        private int corePoolSize = 2;
+
+        private int maxPoolSize = 50;
+
+        private int queueCapacity = 10000;
+
+        public int getCorePoolSize() {
+            return this.corePoolSize;
+        }
+
+        public void setCorePoolSize(final int corePoolSize) {
+            this.corePoolSize = corePoolSize;
+        }
+
+        public int getMaxPoolSize() {
+            return this.maxPoolSize;
+        }
+
+        public void setMaxPoolSize(final int maxPoolSize) {
+            this.maxPoolSize = maxPoolSize;
+        }
+
+        public int getQueueCapacity() {
+            return this.queueCapacity;
+        }
+
+        public void setQueueCapacity(final int queueCapacity) {
+            this.queueCapacity = queueCapacity;
+        }
     }
 
     /**

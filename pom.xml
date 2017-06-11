@@ -20,6 +20,7 @@
         <module>common-test</module>
         <module>config-service</module>
         <module>eureka-service</module>
+        <module>zuul-gateway</module>
         <module>auth-service</module>
         <module>product-service</module>
         <module>cart-service</module>
@@ -41,6 +42,7 @@
 
         <commons-lang3.version>3.5</commons-lang3.version>
         <commons-io.version>2.4</commons-io.version>
+        <spring-cloud.version>Dalston.RELEASE</spring-cloud.version>
         <springfox.version>2.6.1</springfox.version>
         <assertj.version>3.6.2</assertj.version>
     </properties>
@@ -58,6 +60,15 @@
                 <groupId>bzh.zomzog.zeshop</groupId>
                 <artifactId>ze-shop-common-test</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <!-- Spring cloud -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <!-- Database -->
