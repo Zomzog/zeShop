@@ -8,12 +8,11 @@ services:
   
 after_success:
   - mvn clean test jacoco:report coveralls:report
-  - if [ "$TRAVIS_BRANCH" == "docker" ]; then
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push zomzog/cart-service
-    docker push zomzog/product-service
-    docker push zomzog/auth-service
-    docker push zomzog/zuul-gateway
-    docker push zomzog/eureka-service
-    docker push zomzog/ze-shop-config
-    fi
+  - echo $TRAVIS_BRANCH
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+  - docker push zomzog/cart-service
+  - docker push zomzog/product-service
+  - docker push zomzog/auth-service
+  - docker push zomzog/zuul-gateway
+  - docker push zomzog/eureka-service
+  - docker push zomzog/ze-shop-config
