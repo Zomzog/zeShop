@@ -168,6 +168,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <skip>true</skip>
                     <repository>${docker.image.prefix}/${project.name}</repository>
                     <tag>${project.version}</tag>
                 </configuration>
