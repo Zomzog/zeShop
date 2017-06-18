@@ -1,6 +1,5 @@
 package bzh.zomzog.zeshop.auth.web.rest;
 
-import bzh.zomzog.zeshop.auth.domain.Account;
 import bzh.zomzog.zeshop.auth.exception.LoginAlreadyInUseException;
 import bzh.zomzog.zeshop.auth.service.AccountService;
 import bzh.zomzog.zeshop.auth.service.dto.AccountDTO;
@@ -62,7 +61,7 @@ public class AccountResource {
      */
     @PostMapping("/activate")
     public ResponseEntity<String> activateAccount(@RequestParam(value = "key") final String key) {
-        final Account account = this.accountService.activateRegistration(key);
+        this.accountService.activateRegistration(key);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
