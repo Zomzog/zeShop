@@ -1,9 +1,12 @@
 language: java
-sudo: required
+sudo: false
 jdk:
   - oraclejdk8
-services:
-  - docker
+
   
 after_success:
   - mvn clean test jacoco:report coveralls:report
+  - if [ "$TRAVIS_BRANCH" == "docker" ]; then
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker push zomzog/ze-shop-config;
+    fi
