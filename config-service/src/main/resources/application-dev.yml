@@ -4,6 +4,3 @@ spring:
       server:
         git:
           uri: file:///Z:/Dev/git/zeShopConfig
-
-server:
-  port: 8888
