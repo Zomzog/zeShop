@@ -1,0 +1,12 @@
+server:
+  port: ${PORT:8761}
+spring:
+  application:
+    name: eureka-service
+  cloud:
+    config:
+      uri: http://configserver:8888
+      fail-fast: true
+      retry:
+        max-attempts: 10
+        max-interval: 3000

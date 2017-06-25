@@ -1,0 +1,12 @@
+server:
+  port: 8040
+spring:
+  application:
+    name: cart-service
+  cloud:
+    config:
+      uri: http://configserver:8888
+      fail-fast: true
+      retry:
+        max-attempts: 10
+        max-interval: 3000

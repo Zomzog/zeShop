@@ -1,0 +1,13 @@
+server:
+  port: 8041
+
+spring:
+  application:
+    name: product-services
+  cloud:
+    config:
+      uri: http://configserver:8888
+      fail-fast: true
+      retry:
+        max-attempts: 10
+        max-interval: 3000

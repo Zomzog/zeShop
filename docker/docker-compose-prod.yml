@@ -1,0 +1,13 @@
+services:
+  config:
+    image: zomzog/ze-shop-config:0.0.1-SNAPSHOT
+  discovery:
+    image: zomzog/eureka-service:0.0.1-SNAPSHOT
+  carts:
+    image: zomzog/cart-service:0.0.1-SNAPSHOT
+  products:
+    image: zomzog/product-service:0.0.1-SNAPSHOT
+  auth:
+    image: zomzog/auth-service:0.0.1-SNAPSHOT
+  gateway:
+    image: zomzog/zuul-gateway:0.0.1-SNAPSHOT

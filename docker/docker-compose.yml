@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  configserver:
+    build: ../config-service/
+    ports:
+      - "8888:8888"
+  discovery:
+    build: ../eureka-service/
+    links:
+      - configserver
+    depends_on:
+      - configserver
+    ports:
+      - "8761:8761"
+  carts:
+    build: ../cart-service/
+    links:
+      - configserver
+      - discovery
+    depends_on:
+      - configserver
+      - discovery
+  products:
+    build: ../product-service/
+    links:
+      - configserver
+      - discovery
+    depends_on:
+      - configserver
+      - discovery
+  auth:
+    build: ../auth-service/
+    links:
+      - configserver
+      - discovery
+    depends_on:
+      - configserver
+      - discovery
+  gateway:
+    build: ../zuul-gateway/
+    links:
+      - configserver
+      - discovery
+    depends_on:
+      - configserver
+      - discovery
+    ports:
+      - "8080:8080"
