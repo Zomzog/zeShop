@@ -2,13 +2,16 @@ language: java
 sudo: false
 jdk:
   - oraclejdk8
- 
+
 services:
   - docker
-  
+
+script:
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
+
 after_success:
   - mvn clean test jacoco:report coveralls:report
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+  - if [ "$TRAVIS_BRANCH" == "zeShop/master" ]; then
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
     docker push zomzog/cart-service
     docker push zomzog/product-service
