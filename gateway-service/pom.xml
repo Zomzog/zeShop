@@ -13,7 +13,7 @@
     <artifactId>ze-shop-gateway</artifactId>
     <packaging>jar</packaging>
 
-    <name>zuul-gateway</name>
+    <name>gateway-service</name>
     <description>Gateway for zeShop</description>
 
     <dependencies>

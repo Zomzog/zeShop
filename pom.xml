@@ -20,7 +20,7 @@
         <module>common-test</module>
         <module>config-service</module>
         <module>eureka-service</module>
-        <module>zuul-gateway</module>
+        <module>gateway-service</module>
         <module>auth-service</module>
         <module>product-service</module>
         <module>cart-service</module>
