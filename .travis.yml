@@ -7,16 +7,16 @@ services:
   - docker
 
 script:
-  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
 
 after_success:
   - mvn clean test jacoco:report coveralls:report
-  - if [ "$TRAVIS_BRANCH" == "zeShop/master" ]; then
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push zomzog/cart-service
-    docker push zomzog/product-service
-    docker push zomzog/auth-service
-    docker push zomzog/zuul-gateway
-    docker push zomzog/eureka-service
-    docker push zomzog/ze-shop-config
+    docker push zomzog/cart-service;
+    docker push zomzog/product-service;
+    docker push zomzog/auth-service;
+    docker push zomzog/zuul-gateway;
+    docker push zomzog/eureka-service;
+    docker push zomzog/ze-shop-config;
     fi
