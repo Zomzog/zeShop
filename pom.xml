@@ -185,6 +185,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <skip>true</skip>
                     <repository>${docker.image.prefix}/${project.name}</repository>
                 </configuration>
             </plugin>
