@@ -18,5 +18,5 @@ after_success:
     docker push zomzog/auth-service;
     docker push zomzog/zuul-gateway;
     docker push zomzog/eureka-service;
-    docker push zomzog/ze-shop-config;
+    docker push zomzog/config-service;
     fi
