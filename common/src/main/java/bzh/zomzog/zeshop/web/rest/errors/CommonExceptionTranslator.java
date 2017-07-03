@@ -1,7 +1,8 @@
 package bzh.zomzog.zeshop.web.rest.errors;
 
-import java.util.List;
-
+import bzh.zomzog.zeshop.exception.BadParameterException;
+import bzh.zomzog.zeshop.exception.FunctionalException;
+import bzh.zomzog.zeshop.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import bzh.zomzog.zeshop.exception.BadParameterException;
+import java.util.List;
 
 /**
  * Controller advice to translate the server side exceptions to client-friendly
@@ -83,18 +84,32 @@ public class CommonExceptionTranslator {
     @ExceptionHandler(BadParameterException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorVM notFoundException(final BadParameterException ex) {
+    public ErrorVM badParameterException(final BadParameterException ex) {
         this.log.error(ex.getClass().getName(), ex);
-        final ErrorVM dto = new ErrorVM(ErrorConstants.ERR_BAD_PARAMETER_ERROR);
-        dto.add(ex.getObjectName(), ex.getFieldName(), ex.getValue() + " invalid");
         return new ErrorVM(ErrorConstants.ERR_BAD_PARAMETER_ERROR, ex.getMessage());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorVM notFoundException(final NotFoundException ex) {
+        this.log.error(ex.getClass().getName(), ex);
+        return new ErrorVM(ErrorConstants.ERR_NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(FunctionalException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorVM notFoundException(final FunctionalException ex) {
+        this.log.error(ex.getClass().getName(), ex);
+        return new ErrorVM(ErrorConstants.ERR_FUNCTIONNAL_ERROR, ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorVM> processRuntimeException(final Exception ex) {
         this.log.error(ex.getClass().getName(), ex);
-        BodyBuilder builder;
-        ErrorVM errorVM;
+        final BodyBuilder builder;
+        final ErrorVM errorVM;
         final ResponseStatus responseStatus = AnnotationUtils.findAnnotation(ex.getClass(), ResponseStatus.class);
         if (responseStatus != null) {
             builder = ResponseEntity.status(responseStatus.value());

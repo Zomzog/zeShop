@@ -9,6 +9,7 @@ public final class ErrorConstants {
     public static final String ERR_INTERNAL_SERVER_ERROR = "error.internalServerError";
     public static final String ERR_FUNCTIONNAL_ERROR     = "error.functionnalError";
     public static final String ERR_BAD_PARAMETER_ERROR   = "error.badParameterError";
+    public static final java.lang.String ERR_NOT_FOUND   = "error.notFound";;
 
     private ErrorConstants() {
     }

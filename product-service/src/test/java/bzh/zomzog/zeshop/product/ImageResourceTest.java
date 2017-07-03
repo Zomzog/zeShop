@@ -2,6 +2,7 @@ package bzh.zomzog.zeshop.product;
 
 import bzh.zomzog.zeshop.product.domain.Image;
 import bzh.zomzog.zeshop.product.domain.Product;
+import bzh.zomzog.zeshop.product.exception.StorageFileNotFoundException;
 import bzh.zomzog.zeshop.product.repository.ImageRepository;
 import bzh.zomzog.zeshop.product.repository.ProductRepository;
 import bzh.zomzog.zeshop.product.service.ImageService;
@@ -133,9 +134,30 @@ public class ImageResourceTest {
         assertThat(response.getHeader(HttpHeaders.CONTENT_DISPOSITION))
                 .isEqualTo("attachment; filename=\"name\"");
         assertThat(response.getContentAsString()).isEqualTo("Spring Framework");
-
+        // Teardown
         this.imageRepository.delete(this.image.getId());
     }
 
+    @Test
+    public void should404WhenMissingFile() throws Exception {
+        this.image = this.imageRepository.save(this.image);
+
+        given(this.storageService.loadAsResource(this.image.getName()))
+                .willThrow(StorageFileNotFoundException.class);
+
+        this.mockMvcImage.perform(get("/images/{id}", this.image.getId()))
+                .andExpect(status().isNotFound());
+        // Teardown
+        this.imageRepository.delete(this.image.getId());
+    }
+
+    @Test
+    public void should404WhenIdNotFoundFile() throws Exception {
+        given(this.storageService.loadAsResource(this.image.getName()))
+                .willThrow(StorageFileNotFoundException.class);
+
+        this.mockMvcImage.perform(get("/images/{id}", Integer.MAX_VALUE))
+                .andExpect(status().isNotFound());
+    }
 
 }
