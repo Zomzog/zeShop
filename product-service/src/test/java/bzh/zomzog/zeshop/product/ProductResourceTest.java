@@ -1,14 +1,33 @@
-package bzh.zomzog.zeshop.product.test;
+package bzh.zomzog.zeshop.product;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import bzh.zomzog.zeshop.product.domain.Image;
+import bzh.zomzog.zeshop.product.domain.Product;
+import bzh.zomzog.zeshop.product.domain.ProductCustomizationField;
+import bzh.zomzog.zeshop.product.domain.enums.ProductCustomizationType;
+import bzh.zomzog.zeshop.product.repository.ProductRepository;
+import bzh.zomzog.zeshop.product.service.ProductService;
+import bzh.zomzog.zeshop.product.service.StorageService;
+import bzh.zomzog.zeshop.product.service.dto.product.ProductCustomizationFieldDTO;
+import bzh.zomzog.zeshop.product.service.dto.product.ProductDTO;
+import bzh.zomzog.zeshop.product.service.mapper.product.ProductMapper;
+import bzh.zomzog.zeshop.product.web.rest.ProductResource;
+import bzh.zomzog.zeshop.product.web.rest.error.ExceptionTranslator;
+import bzh.zomzog.zeshop.web.rest.TestUtil;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -18,34 +37,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-
-import bzh.zomzog.zeshop.product.ProductServerApplication;
-import bzh.zomzog.zeshop.product.domain.Product;
-import bzh.zomzog.zeshop.product.domain.ProductCustomizationField;
-import bzh.zomzog.zeshop.product.domain.enums.ProductCustomizationType;
-import bzh.zomzog.zeshop.product.repository.ProductRepository;
-import bzh.zomzog.zeshop.product.service.ProductService;
-import bzh.zomzog.zeshop.product.service.dto.product.ProductCustomizationFieldDTO;
-import bzh.zomzog.zeshop.product.service.dto.product.ProductDTO;
-import bzh.zomzog.zeshop.product.service.mapper.product.ProductMapper;
-import bzh.zomzog.zeshop.product.web.rest.ProductResource;
-import bzh.zomzog.zeshop.product.web.rest.error.ExceptionTranslator;
-import bzh.zomzog.zeshop.web.rest.TestUtil;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.not;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the ProductResource REST controller.
@@ -89,18 +89,15 @@ public class ProductResourceTest {
 
     @Autowired
     private ProductService productService;
+    @MockBean
+    private StorageService storageService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
     @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
     @Autowired
     private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
-    private EntityManager em;
 
     private MockMvc restProductMockMvc;
 
@@ -117,11 +114,11 @@ public class ProductResourceTest {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Product createEntity(final EntityManager em) {
+    public static Product createEntity() {
         final Product product = new Product()//
                 .name(DEFAULT_NAME)//
                 .description(DEFAULT_DESCRIPTION)//
@@ -135,7 +132,7 @@ public class ProductResourceTest {
 
     @Before
     public void initTest() {
-        this.product = createEntity(this.em);
+        this.product = createEntity();
     }
 
     @Test
@@ -340,7 +337,7 @@ public class ProductResourceTest {
         this.productRepository.saveAndFlush(this.product);
         final int databaseSizeBeforeDelete = this.productRepository.findAll().size();
 
-        // Get the product
+        // Delete the product
         this.restProductMockMvc
                 .perform(delete("/products/{id}", this.product.getId()).accept(TestUtil.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
@@ -351,8 +348,37 @@ public class ProductResourceTest {
     }
 
     @Test
-    @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Product.class);
     }
+
+    @Test
+    public void addImages() throws Exception {
+        // Initialize the database
+        this.product = this.productRepository.saveAndFlush(this.product);
+        final String filename = "test.txt";
+
+        final MockMultipartFile multipartFile =
+                new MockMultipartFile("file", filename, "text/plain", "Spring Framework".getBytes());
+
+        // Get the product
+        this.restProductMockMvc.perform(fileUpload("/products/{id}/images", this.product.getId()).file(multipartFile))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.id").isNotEmpty())
+                .andExpect(jsonPath("$.name").value(not(filename)))
+                .andExpect(jsonPath("$.productId").isNotEmpty());
+
+        final Product last = this.productRepository.findOneWithEagerRelationships(this.product.getId());
+        assertThat(last.getImages().size()).isEqualTo(1);
+        final Image image = last.getImages().iterator().next();
+        assertThat(image.getId()).isNotNull();
+        assertThat(image.getName()).isNotNull();
+        assertThat(image.getName()).isNotEqualTo(multipartFile.getName());
+        assertThat(image.getName()).isNotEqualTo(multipartFile.getOriginalFilename());
+
+        then(this.storageService).should().store(eq(multipartFile), anyString());
+    }
 }
+

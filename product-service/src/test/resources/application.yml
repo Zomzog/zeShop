@@ -1,26 +1,29 @@
 eureka:
-    client:
-        enabled: false
+  client:
+    enabled: false
         
 security:
-    basic:
-        enabled: false
+  basic:
+    enabled: false
         
 liquibase:
-    change-log: classpath:config/liquibase/master.xml
-    contexts: test
+  change-log: classpath:config/liquibase/master.xml
+  contexts: test
 
 server:
-    port: 10344
-    address: localhost
+  port: 10344
+  address: localhost
     
 spring:
-    datasource:
-        type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:h2:mem:zeShopProduct;DB_CLOSE_DELAY=-1
-        name:
-        username:
-        password:
-    jpa:
-        hibernate:
-            ddl-auto: none
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:h2:mem:zeShopProduct;DB_CLOSE_DELAY=-1
+    name:
+    username:
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+storage:
+  location: z:/Dev/tmp

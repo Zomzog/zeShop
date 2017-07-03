@@ -1,22 +1,12 @@
 package bzh.zomzog.zeshop.product.domain;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  * A Product.
@@ -59,6 +49,9 @@ public class Product implements Serializable {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<ProductCustomizationField> customizationFields = new HashSet<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final Set<Image> images = new HashSet<>();
 
     @PrePersist
     void createdDate() {
@@ -118,8 +111,7 @@ public class Product implements Serializable {
     }
 
     /**
-     * @param id
-     *            the id to set
+     * @param id the id to set
      */
     public void setId(final Long id) {
         this.id = id;
@@ -133,8 +125,7 @@ public class Product implements Serializable {
     }
 
     /**
-     * @param name
-     *            the name to set
+     * @param name the name to set
      */
     public void setName(final String name) {
         this.name = name;
@@ -148,8 +139,7 @@ public class Product implements Serializable {
     }
 
     /**
-     * @param description
-     *            the description to set
+     * @param description the description to set
      */
     public void setDescription(final String description) {
         this.description = description;
@@ -163,8 +153,7 @@ public class Product implements Serializable {
     }
 
     /**
-     * @param quantity
-     *            the quantity to set
+     * @param quantity the quantity to set
      */
     public void setQuantity(final int quantity) {
         this.quantity = quantity;
@@ -178,8 +167,7 @@ public class Product implements Serializable {
     }
 
     /**
-     * @param price
-     *            the price to set
+     * @param price the price to set
      */
     public void setPrice(final float price) {
         this.price = price;
@@ -193,8 +181,7 @@ public class Product implements Serializable {
     }
 
     /**
-     * @param available
-     *            the available to set
+     * @param available the available to set
      */
     public void setAvailable(final boolean available) {
         this.available = available;
@@ -208,8 +195,7 @@ public class Product implements Serializable {
     }
 
     /**
-     * @param createdDate
-     *            the createdDate to set
+     * @param createdDate the createdDate to set
      */
     public void setCreatedDate(final ZonedDateTime createdDate) {
         this.createdDate = createdDate;
@@ -223,8 +209,7 @@ public class Product implements Serializable {
     }
 
     /**
-     * @param updatedDate
-     *            the updatedDate to set
+     * @param updatedDate the updatedDate to set
      */
     public void setUpdatedDate(final ZonedDateTime updatedDate) {
         this.updatedDate = updatedDate;
@@ -237,11 +222,15 @@ public class Product implements Serializable {
         return this.customizationFields;
     }
 
+    public Set<Image> getImages() {
+        return this.images;
+    }
+
     /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
+         * (non-Javadoc)
+         *
+         * @see java.lang.Object#hashCode()
+         */
     @Override
     public int hashCode() {
         final int prime = 31;

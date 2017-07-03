@@ -1,12 +1,13 @@
 package bzh.zomzog.zeshop.product.web.rest;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
+import bzh.zomzog.zeshop.product.exception.StorageException;
+import bzh.zomzog.zeshop.product.service.ProductService;
+import bzh.zomzog.zeshop.product.service.dto.ImageDTO;
+import bzh.zomzog.zeshop.product.service.dto.product.ProductDTO;
+import bzh.zomzog.zeshop.web.rest.utils.HeaderUtil;
+import bzh.zomzog.zeshop.web.rest.utils.PaginationUtil;
+import bzh.zomzog.zeshop.web.rest.utils.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -14,20 +15,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import bzh.zomzog.zeshop.product.service.ProductService;
-import bzh.zomzog.zeshop.product.service.dto.product.ProductDTO;
-import bzh.zomzog.zeshop.web.rest.utils.HeaderUtil;
-import bzh.zomzog.zeshop.web.rest.utils.PaginationUtil;
-import bzh.zomzog.zeshop.web.rest.utils.ResponseUtil;
-import io.swagger.annotations.ApiParam;
+import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing Product.
@@ -48,13 +43,11 @@ public class ProductResource {
     /**
      * POST /products : Create a new product.
      *
-     * @param productDTO
-     *            the productDTO to create
+     * @param productDTO the productDTO to create
      * @return the ResponseEntity with status 201 (Created) and with body the
-     *         new productDTO, or with status 400 (Bad Request) if the product
-     *         has already an ID
-     * @throws URISyntaxException
-     *             if the Location URI syntax is incorrect
+     * new productDTO, or with status 400 (Bad Request) if the product
+     * has already an ID
+     * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/products")
     public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody final ProductDTO productDTO)
@@ -73,14 +66,12 @@ public class ProductResource {
     /**
      * PUT /products : Updates an existing product.
      *
-     * @param productDTO
-     *            the productDTO to update
+     * @param productDTO the productDTO to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated
-     *         productDTO, or with status 400 (Bad Request) if the productDTO is
-     *         not valid, or with status 500 (Internal Server Error) if the
-     *         productDTO couldnt be updated
-     * @throws URISyntaxException
-     *             if the Location URI syntax is incorrect
+     * productDTO, or with status 400 (Bad Request) if the productDTO is
+     * not valid, or with status 500 (Internal Server Error) if the
+     * productDTO couldnt be updated
+     * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/products")
     public ResponseEntity<ProductDTO> updateProduct(@Valid @RequestBody final ProductDTO productDTO)
@@ -97,12 +88,10 @@ public class ProductResource {
     /**
      * GET /products : get all the products.
      *
-     * @param pageable
-     *            the pagination information
+     * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of products
-     *         in body
-     * @throws URISyntaxException
-     *             if there is an error to generate the pagination HTTP headers
+     * in body
+     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
     @GetMapping("/products")
     public ResponseEntity<List<ProductDTO>> getAllProducts(@ApiParam final Pageable pageable) {
@@ -115,10 +104,9 @@ public class ProductResource {
     /**
      * GET /products/:id : get the "id" product.
      *
-     * @param id
-     *            the id of the productDTO to retrieve
+     * @param id the id of the productDTO to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the
-     *         productDTO, or with status 404 (Not Found)
+     * productDTO, or with status 404 (Not Found)
      */
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductDTO> getProduct(@PathVariable final Long id) {
@@ -130,8 +118,7 @@ public class ProductResource {
     /**
      * DELETE /products/:id : delete the "id" product.
      *
-     * @param id
-     *            the id of the productDTO to delete
+     * @param id the id of the productDTO to delete
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/products/{id}")
@@ -141,4 +128,10 @@ public class ProductResource {
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
+    @PostMapping("/products/{id}/images")
+    public ResponseEntity<ImageDTO> addImageToProduct(@PathVariable final Long id, @RequestParam("file") final MultipartFile file) throws StorageException, URISyntaxException {
+        this.log.debug("REST request to add image {} Product : {}", file.getOriginalFilename(), id);
+        final ImageDTO result = this.productService.addImageToProduct(id, file);
+        return ResponseEntity.created(new URI("/api/products/" + id + "/images/" + result.getId())).body(result);
+    }
 }

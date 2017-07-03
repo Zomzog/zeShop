@@ -1,17 +1,23 @@
 package bzh.zomzog.zeshop.product.service;
 
+import bzh.zomzog.zeshop.product.domain.Image;
+import bzh.zomzog.zeshop.product.domain.Product;
+import bzh.zomzog.zeshop.product.domain.ProductCustomizationField;
+import bzh.zomzog.zeshop.product.exception.StorageException;
+import bzh.zomzog.zeshop.product.repository.ImageRepository;
+import bzh.zomzog.zeshop.product.repository.ProductRepository;
+import bzh.zomzog.zeshop.product.service.dto.ImageDTO;
+import bzh.zomzog.zeshop.product.service.dto.product.ProductDTO;
+import bzh.zomzog.zeshop.product.service.mapper.ImageMapper;
+import bzh.zomzog.zeshop.product.service.mapper.product.ProductMapper;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import bzh.zomzog.zeshop.product.domain.Product;
-import bzh.zomzog.zeshop.product.domain.ProductCustomizationField;
-import bzh.zomzog.zeshop.product.repository.ProductRepository;
-import bzh.zomzog.zeshop.product.service.dto.product.ProductDTO;
-import bzh.zomzog.zeshop.product.service.mapper.product.ProductMapper;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Service Implementation for managing Product.
@@ -22,20 +28,28 @@ public class ProductService {
 
     private final Logger log = LoggerFactory.getLogger(ProductService.class);
 
+    private static final int IMAGE_NAME_SIZE = 20;
+
     private final ProductRepository productRepository;
+    private final ImageRepository imageRepository;
 
     private final ProductMapper productMapper;
+    private final ImageMapper imageMapper;
 
-    public ProductService(final ProductRepository productRepository, final ProductMapper productMapper) {
+    private final StorageService storageService;
+
+    public ProductService(final ProductRepository productRepository, final ImageRepository imageRepository, final ProductMapper productMapper, final ImageMapper imageMapper, final StorageService storageService) {
         this.productRepository = productRepository;
+        this.imageRepository = imageRepository;
         this.productMapper = productMapper;
+        this.imageMapper = imageMapper;
+        this.storageService = storageService;
     }
 
     /**
      * Save a product.
      *
-     * @param productDTO
-     *            the entity to save
+     * @param productDTO the entity to save
      * @return the persisted entity
      */
     public ProductDTO save(final ProductDTO productDTO) {
@@ -49,9 +63,8 @@ public class ProductService {
 
     /**
      * Get all the products.
-     * 
-     * @param pageable
-     *            the pagination information
+     *
+     * @param pageable the pagination information
      * @return the list of entities
      */
     @Transactional(readOnly = true)
@@ -64,8 +77,7 @@ public class ProductService {
     /**
      * Get one product by id.
      *
-     * @param id
-     *            the id of the entity
+     * @param id the id of the entity
      * @return the entity
      */
     @Transactional(readOnly = true)
@@ -79,8 +91,7 @@ public class ProductService {
     /**
      * Delete the product by id.
      *
-     * @param id
-     *            the id of the entity
+     * @param id the id of the entity
      */
     public void delete(final Long id) {
         this.log.debug("Request to delete Product : {}", id);
@@ -90,8 +101,7 @@ public class ProductService {
     /**
      * Update a product.
      *
-     * @param productDTO
-     *            the entity to save
+     * @param productDTO the entity to save
      * @return the persisted entity
      */
     public ProductDTO update(final ProductDTO productDTO) {
@@ -105,10 +115,31 @@ public class ProductService {
     }
 
     /**
+     * @param productId product's id
+     * @param file      file
+     * @return image informations
+     * @throws StorageException
+     */
+    public ImageDTO addImageToProduct(final Long productId, final MultipartFile file) throws StorageException {
+        this.log.debug("Request to add image to product : {}", productId);
+        final Product product = this.productRepository.findOne(productId);
+        if (null == product) {
+            throw new IllegalArgumentException("Bad productId");
+        }
+        final String imageName = RandomStringUtils.randomAlphabetic(IMAGE_NAME_SIZE);
+        this.storageService.store(file, imageName);
+        // FIXME move this to ImageService
+        final Image image = new Image().name(imageName).product(product);
+        product.getImages().add(image);
+        this.imageRepository.save(image);
+        return this.imageMapper.imageToImageDTO(image);
+    }
+
+    /**
      * TODO : most efficient way with mapstruct ?
-     * 
+     * <p>
      * Update childs elements for hibernate mapping
-     * 
+     *
      * @param product
      * @return
      */
@@ -118,5 +149,4 @@ public class ProductService {
         }
         return product;
     }
-
 }

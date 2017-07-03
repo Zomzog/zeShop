@@ -47,7 +47,7 @@
         <assertj.version>3.6.2</assertj.version>
 
         <docker.image.prefix>zomzog</docker.image.prefix>
-        <dockerfile-maven-plugin.version>1.3.0</dockerfile-maven-plugin.version>
+        <dockerfile-maven-plugin.version>1.3.1</dockerfile-maven-plugin.version>
     </properties>
 
 
