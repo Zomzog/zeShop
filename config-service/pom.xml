@@ -13,7 +13,7 @@
     <artifactId>ze-shop-config</artifactId>
     <packaging>jar</packaging>
 
-    <name>ze-shop-config</name>
+    <name>config-service</name>
     <description>Config serveur for zeShop</description>
 
     <properties>
@@ -33,7 +33,7 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
