@@ -66,7 +66,7 @@ public class CartResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/carts")
-    public ResponseEntity<CartDTO> updateCart(@Valid @RequestBody final CartDTO cartDTO) throws URISyntaxException {
+    public ResponseEntity<CartDTO> updateCart(@Valid @RequestBody final CartDTO cartDTO) throws URISyntaxException, BadParameterException {
         this.log.debug("REST request to update Cart : {}", cartDTO);
         if (cartDTO.getId() == null) {
             return createCart(cartDTO);

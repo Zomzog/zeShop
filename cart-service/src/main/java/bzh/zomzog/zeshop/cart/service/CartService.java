@@ -5,6 +5,7 @@ import bzh.zomzog.zeshop.cart.domain.cart.CartProduct;
 import bzh.zomzog.zeshop.cart.domain.product.Product;
 import bzh.zomzog.zeshop.cart.repository.CartRepository;
 import bzh.zomzog.zeshop.cart.service.dto.cart.CartDTO;
+import bzh.zomzog.zeshop.cart.service.dto.cart.CartProductDTO;
 import bzh.zomzog.zeshop.cart.service.mapper.cart.CartMapper;
 import bzh.zomzog.zeshop.exception.BadParameterException;
 import org.slf4j.Logger;
@@ -95,8 +96,16 @@ public class CartService {
      * @param cartDTO the entity to save
      * @return the persisted entity
      */
-    public CartDTO update(final CartDTO cartDTO) {
+    public CartDTO update(final CartDTO cartDTO) throws BadParameterException {
         this.log.debug("Request to save Product : {}", cartDTO);
+        // Check if all products exists
+        for (final CartProductDTO cartProduct : cartDTO.getProducts()) {
+            final Optional<Product> product = this.productService.get(cartProduct.getProductId());
+            if (!product.isPresent()) {
+                throw new BadParameterException("cart.product", "id", cartProduct.getProductId().toString(), "not found");
+            }
+        }
+
         Cart cart = this.cartRepository.findOne(cartDTO.getId());
         cart = this.cartMapper.update(cartDTO, cart);
         linkCartProductWithCart(cart);
