@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: product-services
+    name: product-service
   cloud:
     config:
       uri: http://configserver:8888

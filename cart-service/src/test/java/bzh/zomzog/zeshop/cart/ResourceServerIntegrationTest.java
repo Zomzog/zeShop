@@ -1,12 +1,10 @@
-package bzh.zomzog.zeshop.cart.test;
+package bzh.zomzog.zeshop.cart;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import bzh.zomzog.zeshop.cart.CartServerApplication;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CartServerApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)

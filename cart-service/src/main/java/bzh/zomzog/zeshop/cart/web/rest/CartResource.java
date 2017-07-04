@@ -119,7 +119,7 @@ public class CartResource {
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    @PutMapping("/carts/{cartId}/product/{productId}")
+    @PutMapping("/carts/{cartId}/products/{productId}")
     public ResponseEntity<CartDTO> addToCart(@PathVariable final Long cartId, @PathVariable final Long productId)
             throws URISyntaxException, BadParameterException {
         this.log.debug("REST request to add to  Cart : {} product {}", cartId, productId);

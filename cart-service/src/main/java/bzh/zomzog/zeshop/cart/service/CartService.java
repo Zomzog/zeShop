@@ -1,5 +1,12 @@
 package bzh.zomzog.zeshop.cart.service;
 
+import bzh.zomzog.zeshop.cart.domain.cart.Cart;
+import bzh.zomzog.zeshop.cart.domain.cart.CartProduct;
+import bzh.zomzog.zeshop.cart.domain.product.Product;
+import bzh.zomzog.zeshop.cart.repository.CartRepository;
+import bzh.zomzog.zeshop.cart.service.dto.cart.CartDTO;
+import bzh.zomzog.zeshop.cart.service.mapper.cart.CartMapper;
+import bzh.zomzog.zeshop.exception.BadParameterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -7,12 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import bzh.zomzog.zeshop.cart.domain.cart.Cart;
-import bzh.zomzog.zeshop.cart.domain.cart.CartProduct;
-import bzh.zomzog.zeshop.cart.repository.CartRepository;
-import bzh.zomzog.zeshop.cart.service.dto.cart.CartDTO;
-import bzh.zomzog.zeshop.cart.service.mapper.cart.CartMapper;
-import bzh.zomzog.zeshop.exception.BadParameterException;
+import java.util.Optional;
 
 /**
  * Service Implementation for managing Cart.
@@ -27,16 +29,18 @@ public class CartService {
 
     private final CartMapper cartMapper;
 
-    public CartService(final CartRepository cartRepository, final CartMapper cartMapper) {
+    private final ProductService productService;
+
+    public CartService(final CartRepository cartRepository, final CartMapper cartMapper, final ProductService productService) {
         this.cartRepository = cartRepository;
         this.cartMapper = cartMapper;
+        this.productService = productService;
     }
 
     /**
      * Save a cart.
      *
-     * @param cartDTO
-     *            the entity to save
+     * @param cartDTO the entity to save
      * @return the persisted entity
      */
     public CartDTO save(final CartDTO cartDTO) {
@@ -50,9 +54,8 @@ public class CartService {
 
     /**
      * Get all the carts.
-     * 
-     * @param pageable
-     *            the pagination information
+     *
+     * @param pageable the pagination information
      * @return the list of entities
      */
     @Transactional(readOnly = true)
@@ -65,8 +68,7 @@ public class CartService {
     /**
      * Get one cart by id.
      *
-     * @param id
-     *            the id of the entity
+     * @param id the id of the entity
      * @return the entity
      */
     @Transactional(readOnly = true)
@@ -80,8 +82,7 @@ public class CartService {
     /**
      * Delete the cart by id.
      *
-     * @param id
-     *            the id of the entity
+     * @param id the id of the entity
      */
     public void delete(final Long id) {
         this.log.debug("Request to delete Cart : {}", id);
@@ -91,8 +92,7 @@ public class CartService {
     /**
      * Update a product.
      *
-     * @param cartDTO
-     *            the entity to save
+     * @param cartDTO the entity to save
      * @return the persisted entity
      */
     public CartDTO update(final CartDTO cartDTO) {
@@ -107,7 +107,7 @@ public class CartService {
 
     /**
      * Add product to cart
-     * 
+     *
      * @param cartId
      * @param productId
      * @return
@@ -117,6 +117,10 @@ public class CartService {
         final Cart cart = this.cartRepository.findOne(cartId);
         if (null == cart) {
             throw new BadParameterException("cart", "id", cartId.toString());
+        }
+        final Optional<Product> product = this.productService.get(productId);
+        if (!product.isPresent()) {
+            throw new BadParameterException("product", "id", productId.toString());
         }
         final CartProduct cartProduct = new CartProduct();
         cartProduct.setProductId(productId);
@@ -130,7 +134,7 @@ public class CartService {
 
     /**
      * Add for all product cart the reference of the cart
-     * 
+     *
      * @param cart
      * @return
      */

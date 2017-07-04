@@ -1,28 +1,26 @@
-package bzh.zomzog.zeshop.cart.test;
+package bzh.zomzog.zeshop.cart;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-
+import bzh.zomzog.zeshop.cart.domain.cart.Cart;
+import bzh.zomzog.zeshop.cart.domain.cart.CartProduct;
+import bzh.zomzog.zeshop.cart.domain.product.Product;
+import bzh.zomzog.zeshop.cart.repository.CartRepository;
+import bzh.zomzog.zeshop.cart.service.CartService;
+import bzh.zomzog.zeshop.cart.service.client.ProductClient;
+import bzh.zomzog.zeshop.cart.service.dto.cart.CartDTO;
+import bzh.zomzog.zeshop.cart.service.mapper.cart.CartMapper;
+import bzh.zomzog.zeshop.cart.web.rest.CartResource;
+import bzh.zomzog.zeshop.cart.web.rest.error.ExceptionTranslator;
+import bzh.zomzog.zeshop.exception.MockFeignException;
+import bzh.zomzog.zeshop.web.rest.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.BDDMockito;
+import org.mockito.Matchers;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -31,16 +29,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import bzh.zomzog.zeshop.cart.CartServerApplication;
-import bzh.zomzog.zeshop.cart.domain.cart.Cart;
-import bzh.zomzog.zeshop.cart.domain.cart.CartProduct;
-import bzh.zomzog.zeshop.cart.repository.CartRepository;
-import bzh.zomzog.zeshop.cart.service.CartService;
-import bzh.zomzog.zeshop.cart.service.dto.cart.CartDTO;
-import bzh.zomzog.zeshop.cart.service.mapper.cart.CartMapper;
-import bzh.zomzog.zeshop.cart.web.rest.CartResource;
-import bzh.zomzog.zeshop.cart.web.rest.error.ExceptionTranslator;
-import bzh.zomzog.zeshop.web.rest.TestUtil;
+import javax.persistence.EntityManager;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the CartResource REST controller.
@@ -84,6 +82,9 @@ public class CartResourceTest {
     @Autowired
     private EntityManager em;
 
+    @MockBean
+    private ProductClient productClient;
+
     private MockMvc restCartMockMvc;
 
     private Cart cart;
@@ -101,7 +102,7 @@ public class CartResourceTest {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -120,6 +121,7 @@ public class CartResourceTest {
     @Test
     @Transactional
     public void addToCart() throws Exception {
+        BDDMockito.given(this.productClient.getProduct(Matchers.anyLong())).willReturn(new Product().id(1L));
         final ZonedDateTime now = ZonedDateTime.now();
         // Initialize the database
         this.cartRepository.saveAndFlush(this.cart);
@@ -128,7 +130,7 @@ public class CartResourceTest {
         // Update the cart
 
         this.restCartMockMvc
-                .perform(put("/carts/{cartId}/product/{productId}", this.cart.getId(), DEFAULT_PRODUCT_ID)
+                .perform(put("/carts/{cartId}/products/{productId}", this.cart.getId(), DEFAULT_PRODUCT_ID)
                         .contentType(TestUtil.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
 
@@ -142,31 +144,32 @@ public class CartResourceTest {
         this.cartRepository.delete(this.cart.getId());
     }
 
-    // FIXME Restore the test
-    // @Test
-    // @Transactional
-    // public void addToCartNotExistingProduct() throws Exception {
-    // // Initialize the database
-    // this.cartRepository.saveAndFlush(this.cart);
-    // final int databaseSizeBeforeUpdate =
-    // this.cartRepository.findAll().size();
-    //
-    // // Update the cart
-    //
-    // this.restCartMockMvc
-    // .perform(put("/carts/{cartId}/product/{productId}", this.cart.getId(),
-    // Integer.MAX_VALUE)
-    // .contentType(TestUtil.APPLICATION_JSON_UTF8))
-    // .andExpect(status().isBadRequest());
-    //
-    // // Validate the Cart in the database
-    // final List<Cart> cartList = this.cartRepository.findAll();
-    // assertThat(cartList).hasSize(databaseSizeBeforeUpdate);
-    // final Cart testCart = cartList.get(cartList.size() - 1);
-    // assertThat(testCart.getUpdatedDate()).isEqualTo(this.cart.getUpdatedDate());
-    // // Teardown
-    // this.cartRepository.delete(this.cart.getId());
-    // }
+
+    @Test
+    @Transactional
+    public void addToCartNotExistingProduct() throws Exception {
+        BDDMockito.given(this.productClient.getProduct(Matchers.anyLong())).willThrow(new MockFeignException(404, "status 404 reading ProductClient#getProduct(long)"));
+        // Initialize the database
+        this.cartRepository.saveAndFlush(this.cart);
+        final int databaseSizeBeforeUpdate =
+                this.cartRepository.findAll().size();
+
+
+        // Update the cart
+        this.restCartMockMvc
+                .perform(put("/carts/{cartId}/products/{productId}", this.cart.getId(),
+                        Integer.MAX_VALUE)
+                        .contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest());
+
+        // Validate the Cart in the database
+        final List<Cart> cartList = this.cartRepository.findAll();
+        assertThat(cartList).hasSize(databaseSizeBeforeUpdate);
+        final Cart testCart = cartList.get(cartList.size() - 1);
+        assertThat(testCart.getUpdatedDate()).isEqualTo(this.cart.getUpdatedDate());
+        // Teardown
+        this.cartRepository.delete(this.cart.getId());
+    }
 
     @Test
     @Transactional
