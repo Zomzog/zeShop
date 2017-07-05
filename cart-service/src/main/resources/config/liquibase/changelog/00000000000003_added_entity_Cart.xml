@@ -15,7 +15,7 @@
     <!--
         Added the entity Cart.
     -->
-    <changeSet id="00000000000003" author="zomzog">
+    <changeSet id="00000000000003" author="Zomzog">
         <createTable tableName="cart">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>

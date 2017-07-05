@@ -1,22 +1,19 @@
 package bzh.zomzog.zeshop.cart.service.mapper.cart;
 
-import java.util.List;
-
+import bzh.zomzog.zeshop.cart.domain.cart.Cart;
+import bzh.zomzog.zeshop.cart.domain.cart.CartProduct;
+import bzh.zomzog.zeshop.cart.service.dto.cart.CartProductDTO;
+import bzh.zomzog.zeshop.cart.service.mapper.product.ProductCustomizationDataMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-import bzh.zomzog.zeshop.cart.domain.cart.Cart;
-import bzh.zomzog.zeshop.cart.domain.cart.CartProduct;
-import bzh.zomzog.zeshop.cart.domain.product.ProductCustomization;
-import bzh.zomzog.zeshop.cart.service.dto.cart.CartProductDTO;
-import bzh.zomzog.zeshop.cart.service.mapper.product.ProductCustomizationFieldMapper;
-import bzh.zomzog.zeshop.cart.service.mapper.product.ProductCustomizationMapper;
+import java.util.Set;
 
 /**
  * Mapper for the entity CartProduct and its DTO CartProductDTO.
  */
-@Mapper(componentModel = "spring", uses = { ProductCustomizationFieldMapper.class, ProductCustomizationMapper.class })
+@Mapper(componentModel = "spring", uses = {ProductCustomizationDataMapper.class})
 public interface CartProductMapper {
 
     @Mappings({ //
@@ -24,14 +21,14 @@ public interface CartProductMapper {
     })
     CartProductDTO cartProductToCartProductDTO(CartProduct cartProduct);
 
-    List<CartProductDTO> cartProductsToCartProductDTOs(List<CartProduct> cartProducts);
+    Set<CartProductDTO> cartProductsToCartProductDTOs(Set<CartProduct> cartProducts);
 
     @Mappings({ //
             @Mapping(source = "cartId", target = "cart"), //
     })
     CartProduct cartProductDTOToCartProduct(CartProductDTO cartProductDTO);
 
-    List<CartProduct> cartProductDTOsToCartProducts(List<CartProductDTO> cartProductDTOs);
+    Set<CartProduct> cartProductDTOsToCartProducts(Set<CartProductDTO> cartProductDTOs);
 
     default Cart cartFromId(final Long id) {
         if (id == null) {
@@ -42,12 +39,4 @@ public interface CartProductMapper {
         return cart;
     }
 
-    default ProductCustomization productCustomizationFromId(final Long id) {
-        if (id == null) {
-            return null;
-        }
-        final ProductCustomization productCustomization = new ProductCustomization();
-        productCustomization.setId(id);
-        return productCustomization;
-    }
 }

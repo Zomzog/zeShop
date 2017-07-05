@@ -1,24 +1,25 @@
 package bzh.zomzog.zeshop.cart.service.mapper.product;
 
-import java.util.List;
-
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-
-import bzh.zomzog.zeshop.cart.domain.product.ProductCustomizationData;
+import bzh.zomzog.zeshop.cart.domain.cart.ProductCustomizationData;
 import bzh.zomzog.zeshop.cart.service.dto.product.ProductCustomizationDataDTO;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "spring", uses = { ProductCustomizationFieldMapper.class })
-public interface ProductCustomizationDataMapper {
+import java.util.Set;
 
-    ProductCustomizationDataDTO mapDTO(ProductCustomizationData product);
+@Mapper(componentModel = "spring", uses = {})
+public abstract class ProductCustomizationDataMapper {
 
-    List<ProductCustomizationDataDTO> mapDTO(List<ProductCustomizationData> products);
+    @Mappings({
+            @Mapping(target = "cartProductId", source = "product.cartProduct.id")
+    })
+    public abstract ProductCustomizationDataDTO mapDTO(ProductCustomizationData product);
 
-    ProductCustomizationData map(ProductCustomizationDataDTO productDTO);
+    public abstract Set<ProductCustomizationDataDTO> mapDTO(Set<ProductCustomizationData> products);
 
-    List<ProductCustomizationData> map(List<ProductCustomizationDataDTO> productDTOs);
+    public abstract ProductCustomizationData map(ProductCustomizationDataDTO productDTO);
 
-    ProductCustomizationData update(ProductCustomizationDataDTO productDTO,
-            @MappingTarget ProductCustomizationData product);
+    public abstract Set<ProductCustomizationData> map(Set<ProductCustomizationDataDTO> productDTOs);
+
 }

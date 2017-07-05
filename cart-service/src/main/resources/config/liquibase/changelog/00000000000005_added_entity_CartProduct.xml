@@ -15,11 +15,18 @@
     <!--
         Added the entity CartProduct.
     -->
-    <changeSet id="00000000000005" author="jhipster">
+    <changeSet id="00000000000005" author="Zomzog">
         <createTable tableName="cart_product">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="cart_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="quantity" type="bigint">
                 <constraints nullable="false"/>
             </column>
@@ -27,20 +34,17 @@
             <column name="added_date" type="timestamp">
                 <constraints nullable="false"/>
             </column>
-
-            <column name="cart_id" type="bigint">
-                <constraints nullable="false"/>
+            <column name="updated_date" type="timestamp">
+                <constraints nullable="true"/>
             </column>
 
-            <column name="product_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="product_customization_id" type="bigint">
-                <constraints unique="true" nullable="true"/>
-            </column>
-            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
         <dropDefaultValue tableName="cart_product" columnName="added_date" columnDataType="datetime"/>
 
+        <addForeignKeyConstraint baseColumnNames="cart_id"
+                                 baseTableName="cart_product"
+                                 constraintName="fk_cart_product_cart_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="cart"/>
     </changeSet>
 </databaseChangeLog>

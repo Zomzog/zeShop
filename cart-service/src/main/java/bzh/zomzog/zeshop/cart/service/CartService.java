@@ -2,6 +2,7 @@ package bzh.zomzog.zeshop.cart.service;
 
 import bzh.zomzog.zeshop.cart.domain.cart.Cart;
 import bzh.zomzog.zeshop.cart.domain.cart.CartProduct;
+import bzh.zomzog.zeshop.cart.domain.cart.ProductCustomizationData;
 import bzh.zomzog.zeshop.cart.domain.product.Product;
 import bzh.zomzog.zeshop.cart.repository.CartRepository;
 import bzh.zomzog.zeshop.cart.service.dto.cart.CartDTO;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 /**
@@ -109,6 +111,10 @@ public class CartService {
         Cart cart = this.cartRepository.findOne(cartDTO.getId());
         cart = this.cartMapper.update(cartDTO, cart);
         linkCartProductWithCart(cart);
+
+        // Manual update because sub entity won't trigger update @PreUpdate
+        cart.setUpdatedDate(ZonedDateTime.now());
+
         cart = this.cartRepository.save(cart);
         final CartDTO result = this.cartMapper.cartToCartDTO(cart);
         return result;
@@ -136,6 +142,10 @@ public class CartService {
         cartProduct.setQuantity(1L);
         cartProduct.setCart(cart);
         cart.getProducts().add(cartProduct);
+
+        // Manual update because sub entity won't trigger update @PreUpdate
+        cart.setUpdatedDate(ZonedDateTime.now());
+
         this.cartRepository.save(cart);
         final CartDTO result = this.cartMapper.cartToCartDTO(cart);
         return result;
@@ -148,8 +158,11 @@ public class CartService {
      * @return
      */
     private Cart linkCartProductWithCart(final Cart cart) {
-        for (final CartProduct product : cart.getProducts()) {
-            product.setCart(cart);
+        for (final CartProduct cartProduct : cart.getProducts()) {
+            cartProduct.setCart(cart);
+            for (final ProductCustomizationData custo : cartProduct.getCustomizations()) {
+                custo.setCartProduct(cartProduct);
+            }
         }
         return cart;
     }

@@ -2,6 +2,7 @@ package bzh.zomzog.zeshop.cart;
 
 import bzh.zomzog.zeshop.cart.domain.cart.Cart;
 import bzh.zomzog.zeshop.cart.domain.cart.CartProduct;
+import bzh.zomzog.zeshop.cart.domain.cart.ProductCustomizationData;
 import bzh.zomzog.zeshop.cart.domain.product.Product;
 import bzh.zomzog.zeshop.cart.repository.CartRepository;
 import bzh.zomzog.zeshop.cart.service.CartService;
@@ -60,6 +61,8 @@ public class CartResourceTest {
 
     private static final Long FIRST_PRODUCT_ID = 1L;
     private static final Long SECOND_PRODUCT_ID = 2L;
+
+    private static final Long FIRST_PRODUCT_CUSTOMIZATION_ID = 1L;
 
     private final MockFeignException productNotFoundException = new MockFeignException(404, "status 404 reading ProductClient#getProduct(long)");
 
@@ -249,6 +252,53 @@ public class CartResourceTest {
         // Teardown
         this.cartRepository.delete(this.cart.getId());
     }
+
+
+    @Test
+    public void updateCartWithCustomizedPorduct() throws Exception {
+        // Init mocks
+        BDDMockito.given(this.productClient.getProduct(FIRST_PRODUCT_ID)).willReturn(new Product().id(FIRST_PRODUCT_ID));
+        BDDMockito.given(this.productClient.getProduct(SECOND_PRODUCT_ID)).willReturn(new Product().id(SECOND_PRODUCT_ID));
+
+        // Initialize the database
+        // No previous products for easy test
+        this.cart.getProducts().clear();
+        this.cartRepository.saveAndFlush(this.cart);
+
+        // Update the cart
+        final Cart updatedCart = this.cartRepository.findOneWithEagerRelationships(this.cart.getId());
+
+        // New product
+        final CartProduct newProduct = new CartProduct()
+                .productId(SECOND_PRODUCT_ID)
+                .quantity(1L);
+        updatedCart.getProducts().add(newProduct);
+        // Add Product customization
+        final ProductCustomizationData productCustomizationdata = new ProductCustomizationData()
+                .cartProduct(newProduct)
+                .customizationFieldId(FIRST_PRODUCT_CUSTOMIZATION_ID)
+                .value("PONY");
+        newProduct.getCustomizations().add(productCustomizationdata);
+
+        final CartDTO cartDTO = this.cartMapper.cartToCartDTO(updatedCart);
+
+        this.restCartMockMvc.perform(put("/carts").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(cartDTO))).andExpect(status().isOk());
+
+        // Validate the Cart in the database
+        final Cart testCart = this.cartRepository.findOneWithEagerRelationships(updatedCart.getId());
+        // Updated and created date are managed on server side
+        assertThat(testCart.getProducts()).hasSize(1);
+        final CartProduct cartProduct = testCart.getProducts().iterator().next();
+        assertThat(cartProduct.getCustomizations()).hasSize(1);
+        final ProductCustomizationData pcd = cartProduct.getCustomizations().iterator().next();
+        assertThat(pcd.getCustomizationFieldId()).isEqualTo(FIRST_PRODUCT_CUSTOMIZATION_ID);
+        assertThat(pcd.getValue()).isEqualTo("PONY");
+
+        // Teardown
+        this.cartRepository.delete(this.cart.getId());
+    }
+
 
     @Test
     @Transactional

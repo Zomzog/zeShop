@@ -13,41 +13,30 @@
     <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
 
     <!--
-        Added the entity Product.
+        Added the entity CartProduct.
     -->
-    <changeSet id="00000000000001" author="zomzog">
-        <createTable tableName="product_customization">
-            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-        </createTable>
+    <changeSet id="00000000000006" author="Zomzog">
         <createTable tableName="product_customization_data">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="field_id" type="bigint">
+            <column name="customization_field_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="customization_id" type="bigint" remarks="FK to Product Customization">
+            <column name="cart_product_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
+
             <column name="value" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
+
         </createTable>
-        <createTable tableName="product_customization_field">
-            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="product_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="name" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="type" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="cart_product_id"
+                                 baseTableName="product_customization_data"
+                                 constraintName="fk_product_customization_data_cartProduct_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="cart_product"/>
     </changeSet>
 </databaseChangeLog>

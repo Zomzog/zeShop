@@ -1,92 +1,52 @@
 package bzh.zomzog.zeshop.cart.service.dto.product;
 
+import bzh.zomzog.zeshop.cart.domain.cart.ProductCustomizationData;
+import lombok.ToString;
+
 /**
  * DTO for {@link ProductCustomizationData}
- * 
- * @author Zomzog
  *
+ * @author Zomzog
  */
+@ToString
 public class ProductCustomizationDataDTO {
-
     private Long id;
 
-    private ProductCustomizationFieldDTO field;
+    private Long customizationFieldId;
 
-    private Long customizationId;
+    private Long cartProductId;
 
     private String value;
 
-    /**
-     * @return the id
-     */
     public Long getId() {
         return this.id;
     }
 
-    /**
-     * @param id
-     *            the id to set
-     */
     public void setId(final Long id) {
         this.id = id;
     }
 
-    /**
-     * @return the field
-     */
-    public ProductCustomizationFieldDTO getField() {
-        return this.field;
+    public Long getCustomizationFieldId() {
+        return this.customizationFieldId;
     }
 
-    /**
-     * @param field
-     *            the field to set
-     */
-    public void setField(final ProductCustomizationFieldDTO field) {
-        this.field = field;
+    public void setCustomizationFieldId(final Long customizationFieldId) {
+        this.customizationFieldId = customizationFieldId;
     }
 
-    /**
-     * @return the customizationId
-     */
-    public Long getCustomizationId() {
-        return this.customizationId;
+    public Long getCartProductId() {
+        return this.cartProductId;
     }
 
-    /**
-     * @param customizationId
-     *            the customizationId to set
-     */
-    public void setCustomizationId(final Long customizationId) {
-        this.customizationId = customizationId;
+    public void setCartProductId(final Long cartProductId) {
+        this.cartProductId = cartProductId;
     }
 
-    /**
-     * @return the value
-     */
     public String getValue() {
         return this.value;
     }
 
-    /**
-     * @param value
-     *            the value to set
-     */
     public void setValue(final String value) {
         this.value = value;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "ProductCustomizationDataDTO [" + (this.id != null ? "id=" + this.id + ", " : "")
-                + (this.field != null ? "field=" + this.field + ", " : "")
-                + (this.customizationId != null ? "customizationId=" + this.customizationId + ", " : "")
-                + (this.value != null ? "value=" + this.value : "") + "]";
-    }
-
 }

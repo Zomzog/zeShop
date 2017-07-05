@@ -1,14 +1,16 @@
 package bzh.zomzog.zeshop.cart.service.dto.cart;
 
+import lombok.ToString;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 /**
  * A DTO for the Cart entity.
  */
+@ToString
 public class CartDTO implements Serializable {
 
     /**
@@ -25,7 +27,7 @@ public class CartDTO implements Serializable {
     private Set<CartProductDTO> products = new HashSet<>();
 
     private Long userId;
-    
+
     private String userLogin;
 
     public Long getId() {
@@ -76,33 +78,4 @@ public class CartDTO implements Serializable {
         this.userLogin = userLogin;
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final CartDTO cartDTO = (CartDTO) o;
-
-        if (!Objects.equals(this.id, cartDTO.id)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(this.id);
-    }
-
-    @Override
-    public String toString() {
-        return "CartDTO{" + "id=" + this.id + ", createdDate='" + this.createdDate + "'" + ", updatedDate='"
-                + this.updatedDate + "'"
-                + '}';
-    }
 }

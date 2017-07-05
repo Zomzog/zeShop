@@ -1,17 +1,19 @@
 package bzh.zomzog.zeshop.cart.service.dto.cart;
 
-import java.io.Serializable;
-import java.time.ZonedDateTime;
-import java.util.Objects;
+import bzh.zomzog.zeshop.cart.service.dto.product.ProductCustomizationDataDTO;
+import lombok.ToString;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
-import bzh.zomzog.zeshop.cart.service.dto.product.ProductCustomizationDTO;
+import java.io.Serializable;
+import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A DTO for the CartProduct entity.
  */
+@ToString
 public class CartProductDTO implements Serializable {
 
     /**
@@ -25,7 +27,7 @@ public class CartProductDTO implements Serializable {
 
     private Long productId;
 
-    private ProductCustomizationDTO productCustomization;
+    private final Set<ProductCustomizationDataDTO> customizations = new HashSet<>();
 
     @NotNull
     @Min(value = 1)
@@ -35,7 +37,7 @@ public class CartProductDTO implements Serializable {
     private ZonedDateTime addedDate;
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(final Long id) {
@@ -43,7 +45,7 @@ public class CartProductDTO implements Serializable {
     }
 
     public Long getQuantity() {
-        return quantity;
+        return this.quantity;
     }
 
     public void setQuantity(final Long quantity) {
@@ -51,7 +53,7 @@ public class CartProductDTO implements Serializable {
     }
 
     public ZonedDateTime getAddedDate() {
-        return addedDate;
+        return this.addedDate;
     }
 
     public void setAddedDate(final ZonedDateTime addedDate) {
@@ -59,7 +61,7 @@ public class CartProductDTO implements Serializable {
     }
 
     public Long getCartId() {
-        return cartId;
+        return this.cartId;
     }
 
     public void setCartId(final Long cartId) {
@@ -67,54 +69,14 @@ public class CartProductDTO implements Serializable {
     }
 
     public Long getProductId() {
-        return productId;
+        return this.productId;
     }
 
     public void setProductId(final Long productId) {
         this.productId = productId;
     }
 
-    /**
-     * @return the productCustomization
-     */
-    public ProductCustomizationDTO getProductCustomization() {
-        return productCustomization;
-    }
-
-    /**
-     * @param productCustomization
-     *            the productCustomization to set
-     */
-    public void setProductCustomization(final ProductCustomizationDTO productCustomization) {
-        this.productCustomization = productCustomization;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        final CartProductDTO cartProductDTO = (CartProductDTO) o;
-
-        if (!Objects.equals(id, cartProductDTO.id)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return "CartProductDTO{" + "id=" + id + ", quantity='" + quantity + "'" + ", addedDate='" + addedDate + "'"
-                + '}';
+    public Set<ProductCustomizationDataDTO> getCustomizations() {
+        return this.customizations;
     }
 }
