@@ -3,7 +3,9 @@ package bzh.zomzog.zeshop.cart;
 import bzh.zomzog.zeshop.cart.domain.cart.Cart;
 import bzh.zomzog.zeshop.cart.domain.cart.CartProduct;
 import bzh.zomzog.zeshop.cart.domain.cart.ProductCustomizationData;
+import bzh.zomzog.zeshop.cart.domain.enumeration.ProductCustomizationType;
 import bzh.zomzog.zeshop.cart.domain.product.Product;
+import bzh.zomzog.zeshop.cart.domain.product.ProductCustomizationField;
 import bzh.zomzog.zeshop.cart.repository.CartRepository;
 import bzh.zomzog.zeshop.cart.service.CartService;
 import bzh.zomzog.zeshop.cart.service.client.ProductClient;
@@ -89,7 +91,10 @@ public class CartResourceTest {
 
     private Cart cart;
     private CartProduct cartProduct;
-
+    private Product product1;
+    private Product product2;
+    ProductCustomizationField custo1;
+    ProductCustomizationField custo2;
 
     @Before
     public void setup() {
@@ -116,6 +121,10 @@ public class CartResourceTest {
         this.cart = createEntity();
         this.cartProduct = new CartProduct().productId(FIRST_PRODUCT_ID).quantity(5L).cart(this.cart);
         this.cart.getProducts().add(this.cartProduct);
+        this.custo1 = new ProductCustomizationField().name("name1").type(ProductCustomizationType.TEXT);
+        this.custo2 = new ProductCustomizationField().name("name2").type(ProductCustomizationType.TEXT);
+        this.product1 = new Product().id(FIRST_PRODUCT_ID);
+        this.product2 = new Product().id(FIRST_PRODUCT_ID);
     }
 
     @Test
@@ -222,8 +231,8 @@ public class CartResourceTest {
     @Test
     public void updateCart() throws Exception {
         // Init mocks
-        BDDMockito.given(this.productClient.getProduct(FIRST_PRODUCT_ID)).willReturn(new Product().id(FIRST_PRODUCT_ID));
-        BDDMockito.given(this.productClient.getProduct(SECOND_PRODUCT_ID)).willReturn(new Product().id(SECOND_PRODUCT_ID));
+        BDDMockito.given(this.productClient.getProduct(FIRST_PRODUCT_ID)).willReturn(this.product1);
+        BDDMockito.given(this.productClient.getProduct(SECOND_PRODUCT_ID)).willReturn(this.product2);
 
         final ZonedDateTime now = ZonedDateTime.now();
         // Initialize the database
@@ -257,8 +266,9 @@ public class CartResourceTest {
     @Test
     public void updateCartWithCustomizedPorduct() throws Exception {
         // Init mocks
-        BDDMockito.given(this.productClient.getProduct(FIRST_PRODUCT_ID)).willReturn(new Product().id(FIRST_PRODUCT_ID));
-        BDDMockito.given(this.productClient.getProduct(SECOND_PRODUCT_ID)).willReturn(new Product().id(SECOND_PRODUCT_ID));
+        this.product2.getCustomizationFields().add(this.custo1.id(FIRST_PRODUCT_CUSTOMIZATION_ID));
+        BDDMockito.given(this.productClient.getProduct(FIRST_PRODUCT_ID)).willReturn(this.product1);
+        BDDMockito.given(this.productClient.getProduct(SECOND_PRODUCT_ID)).willReturn(this.product2);
 
         // Initialize the database
         // No previous products for easy test
@@ -299,6 +309,37 @@ public class CartResourceTest {
         this.cartRepository.delete(this.cart.getId());
     }
 
+    @Test
+    public void updateCartWithInvalidCustomizedPorduct() throws Exception {
+        // Init mocks
+        BDDMockito.given(this.productClient.getProduct(FIRST_PRODUCT_ID)).willReturn(new Product().id(FIRST_PRODUCT_ID));
+        BDDMockito.given(this.productClient.getProduct(SECOND_PRODUCT_ID)).willReturn(new Product().id(SECOND_PRODUCT_ID));
+
+        // Initialize the database
+        this.cartRepository.saveAndFlush(this.cart);
+        // Update the cart
+        final Cart updatedCart = this.cartRepository.findOneWithEagerRelationships(this.cart.getId());
+
+        // New product
+        final CartProduct newProduct = new CartProduct()
+                .productId(SECOND_PRODUCT_ID)
+                .quantity(1L);
+        updatedCart.getProducts().add(newProduct);
+        // Add Product customization
+        final ProductCustomizationData productCustomizationdata = new ProductCustomizationData()
+                .cartProduct(newProduct)
+                .customizationFieldId(FIRST_PRODUCT_CUSTOMIZATION_ID)
+                .value("PONY");
+        newProduct.getCustomizations().add(productCustomizationdata);
+
+        final CartDTO cartDTO = this.cartMapper.cartToCartDTO(updatedCart);
+
+        this.restCartMockMvc.perform(put("/carts").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(cartDTO))).andExpect(status().isBadRequest());
+
+        // Teardown
+        this.cartRepository.delete(this.cart.getId());
+    }
 
     @Test
     @Transactional

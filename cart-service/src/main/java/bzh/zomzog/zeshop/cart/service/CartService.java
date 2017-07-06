@@ -4,9 +4,11 @@ import bzh.zomzog.zeshop.cart.domain.cart.Cart;
 import bzh.zomzog.zeshop.cart.domain.cart.CartProduct;
 import bzh.zomzog.zeshop.cart.domain.cart.ProductCustomizationData;
 import bzh.zomzog.zeshop.cart.domain.product.Product;
+import bzh.zomzog.zeshop.cart.domain.product.ProductCustomizationField;
 import bzh.zomzog.zeshop.cart.repository.CartRepository;
 import bzh.zomzog.zeshop.cart.service.dto.cart.CartDTO;
 import bzh.zomzog.zeshop.cart.service.dto.cart.CartProductDTO;
+import bzh.zomzog.zeshop.cart.service.dto.product.ProductCustomizationDataDTO;
 import bzh.zomzog.zeshop.cart.service.mapper.cart.CartMapper;
 import bzh.zomzog.zeshop.exception.BadParameterException;
 import org.slf4j.Logger;
@@ -102,10 +104,7 @@ public class CartService {
         this.log.debug("Request to save Product : {}", cartDTO);
         // Check if all products exists
         for (final CartProductDTO cartProduct : cartDTO.getProducts()) {
-            final Optional<Product> product = this.productService.get(cartProduct.getProductId());
-            if (!product.isPresent()) {
-                throw new BadParameterException("cart.product", "id", cartProduct.getProductId().toString(), "not found");
-            }
+            checkProductIsValid(cartProduct);
         }
 
         Cart cart = this.cartRepository.findOne(cartDTO.getId());
@@ -119,6 +118,41 @@ public class CartService {
         final CartDTO result = this.cartMapper.cartToCartDTO(cart);
         return result;
     }
+
+    /**
+     * Check if the product is present and if it's valid
+     *
+     * @param cartProduct
+     * @throws BadParameterException
+     */
+    private void checkProductIsValid(final CartProductDTO cartProduct) throws BadParameterException {
+        final Optional<Product> product = this.productService.get(cartProduct.getProductId());
+        if (product.isPresent()) {
+            for (final ProductCustomizationDataDTO custo : cartProduct.getCustomizations()) {
+                this.checkCustomizationIsValid(custo, product.get());
+            }
+        } else {
+            throw new BadParameterException("cart.product", "id", cartProduct.getProductId().toString(), "not found");
+        }
+    }
+
+    /**
+     * Check if a customized data is allowed on the product
+     *
+     * @param custo
+     * @param product
+     * @throws BadParameterException
+     */
+    private void checkCustomizationIsValid(final ProductCustomizationDataDTO custo, final Product product) throws BadParameterException {
+        final Optional<ProductCustomizationField> pc = product.getCustomizationFields()
+                .stream()
+                .filter(c -> c.getId().equals(custo.getCustomizationFieldId()))
+                .findFirst();
+        if (!pc.isPresent()) {
+            throw new BadParameterException("cart.product.customization", "id", custo.getCustomizationFieldId().toString(), "not found");
+        }
+    }
+
 
     /**
      * Add product to cart
