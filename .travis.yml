@@ -15,8 +15,7 @@ services:
 script:
 
 after_success:
-  - mvn clean test jacoco:report
-  - mvn coveralls:report
+  - mvn clean test jacoco:report coveralls:report
   - mvn sonar:sonar
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
