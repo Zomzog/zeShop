@@ -1,5 +1,11 @@
 language: java
 sudo: false
+install: true
+addons:
+  sonarcloud:
+    organization: "zomzog-github"
+    token:
+      secure: $SONAR_TOKEN
 jdk:
   - oraclejdk8
 
@@ -9,7 +15,7 @@ services:
 script:
 
 after_success:
-  - mvn clean test jacoco:report coveralls:report
+  - mvn clean test jacoco:report coveralls:report sonar:sonar
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
@@ -20,3 +26,8 @@ after_success:
     docker push zomzog/eureka-service;
     docker push zomzog/config-service;
     fi
+
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
