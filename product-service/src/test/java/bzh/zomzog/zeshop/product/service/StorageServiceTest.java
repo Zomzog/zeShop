@@ -49,7 +49,7 @@ public class StorageServiceTest {
     public void loadInvalidFileNameThrowException() {
         loadInvalidFileNamesThrowException("ThisPonyFileWillNeverExist.jpg", "Could not read file:");
         loadInvalidFileNamesThrowException("ThisPonyFileW*illNeverExist.jpg", ""); // Not same error on windows & linux
-        loadInvalidFileNamesThrowException("ThisPonyFileW:illNeverExist.jpg", "Invalid file name:");
+        loadInvalidFileNamesThrowException("ThisPonyFileW:illNeverExist.jpg", ""); // Not same error on windows & linux
     }
 
     private void loadInvalidFileNamesThrowException(final String filename, final String errorMessage) {
