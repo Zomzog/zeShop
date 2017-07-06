@@ -415,6 +415,28 @@ public class CartResourceTest {
         this.cartRepository.delete(this.cart.getId());
     }
 
+
+    @Test
+    @Transactional
+    public void addToNotExistingCart() throws Exception {
+        // Initialize the database
+        final int databaseSizeBeforeUpdate = this.cartRepository.findAll().size();
+
+
+        // Update the cart
+        this.restCartMockMvc
+                .perform(put("/carts/{cartId}/products/{productId}", Integer.MAX_VALUE,
+                        Integer.MAX_VALUE)
+                        .contentType(TestUtil.APPLICATION_JSON_UTF8))
+                .andExpect(status().isBadRequest());
+
+        // Validate the Cart in the database
+        final List<Cart> cartList = this.cartRepository.findAll();
+        assertThat(cartList).hasSize(databaseSizeBeforeUpdate);
+
+        // Teardown
+    }
+
     @Test
     @Transactional
     public void addToCartNotExistingProduct() throws Exception {
