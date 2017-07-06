@@ -4,6 +4,7 @@ import bzh.zomzog.zeshop.product.domain.Image;
 import bzh.zomzog.zeshop.product.domain.Product;
 import bzh.zomzog.zeshop.product.domain.ProductCustomizationField;
 import bzh.zomzog.zeshop.product.domain.enums.ProductCustomizationType;
+import bzh.zomzog.zeshop.product.repository.ImageRepository;
 import bzh.zomzog.zeshop.product.repository.ProductRepository;
 import bzh.zomzog.zeshop.product.service.ProductService;
 import bzh.zomzog.zeshop.product.service.StorageService;
@@ -41,10 +42,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -83,6 +84,8 @@ public class ProductResourceTest {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ImageRepository imageRepository;
 
     @Autowired
     private ProductMapper productMapper;
@@ -363,7 +366,6 @@ public class ProductResourceTest {
 
         // Get the product
         this.restProductMockMvc.perform(fileUpload("/products/{id}/images", this.product.getId()).file(multipartFile))
-                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.id").isNotEmpty())
@@ -379,6 +381,25 @@ public class ProductResourceTest {
         assertThat(image.getName()).isNotEqualTo(multipartFile.getOriginalFilename());
 
         then(this.storageService).should().store(eq(multipartFile), anyString());
+    }
+
+    @Test
+    public void addImagesToNonExistingProduct() throws Exception {
+        // Initialize the database
+        final String filename = "test.txt";
+        final long imageCountBeforeUpdate = this.imageRepository.count();
+
+        final MockMultipartFile multipartFile =
+                new MockMultipartFile("file", filename, "text/plain", "Spring Framework".getBytes());
+
+        // Get the product
+        this.restProductMockMvc.perform(fileUpload("/products/{id}/images", Integer.MAX_VALUE).file(multipartFile))
+                .andExpect(status().isBadRequest());
+
+
+        assertThat(this.imageRepository.count()).isEqualTo(imageCountBeforeUpdate);
+
+        verify(this.storageService, never()).store(anyObject(), anyString());
     }
 }
 
