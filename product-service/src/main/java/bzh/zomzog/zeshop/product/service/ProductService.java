@@ -1,5 +1,6 @@
 package bzh.zomzog.zeshop.product.service;
 
+import bzh.zomzog.zeshop.exception.BadParameterException;
 import bzh.zomzog.zeshop.product.domain.Image;
 import bzh.zomzog.zeshop.product.domain.Product;
 import bzh.zomzog.zeshop.product.domain.ProductCustomizationField;
@@ -120,11 +121,11 @@ public class ProductService {
      * @return image informations
      * @throws StorageException
      */
-    public ImageDTO addImageToProduct(final Long productId, final MultipartFile file) throws StorageException {
+    public ImageDTO addImageToProduct(final Long productId, final MultipartFile file) throws StorageException, BadParameterException {
         this.log.debug("Request to add image to product : {}", productId);
         final Product product = this.productRepository.findOne(productId);
         if (null == product) {
-            throw new IllegalArgumentException("Bad productId");
+            throw new BadParameterException("product", "id", productId.toString());
         }
         final String imageName = RandomStringUtils.randomAlphabetic(IMAGE_NAME_SIZE);
         this.storageService.store(file, imageName);

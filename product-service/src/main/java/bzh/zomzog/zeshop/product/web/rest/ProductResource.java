@@ -1,5 +1,6 @@
 package bzh.zomzog.zeshop.product.web.rest;
 
+import bzh.zomzog.zeshop.exception.BadParameterException;
 import bzh.zomzog.zeshop.product.exception.StorageException;
 import bzh.zomzog.zeshop.product.service.ProductService;
 import bzh.zomzog.zeshop.product.service.dto.ImageDTO;
@@ -129,7 +130,7 @@ public class ProductResource {
     }
 
     @PostMapping("/products/{id}/images")
-    public ResponseEntity<ImageDTO> addImageToProduct(@PathVariable final Long id, @RequestParam("file") final MultipartFile file) throws StorageException, URISyntaxException {
+    public ResponseEntity<ImageDTO> addImageToProduct(@PathVariable final Long id, @RequestParam("file") final MultipartFile file) throws StorageException, URISyntaxException, BadParameterException {
         this.log.debug("REST request to add image {} Product : {}", file.getOriginalFilename(), id);
         final ImageDTO result = this.productService.addImageToProduct(id, file);
         return ResponseEntity.created(new URI("/api/products/" + id + "/images/" + result.getId())).body(result);
