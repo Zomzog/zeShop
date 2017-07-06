@@ -1,25 +1,22 @@
 package bzh.zomzog.zeshop.product.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
 import bzh.zomzog.zeshop.product.domain.enums.ProductCustomizationType;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * A Product customization field.
  */
 @Entity
 @Table(name = "product_customization_field")
-public class ProductCustomizationField {
-
+public class ProductCustomizationField implements Serializable {
+    /**
+     * Serial Id
+     */
+    private static final long serialVersionUID = -7049362390410145635L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -65,8 +62,7 @@ public class ProductCustomizationField {
     }
 
     /**
-     * @param id
-     *            the id to set
+     * @param id the id to set
      */
     public void setId(final Long id) {
         this.id = id;
@@ -80,8 +76,7 @@ public class ProductCustomizationField {
     }
 
     /**
-     * @param product
-     *            the product to set
+     * @param product the product to set
      */
     public void setProduct(final Product product) {
         this.product = product;
@@ -95,8 +90,7 @@ public class ProductCustomizationField {
     }
 
     /**
-     * @param name
-     *            the name to set
+     * @param name the name to set
      */
     public void setName(final String name) {
         this.name = name;
@@ -110,8 +104,7 @@ public class ProductCustomizationField {
     }
 
     /**
-     * @param type
-     *            the type to set
+     * @param type the type to set
      */
     public void setType(final ProductCustomizationType type) {
         this.type = type;
