@@ -13,9 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Stream;
 
 /**
  * Created by Zomzog on 30/06/2017.
@@ -42,17 +42,12 @@ public class StorageService {
         }
     }
 
-    public Stream<Path> loadAll() throws StorageException {
-        try {
-            return Files.walk(this.rootLocation, 1)
-                    .filter(path -> !path.equals(this.rootLocation))
-                    .map(path -> this.rootLocation.relativize(path));
-        } catch (final IOException e) {
-            throw new StorageException("Failed to read stored files", e);
-        }
-
-    }
-
+    /**
+     * Resolve full path from filename
+     *
+     * @param filename
+     * @return
+     */
     public Path load(final String filename) {
         return this.rootLocation.resolve(filename);
     }
@@ -67,9 +62,9 @@ public class StorageService {
                 throw new StorageFileNotFoundException("Could not read file: " + filename);
 
             }
-        } catch (final MalformedURLException e) {
-            this.log.error("Could not read file: " + filename, e);
-            throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+        } catch (MalformedURLException | InvalidPathException e) {
+            this.log.error("Invalid file name: " + filename, e);
+            throw new StorageFileNotFoundException("Invalid file name: " + filename, e);
         }
     }
 
