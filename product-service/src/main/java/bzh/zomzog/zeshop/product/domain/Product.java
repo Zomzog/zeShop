@@ -237,7 +237,7 @@ public class Product implements Serializable {
         int result = 1;
         result = prime * result + (this.available ? 1231 : 1237);
         result = prime * result + ((this.createdDate == null) ? 0 : this.createdDate.hashCode());
-        result = prime * result + ((this.customizationFields == null) ? 0 : this.customizationFields.hashCode());
+        result = prime * result + this.customizationFields.hashCode();
         result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
         result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
         result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
@@ -277,11 +277,7 @@ public class Product implements Serializable {
         } else if (!this.createdDate.equals(other.createdDate)) {
             return false;
         }
-        if (this.customizationFields == null) {
-            if (other.customizationFields != null) {
-                return false;
-            }
-        } else if (!this.customizationFields.equals(other.customizationFields)) {
+        if (!this.customizationFields.equals(other.customizationFields)) {
             return false;
         }
         if (this.description == null) {
@@ -290,11 +286,6 @@ public class Product implements Serializable {
             }
         } else if (!this.description.equals(other.description)) {
             return false;
-        }
-        if (this.id == null) {
-            if (other.id != null) {
-                return false;
-            }
         } else if (!this.id.equals(other.id)) {
             return false;
         }

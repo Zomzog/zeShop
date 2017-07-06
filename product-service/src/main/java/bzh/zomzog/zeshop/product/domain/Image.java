@@ -2,13 +2,18 @@ package bzh.zomzog.zeshop.product.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * Created by Zomzog on 30/06/2017.
  */
 @Entity
 @Table(name = "image")
-public class Image {
+public class Image implements Serializable {
+    /**
+     * Serial Id
+     */
+    private static final long serialVersionUID = -956293776651305297L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

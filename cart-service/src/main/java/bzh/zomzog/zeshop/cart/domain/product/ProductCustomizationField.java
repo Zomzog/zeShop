@@ -4,12 +4,18 @@ package bzh.zomzog.zeshop.cart.domain.product;
 import bzh.zomzog.zeshop.cart.domain.enumeration.ProductCustomizationType;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 /**
  * A Product customization field.
  */
 @ToString
-public class ProductCustomizationField {
-
+public class ProductCustomizationField implements Serializable {
+    /**
+     * Serial Id
+     */
+    private static final long serialVersionUID = -6991827940968249350L;
+    
     private Long id;
 
     private String name;

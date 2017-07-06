@@ -3,13 +3,21 @@ package bzh.zomzog.zeshop.cart.service.dto.product;
 import bzh.zomzog.zeshop.cart.domain.cart.ProductCustomizationData;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 /**
  * DTO for {@link ProductCustomizationData}
  *
  * @author Zomzog
  */
 @ToString
-public class ProductCustomizationDataDTO {
+public class ProductCustomizationDataDTO implements Serializable {
+
+    /**
+     * Serial Id
+     */
+    private static final long serialVersionUID = -4574678885617209420L;
+    
     private Long id;
 
     private Long customizationFieldId;

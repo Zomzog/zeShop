@@ -275,7 +275,7 @@ public class Account extends AbstractAuditingEntity {
                 + (this.langKey != null ? "langKey=" + this.langKey + ", " : "")
                 + (this.resetKey != null ? "resetKey=" + this.resetKey + ", " : "")
                 + (this.resetDate != null ? "resetDate=" + this.resetDate + ", " : "")
-                + (this.authorities != null ? "authorities=" + this.authorities : "") + "]";
+                + "authorities=" + this.authorities + "]";
     }
 
 }

@@ -2,14 +2,20 @@ package bzh.zomzog.zeshop.cart.domain.cart;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * A Product customization field.
  */
 @Entity
 @Table(name = "product_customization_data")
-public class ProductCustomizationData {
+public class ProductCustomizationData implements Serializable {
 
+    /**
+     * Serial Id
+     */
+    private static final long serialVersionUID = 5097545428325340620L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

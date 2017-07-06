@@ -1,21 +1,11 @@
 package bzh.zomzog.zeshop.cart.domain.cart;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 /**
  * A Cart.
@@ -77,8 +67,7 @@ public class Cart implements Serializable {
     }
 
     /**
-     * @param id
-     *            the id to set
+     * @param id the id to set
      */
     public void setId(final Long id) {
         this.id = id;
@@ -92,8 +81,7 @@ public class Cart implements Serializable {
     }
 
     /**
-     * @param createdDate
-     *            the createdDate to set
+     * @param createdDate the createdDate to set
      */
     public void setCreatedDate(final ZonedDateTime createdDate) {
         this.createdDate = createdDate;
@@ -107,8 +95,7 @@ public class Cart implements Serializable {
     }
 
     /**
-     * @param updatedDate
-     *            the updatedDate to set
+     * @param updatedDate the updatedDate to set
      */
     public void setUpdatedDate(final ZonedDateTime updatedDate) {
         this.updatedDate = updatedDate;
@@ -122,8 +109,7 @@ public class Cart implements Serializable {
     }
 
     /**
-     * @param userId
-     *            the userId to set
+     * @param userId the userId to set
      */
     public void setUserId(final Long userId) {
         this.userId = userId;
@@ -138,7 +124,7 @@ public class Cart implements Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -146,79 +132,25 @@ public class Cart implements Serializable {
         return "Cart [" + (this.id != null ? "id=" + this.id + ", " : "")
                 + (this.createdDate != null ? "createdDate=" + this.createdDate + ", " : "")
                 + (this.updatedDate != null ? "updatedDate=" + this.updatedDate + ", " : "")
-                + (this.products != null ? "products=" + this.products + ", " : "")
+                + "products=" + this.products + ", "
                 + (this.userId != null ? "userId=" + this.userId : "")
                 + "]";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final Cart cart = (Cart) o;
+        if (this.id == null && cart.id == null) {
+            return false;
+        }
+        return this.id != null ? this.id.equals(cart.id) : cart.id == null;
+    }
+
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((this.createdDate == null) ? 0 : this.createdDate.hashCode());
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-        result = prime * result + ((this.products == null) ? 0 : this.products.hashCode());
-        result = prime * result + ((this.updatedDate == null) ? 0 : this.updatedDate.hashCode());
-        result = prime * result + ((this.userId == null) ? 0 : this.userId.hashCode());
-        return result;
+        return this.id != null ? this.id.hashCode() : 0;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Cart other = (Cart) obj;
-        if (this.createdDate == null) {
-            if (other.createdDate != null) {
-                return false;
-            }
-        } else if (!this.createdDate.equals(other.createdDate)) {
-            return false;
-        }
-        if (this.id == null) {
-            return false;
-        } else if (!this.id.equals(other.id)) {
-            return false;
-        }
-        if (this.products == null) {
-            if (other.products != null) {
-                return false;
-            }
-        } else if (!this.products.equals(other.products)) {
-            return false;
-        }
-        if (this.updatedDate == null) {
-            if (other.updatedDate != null) {
-                return false;
-            }
-        } else if (!this.updatedDate.equals(other.updatedDate)) {
-            return false;
-        }
-        if (this.userId == null) {
-            if (other.userId != null) {
-                return false;
-            }
-        } else if (!this.userId.equals(other.userId)) {
-            return false;
-        }
-        return true;
-    }
-
 }

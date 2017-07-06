@@ -169,7 +169,7 @@ public class CartProduct implements Serializable {
         return "CartProduct [" + (this.id != null ? "id=" + this.id + ", " : "")
                 + (this.cart != null ? "cart=" + this.cart + ", " : "")
                 + (this.productId != null ? "productId=" + this.productId + ", " : "")
-                + (this.customizations != null ? "customizations=" + this.customizations + ", " : "")
+                + "customizations=" + this.customizations + ", "
                 + (this.quantity != null ? "quantity=" + this.quantity + ", " : "")
                 + (this.addedDate != null ? "addedDate=" + this.addedDate : "") + "]";
     }
