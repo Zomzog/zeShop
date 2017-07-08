@@ -2,43 +2,48 @@ version: '3'
 
 services:
   configserver:
-    build: ../config-service/
+    image: zomzog/config-service
     ports:
       - "8888:8888"
+    restart: always
   discovery:
-    build: ../eureka-service/
+    image: zomzog/eureka-service
     links:
       - configserver
     depends_on:
       - configserver
     ports:
       - "8761:8761"
+    restart: always
   carts:
-    build: ../cart-service/
+    image: zomzog/cart-service
     links:
       - configserver
       - discovery
     depends_on:
       - configserver
       - discovery
+    restart: always
   products:
-    build: ../product-service/
+    image: zomzog/product-service
     links:
       - configserver
       - discovery
     depends_on:
       - configserver
       - discovery
+    restart: always
   auth:
-    build: ../auth-service/
+    image: zomzog/auth-service
     links:
       - configserver
       - discovery
     depends_on:
       - configserver
       - discovery
+    restart: always
   gateway:
-    build: ../zuul-gateway/
+    image: zomzog/gateway-service
     links:
       - configserver
       - discovery
@@ -47,3 +52,4 @@ services:
       - discovery
     ports:
       - "8080:8080"
+    restart: always

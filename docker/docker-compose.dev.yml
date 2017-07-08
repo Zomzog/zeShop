@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  configserver:
+    build: ../config-service/
+  discovery:
+    build: ../eureka-service/
+  carts:
+    build: ../cart-service/
+  products:
+    build: ../product-service/
+  auth:
+    build: ../auth-service/
+  gateway:
+    build: ../gateway-service/
