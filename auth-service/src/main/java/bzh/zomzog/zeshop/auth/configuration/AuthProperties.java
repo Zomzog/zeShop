@@ -1,10 +1,12 @@
 package bzh.zomzog.zeshop.auth.configuration;
 
+import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * Created by Zomzog on 04/06/2017.
  */
+@ToString
 @ConfigurationProperties(prefix = "auth", ignoreUnknownFields = false)
 public class AuthProperties {
 
@@ -19,17 +21,10 @@ public class AuthProperties {
         return this.mail;
     }
 
-
-    @Override
-    public String toString() {
-        return "AuthProperties{" +
-                "mail=" + this.mail +
-                '}';
-    }
-
     /**
      * Properties for async tasks
      */
+    @ToString
     public static class Async {
 
         private int corePoolSize = 2;
@@ -66,6 +61,7 @@ public class AuthProperties {
     /**
      * Properties for mails management
      */
+    @ToString
     public static class Mail {
         private String from;
         private String baseUrl;
@@ -84,14 +80,6 @@ public class AuthProperties {
 
         public void setBaseUrl(final String baseUrl) {
             this.baseUrl = baseUrl;
-        }
-
-        @Override
-        public String toString() {
-            return "Mail{" +
-                    "from='" + this.from + '\'' +
-                    ", baseUrl='" + this.baseUrl + '\'' +
-                    '}';
         }
     }
 }
