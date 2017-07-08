@@ -24,7 +24,3 @@ spring:
 liquibase:
   change-log: classpath:config/liquibase/master.xml
   contexts: dev
-
-logging:
-  level:
-    org.springframework.security: debug

@@ -1,4 +1,6 @@
-
+server:
+  port: 8888
+  
 spring:
   application:
     name: config-service
@@ -7,8 +9,6 @@ spring:
       server:
         git:
           uri: https://github.com/Zomzog/zeShopConfig.git
-    devtools:
-        restart:
-            enabled: true
-server:
-  port: 8888
+
+
+
