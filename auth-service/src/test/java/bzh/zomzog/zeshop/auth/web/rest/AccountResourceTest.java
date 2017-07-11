@@ -6,6 +6,7 @@ import bzh.zomzog.zeshop.auth.domain.Authority;
 import bzh.zomzog.zeshop.auth.repository.AccountRepository;
 import bzh.zomzog.zeshop.auth.service.AccountService;
 import bzh.zomzog.zeshop.auth.service.MailService;
+import bzh.zomzog.zeshop.auth.service.dto.AccountDTO;
 import bzh.zomzog.zeshop.auth.service.dto.ManagedAccountDTO;
 import bzh.zomzog.zeshop.auth.service.mapper.AccountMapper;
 import bzh.zomzog.zeshop.auth.web.rest.error.ExceptionTranslator;
@@ -163,5 +164,13 @@ public class AccountResourceTest {
         assertThat(created.getActivationKey()).isNull();
         // teardown
         this.accountRepository.delete(account);
+    }
+
+
+    @Test
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(AccountDTO.class);
+        TestUtil.equalsVerifier(ManagedAccountDTO.class);
+        TestUtil.equalsVerifier(Account.class);
     }
 }

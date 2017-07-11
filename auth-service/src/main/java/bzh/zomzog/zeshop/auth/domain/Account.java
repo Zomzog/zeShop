@@ -278,4 +278,37 @@ public class Account extends AbstractAuditingEntity {
                 + "authorities=" + this.authorities + "]";
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final Account account = (Account) o;
+
+        if (this.activated != account.activated) return false;
+        if (this.id != null ? !this.id.equals(account.id) : true) return false;
+        if (this.login != null ? !this.login.equals(account.login) : account.login != null) return false;
+        if (this.password != null ? !this.password.equals(account.password) : account.password != null) return false;
+        if (this.activationKey != null ? !this.activationKey.equals(account.activationKey) : account.activationKey != null)
+            return false;
+        if (this.langKey != null ? !this.langKey.equals(account.langKey) : account.langKey != null) return false;
+        if (this.resetKey != null ? !this.resetKey.equals(account.resetKey) : account.resetKey != null) return false;
+        if (this.resetDate != null ? !this.resetDate.equals(account.resetDate) : account.resetDate != null)
+            return false;
+        return this.authorities != null ? this.authorities.equals(account.authorities) : account.authorities == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = this.id != null ? this.id.hashCode() : 0;
+        result = 31 * result + (this.login != null ? this.login.hashCode() : 0);
+        result = 31 * result + (this.password != null ? this.password.hashCode() : 0);
+        result = 31 * result + (this.activated ? 1 : 0);
+        result = 31 * result + (this.activationKey != null ? this.activationKey.hashCode() : 0);
+        result = 31 * result + (this.langKey != null ? this.langKey.hashCode() : 0);
+        result = 31 * result + (this.resetKey != null ? this.resetKey.hashCode() : 0);
+        result = 31 * result + (this.resetDate != null ? this.resetDate.hashCode() : 0);
+        result = 31 * result + (this.authorities != null ? this.authorities.hashCode() : 0);
+        return result;
+    }
 }

@@ -166,6 +166,12 @@ public class AccountDTO {
             return false;
         }
         final AccountDTO other = (AccountDTO) obj;
+        if (this.id == null) {
+            return false;
+        } else if (!this.id.equals(other.id)) {
+            return false;
+        }
+
         if (this.activated != other.activated) {
             return false;
         }
@@ -174,13 +180,6 @@ public class AccountDTO {
                 return false;
             }
         } else if (!this.authorities.equals(other.authorities)) {
-            return false;
-        }
-        if (this.id == null) {
-            if (other.id != null) {
-                return false;
-            }
-        } else if (!this.id.equals(other.id)) {
             return false;
         }
         if (this.langKey == null) {
