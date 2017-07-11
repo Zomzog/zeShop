@@ -39,8 +39,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.never;
@@ -400,6 +399,33 @@ public class ProductResourceTest {
         assertThat(this.imageRepository.count()).isEqualTo(imageCountBeforeUpdate);
 
         verify(this.storageService, never()).store(anyObject(), anyString());
+    }
+
+    @Test
+    public void updateWithOneImageRemoved() throws Exception {
+        // Initialize the database
+        final Image image1 = new Image().name("image1").product(this.product);
+        final Image image2 = new Image().name("image2").product(this.product);
+        this.product.getImages().add(image1);
+        this.product.getImages().add(image2);
+        this.product = this.productRepository.saveAndFlush(this.product);
+        final long imageCountBeforeUpdate = this.imageRepository.count();
+
+        // Create the Product
+        this.product.getImages().removeIf(i -> i.getName().equals("image1"));
+        final ProductDTO productDTO = this.productMapper.productToProductDTO(this.product);
+
+        // If the entity doesn't have an ID, it will be created instead of just
+        // being updated
+        this.restProductMockMvc.perform(put("/products").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(productDTO)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.id").value(this.product.getId().intValue()))
+                .andExpect(jsonPath("$.images").value(hasSize(1)))
+                .andExpect(jsonPath("$.images.[*].name").value(hasItem("image2")));
+
+        assertThat(this.imageRepository.count()).isEqualTo(imageCountBeforeUpdate - 1);
     }
 }
 

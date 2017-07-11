@@ -34,10 +34,6 @@ public class Image implements Serializable {
         this.id = id;
     }
 
-    public Image id(final Long id) {
-        this.id = id;
-        return this;
-    }
 
     public String getName() {
         return this.name;
@@ -64,4 +60,6 @@ public class Image implements Serializable {
         this.product = product;
         return this;
     }
+
+
 }
