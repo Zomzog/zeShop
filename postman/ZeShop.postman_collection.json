@@ -21,10 +21,13 @@
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);",
 									"",
+									"globals.token = void 0;",
+									"",
 									"tests[\"Status code is 200\"] = responseCode.code === 200;",
 									"",
 									"globals.token = jsonData.access_token;",
 									"",
+									"tests[\"globals.token\"] = globals.token;",
 									""
 								]
 							}
@@ -135,6 +138,44 @@
 					"response": []
 				},
 				{
+					"name": "Info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{cartPort}}/info",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"pony\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
 					"name": "Create cart",
 					"event": [
 						{
@@ -143,14 +184,95 @@
 								"type": "text/javascript",
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);",
-									""
+									"",
+									"tests[\"Status code is 201\"] = responseCode.code === 201;",
+									"",
+									"globals.cartId = jsonData.id;",
+									"",
+									"tests[\"cartId\"] = globals.cartId;"
 								]
 							}
 						}
 					],
 					"request": {
-						"url": "{{basePath}}:{{cartPort}}/cart-service/carts?random=r",
-						"method": "GET",
+						"url": "{{basePath}}:{{cartPort}}/carts?random=r",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"pony\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Add product to cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{cartPort}}/carts/{{cartId}}/products/{{productId}}",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"pony\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Add unknown product to cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{cartPort}}/carts/{{cartId}}/products/99999999999",
+						"method": "PUT",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -177,6 +299,39 @@
 			"name": "Config",
 			"description": "",
 			"item": [
+				{
+					"name": "Info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{configPort}}/info",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
 				{
 					"name": "Get oauth config",
 					"event": [
@@ -314,12 +469,146 @@
 		{
 			"name": "Eureka",
 			"description": "",
-			"item": []
+			"item": [
+				{
+					"name": "Health",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{discoveryPort}}/health",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{discoveryPort}}/info",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "List apps",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{discoveryPort}}/eureka/apps",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "Gateway",
 			"description": "",
-			"item": []
+			"item": [
+				{
+					"name": "Health",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{zuulPort}}/health",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "Product",
@@ -341,7 +630,7 @@
 						}
 					],
 					"request": {
-						"url": "{{basePath}}:{{productPort}}/product-service/products",
+						"url": "{{basePath}}:{{productPort}}/products",
 						"method": "GET",
 						"header": [
 							{
@@ -373,13 +662,17 @@
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);",
 									"",
-									"tests[\"Status code is 201\"] = responseCode.code === 201;"
+									"tests[\"Status code is 201\"] = responseCode.code === 201;",
+									"",
+									"globals.productId = jsonData.id;",
+									"",
+									"tests[\"productId\"] = globals.productId;"
 								]
 							}
 						}
 					],
 					"request": {
-						"url": "{{basePath}}:{{productPort}}/product-service/products",
+						"url": "{{basePath}}:{{productPort}}/products",
 						"method": "POST",
 						"header": [
 							{
