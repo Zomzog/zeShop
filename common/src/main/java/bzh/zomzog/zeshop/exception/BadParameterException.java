@@ -2,9 +2,8 @@ package bzh.zomzog.zeshop.exception;
 
 /**
  * Exception for bad parameter
- * 
- * @author Zomzog
  *
+ * @author Zomzog
  */
 public class BadParameterException extends FunctionalException {
 
@@ -25,33 +24,8 @@ public class BadParameterException extends FunctionalException {
     }
 
     public BadParameterException(final String objectName, final String fieldName, final String value,
-            final String message, final Throwable cause, final boolean enableSuppression,
-            final boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-        this.objectName = objectName;
-        this.fieldName = fieldName;
-        this.value = value;
-    }
-
-    public BadParameterException(final String objectName, final String fieldName, final String value,
-            final String message, final Throwable cause) {
-        super(message, cause);
-        this.objectName = objectName;
-        this.fieldName = fieldName;
-        this.value = value;
-    }
-
-    public BadParameterException(final String objectName, final String fieldName, final String value,
-            final String message) {
+                                 final String message) {
         super(message);
-        this.objectName = objectName;
-        this.fieldName = fieldName;
-        this.value = value;
-    }
-
-    public BadParameterException(final String objectName, final String fieldName, final String value,
-            final Throwable cause) {
-        super(cause);
         this.objectName = objectName;
         this.fieldName = fieldName;
         this.value = value;
@@ -61,21 +35,21 @@ public class BadParameterException extends FunctionalException {
      * @return the fieldName
      */
     public String getFieldName() {
-        return fieldName;
+        return this.fieldName;
     }
 
     /**
      * @return the value
      */
     public String getValue() {
-        return value;
+        return this.value;
     }
 
     /**
      * @return the objectName
      */
     public String getObjectName() {
-        return objectName;
+        return this.objectName;
     }
 
 }

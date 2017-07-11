@@ -86,7 +86,9 @@ public class CommonExceptionTranslator {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorVM badParameterException(final BadParameterException ex) {
         this.log.error(ex.getClass().getName(), ex);
-        return new ErrorVM(ErrorConstants.ERR_BAD_PARAMETER_ERROR, ex.getMessage());
+        final ErrorVM error = new ErrorVM(ErrorConstants.ERR_BAD_PARAMETER_ERROR);
+        error.add(ex.getObjectName(), ex.getFieldName(), ex.getValue());
+        return error;
     }
 
     @ExceptionHandler(NotFoundException.class)
