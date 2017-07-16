@@ -1,0 +1,28 @@
+@import './app/core/navbar/navbar-theme';
+
+@mixin zadmin-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .zadmin-background {
+    background: mat-color($background, background);
+  }
+
+  .zadmin-primary-header {
+    background: mat-color($primary);
+
+    h1 {
+      color: mat-color($primary, default-contrast);
+    }
+  }
+
+  .zadmin-footer {
+    background: mat-color($primary);
+    color: mat-color($primary, default-contrast);
+  }
+
+  @include nav-bar-theme($theme);
+}

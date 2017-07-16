@@ -12,8 +12,8 @@ The solution is build with micro-sevices architecture based on spring-cloud fram
 
 Quick start
 -------------
-cd docker
-docker-compose up
+- cd docker
+- docker-compose up
 
 
 Getting Started (DEV)

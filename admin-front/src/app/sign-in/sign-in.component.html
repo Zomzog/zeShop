@@ -1,0 +1,12 @@
+<div fxFlex="33" fxHide.xs fxHide.sm></div>
+<div fxFlex fxLayout="column">
+  <img alt="Zadmin" class="zadmin-signIn-logo" src="../../../assets/img/logo-icon.jpg">
+  <md-input-container >
+    <input mdInput placeholder="Login" [(ngModel)]="auth.login">
+  </md-input-container>
+  <md-input-container >
+    <input mdInput placeholder="Password" type="password" [(ngModel)]="auth.password">
+  </md-input-container>
+  <button (click)="login()">Log In</button>
+</div>
+<div fxFlex="33" fxHide.xs fxHide.sm></div>

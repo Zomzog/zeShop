@@ -1,5 +1,5 @@
-.navbar {
-      display: flex;
+.zadmin-navbar {
+  display: flex;
   flex-wrap: wrap;
   align-items: center;
   padding: 8px 16px;
@@ -9,4 +9,9 @@
       margin-left: auto;
     }
   }
+}
+
+
+.flex-spacer {
+  flex-grow: 1;
 }
