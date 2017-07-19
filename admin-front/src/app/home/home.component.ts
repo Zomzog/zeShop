@@ -1,3 +1,5 @@
+import { Cart } from './../shared/cart.model';
+import { CartService } from './../shared/cartservice';
 import {Component, NgModule, OnInit} from '@angular/core';
 import {RouterModule} from '@angular/router';
 
@@ -8,9 +10,11 @@ import {RouterModule} from '@angular/router';
 })
 export class Home implements OnInit {
 
-  constructor() { }
+  carts : Cart[];
+  constructor(private cartService: CartService) { }
 
   ngOnInit() {
+      this.cartService.getAll().then(carts => this.carts = carts);
   }
 
 }

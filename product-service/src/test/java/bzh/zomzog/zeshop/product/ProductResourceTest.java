@@ -110,8 +110,10 @@ public class ProductResourceTest {
         MockitoAnnotations.initMocks(this);
         final ProductResource productResource = new ProductResource(this.productService);
         this.restProductMockMvc = MockMvcBuilders.standaloneSetup(productResource)
-                .setCustomArgumentResolvers(this.pageableArgumentResolver).setControllerAdvice(this.exceptionTranslator)
-                .setMessageConverters(this.jacksonMessageConverter).build();
+                .setCustomArgumentResolvers(this.pageableArgumentResolver)
+                .setControllerAdvice(this.exceptionTranslator)
+                .setMessageConverters(this.jacksonMessageConverter)
+                .build();
     }
 
     /**

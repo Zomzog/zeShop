@@ -19,17 +19,22 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItems;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -42,12 +47,16 @@ public class AccountResourceTest {
     private AccountRepository accountRepository;
     @Autowired
     private AccountMapper accountMapper;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
     @Mock
     private MailService mockMailService;
+
+
+    @Autowired
+    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+    @Autowired
+    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
 
     private AccountService accountService;
 
@@ -60,7 +69,10 @@ public class AccountResourceTest {
         this.accountService = new AccountService(this.accountRepository, this.accountMapper, this.mockMailService);
         final AccountResource accountResource = new AccountResource(this.accountService);
 
-        this.restMvc = MockMvcBuilders.standaloneSetup(accountResource).setControllerAdvice(this.exceptionTranslator)
+        this.restMvc = MockMvcBuilders.standaloneSetup(accountResource)
+                .setCustomArgumentResolvers(this.pageableArgumentResolver)
+                .setControllerAdvice(this.exceptionTranslator)
+                .setMessageConverters(this.jacksonMessageConverter)
                 .build();
     }
 
@@ -164,6 +176,28 @@ public class AccountResourceTest {
         assertThat(created.getActivationKey()).isNull();
         // teardown
         this.accountRepository.delete(account);
+    }
+
+    @Test
+    @Transactional
+    public void listAccounts() throws Exception {
+        Account account1 = new Account().password("password")
+                .login("account1")
+                .activated(true)
+                .langKey("fr")
+                .authorities(new HashSet<>(Arrays.asList(new Authority("ROLE_USER"))));
+        account1 = this.accountRepository.save(account1);
+        Account account2 = new Account().password("password")
+                .login("account2")
+                .activated(false)
+                .langKey("fr")
+                .authorities(new HashSet<>(Arrays.asList(new Authority("ROLE_USER"))));
+        account2 = this.accountRepository.save(account2);
+
+
+        this.restMvc.perform(get("/accounts"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[*].id").value(hasItems(account1.getId().intValue(), account2.getId().intValue())));
     }
 
 

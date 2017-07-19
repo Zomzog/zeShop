@@ -16,20 +16,18 @@ export class OauthService {
         this.token = currentUser && currentUser.token;
     }
 
-    login(username: string, password: string) {
+    login(username: string, password: string) : Observable<boolean> {
 
         let headers = new Headers();
         headers.append("Authorization", "Basic " + btoa("pony:ponysecret"));
         headers.append("Content-Type", "application/x-www-form-urlencoded");
 
-        this.http.post(this.uuaUrl,
+        return this.http.post(this.uuaUrl,
             'username=' + username +
             '&password=' + password +
             '&grant_type=password'
             , { headers: headers })
-
-            .toPromise()
-            .then(response => {
+            .map(response => {
                 // login successful if there's a jwt token in the response
                 let token = response.json() && response.json().access_token;
                 if (token) {

@@ -2,6 +2,7 @@ package bzh.zomzog.zeshop.cart.web.rest;
 
 import bzh.zomzog.zeshop.cart.service.CartService;
 import bzh.zomzog.zeshop.cart.service.dto.cart.CartDTO;
+import bzh.zomzog.zeshop.configuration.AuthoritiesConstants;
 import bzh.zomzog.zeshop.exception.BadParameterException;
 import bzh.zomzog.zeshop.web.rest.utils.HeaderUtil;
 import bzh.zomzog.zeshop.web.rest.utils.PaginationUtil;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -84,6 +86,7 @@ public class CartResource {
      * body
      * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
+    @PreAuthorize("hasRole('" + AuthoritiesConstants.ADMIN + "')")
     @GetMapping("/carts")
     public ResponseEntity<List<CartDTO>> getAllCarts(@ApiParam final Pageable pageable) {
         this.log.debug("REST request to get a page of Carts");

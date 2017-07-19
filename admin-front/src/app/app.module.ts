@@ -1,39 +1,53 @@
+import { HttpModule } from '@angular/http';
+
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MdInputModule, MdCardModule } from '@angular/material'
-import { HttpModule } from '@angular/http';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { ZADMIN_ROUTES } from './routes';
 import { ZAdmin } from './zadmin.component';
 import { NavBarModule } from './core/navbar/navbar.component';
-import { HomeModule } from './home/home.component';
+import { Home } from './home/home.component';
 import { SignIn } from './sign-in/sign-in.component';
 
 import { OauthService } from './shared/oauth.service';
+import { CartService } from './shared/cartservice';
+import { AuthInterceptor } from './shared/auth.interceptor';
 
 @NgModule({
   declarations: [
     ZAdmin, 
-    SignIn
+    SignIn,
+    Home
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
-    HttpModule,
+    HttpClientModule,
     RouterModule.forRoot(ZADMIN_ROUTES),
     NavBarModule,
-    HomeModule,
     FlexLayoutModule,
     MdCardModule,
-    MdInputModule
+    MdInputModule,
+    HttpModule
   ],
-  providers: [OauthService],
+  providers: [
+    OauthService,
+    CartService,
+    AuthInterceptor,
+    {   
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    }],
   bootstrap: [ZAdmin]
 })
 export class AppModule { }

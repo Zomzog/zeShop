@@ -1,5 +1,6 @@
 import { Component, OnInit, NgModule } from '@angular/core';
 import { OauthService } from '../shared/oauth.service'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'zadmin-sign-in',
@@ -8,17 +9,33 @@ import { OauthService } from '../shared/oauth.service'
 })
 export class SignIn implements OnInit {
 
+  error = "";
+  loading = false;
   auth = {
     login: "",
     password: ""
   };
 
-  constructor(private oauthService: OauthService) { }
+  constructor(
+    private router: Router,
+    private oauthService: OauthService) { }
 
   ngOnInit() {
   }
 
   login(): void {
-    this.oauthService.login(this.auth.login, this.auth.password);
+
+    this.loading = true;
+    this.oauthService.login(this.auth.login, this.auth.password)
+      .subscribe(result => {
+        if (result === true) {
+          // login successful
+          this.router.navigate(['/']);
+        } else {
+          // login failed
+          this.error = 'Username or password is incorrect';
+          this.loading = false;
+        }
+      });
   }
 }

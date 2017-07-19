@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @Configuration
 @EnableWebMvc
-@ComponentScan({ "bzh.zomzog.zeshop.cart.web.controller" })
+@ComponentScan({"bzh.zomzog.zeshop.cart.web.rest"})
 public class ResourceServerWebConfig extends WebMvcConfigurerAdapter {
     //
 }

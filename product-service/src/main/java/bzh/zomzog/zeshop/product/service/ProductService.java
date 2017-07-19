@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Service Implementation for managing Product.
+ * Service Implementation for managing Products.
  */
 @Service
 @Transactional

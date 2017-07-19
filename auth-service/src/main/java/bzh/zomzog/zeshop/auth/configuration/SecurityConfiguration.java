@@ -1,25 +1,26 @@
 package bzh.zomzog.zeshop.auth.configuration;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.PostConstruct;
+
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService           userDetailsService;
+    private final UserDetailsService userDetailsService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     public SecurityConfiguration(final UserDetailsService userDetailsService,
-            final AuthenticationManagerBuilder authenticationManagerBuilder) {
+                                 final AuthenticationManagerBuilder authenticationManagerBuilder) {
         this.userDetailsService = userDetailsService;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
@@ -47,15 +48,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     // FIXEME Remove that
     @Override
     protected void configure(final HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf()
-                .disable()
-                .authorizeRequests()
-                .antMatchers("/").permitAll()
+        // @formatter:off
+        httpSecurity
+                .csrf()
+                    .disable()
+                .headers()
+                    .frameOptions()
+                    .disable()
+
                 .and()
-                .authorizeRequests()
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/list/**").permitAll()
-                .antMatchers("/register").permitAll();
-        httpSecurity.headers().frameOptions().disable();
+                .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        // @formatter:on
     }
 }

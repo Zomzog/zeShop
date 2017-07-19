@@ -6,11 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 @EnableDiscoveryClient
 @SpringBootApplication
-@EnableResourceServer
 @EnableConfigurationProperties({LiquibaseProperties.class, AuthProperties.class})
 public class AuthServiceApplication {
 

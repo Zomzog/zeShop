@@ -1,3 +1,4 @@
+import { OauthService } from './../../shared/oauth.service';
 import {Component, NgModule} from '@angular/core';
 import {MdButtonModule} from '@angular/material';
 import {RouterModule} from '@angular/router';
@@ -9,7 +10,11 @@ import {RouterModule} from '@angular/router';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavBar {
+  constructor(private oauthService: OauthService) {};
 
+  logout() {
+    this.oauthService.logout();
+  }
 }
 
 @NgModule({

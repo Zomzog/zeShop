@@ -4,16 +4,23 @@ import bzh.zomzog.zeshop.auth.exception.LoginAlreadyInUseException;
 import bzh.zomzog.zeshop.auth.service.AccountService;
 import bzh.zomzog.zeshop.auth.service.dto.AccountDTO;
 import bzh.zomzog.zeshop.auth.service.dto.ManagedAccountDTO;
+import bzh.zomzog.zeshop.configuration.AuthoritiesConstants;
+import bzh.zomzog.zeshop.web.rest.utils.PaginationUtil;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class AccountResource {
@@ -169,11 +176,11 @@ public class AccountResource {
      * POST /account/reset_password/finish : Finish to reset the password of the
      * user
      *
-     * @param keyAndPassword
-     *            the generated key and the new password
+     * @param keyAndPassword the generated key and the new password
+     * @param pageable
      * @return the ResponseEntity with status 200 (OK) if the password has been
-     *         reset, or status 400 (Bad Request) or 500 (Internal Server Error)
-     *         if the password could not be reset
+     * reset, or status 400 (Bad Request) or 500 (Internal Server Error)
+     * if the password could not be reset
      */
     // @PostMapping(path = "/account/reset_password/finish", produces =
     // MediaType.TEXT_PLAIN_VALUE)
@@ -194,4 +201,12 @@ public class AccountResource {
     // ManagedUserVM.PASSWORD_MIN_LENGTH
     // && password.length() <= ManagedUserVM.PASSWORD_MAX_LENGTH;
     // }
+    @GetMapping("/accounts")
+    @Secured(AuthoritiesConstants.ADMIN)
+    public ResponseEntity<List<AccountDTO>> getAll(@ApiParam final Pageable pageable) {
+        this.log.debug("REST request to get a page of accounts");
+        final Page<AccountDTO> page = this.accountService.findAll(pageable);
+        final HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/carts");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
 }
