@@ -12,6 +12,105 @@
 			"description": "",
 			"item": [
 				{
+					"name": "Get public key",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"globals.tokenAdmin = void 0;",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"globals.tokenAdmin = jsonData.access_token;",
+									"",
+									"tests[\"globals.tokenAdmin\"] = globals.tokenAdmin;",
+									"",
+									"",
+									"",
+									"globals.token = void 0;",
+									"globals.token = jsonData.access_token;",
+									"tests[\"globals.token\"] = globals.token;"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "pony",
+								"password": "ponysecret",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "{{basePath}}:{{authPort}}/oauth//token_key",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic cG9ueTpwb255c2VjcmV0",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "authorize",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"globals.tokenAdmin = void 0;",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"globals.tokenAdmin = jsonData.access_token;",
+									"",
+									"tests[\"globals.tokenAdmin\"] = globals.tokenAdmin;",
+									"",
+									"",
+									"",
+									"globals.token = void 0;",
+									"globals.token = jsonData.access_token;",
+									"tests[\"globals.token\"] = globals.token;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{authPort}}/oauth/authorize",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{tokenAdmin}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
 					"name": "Get Token Admin",
 					"event": [
 						{
@@ -21,13 +120,67 @@
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);",
 									"",
-									"globals.token = void 0;",
+									"globals.tokenAdmin = void 0;",
 									"",
 									"tests[\"Status code is 200\"] = responseCode.code === 200;",
 									"",
-									"globals.token = jsonData.access_token;",
+									"globals.tokenAdmin = jsonData.access_token;",
 									"",
-									"tests[\"globals.token\"] = globals.token;",
+									"tests[\"globals.tokenAdmin\"] = globals.tokenAdmin;",
+									"",
+									"",
+									"",
+									"globals.token = void 0;",
+									"globals.token = jsonData.access_token;",
+									"tests[\"globals.token\"] = globals.token;"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": {
+								"username": "pony",
+								"password": "ponysecret",
+								"saveHelperData": true,
+								"showPassword": false
+							}
+						},
+						"url": "{{basePath}}:{{authPort}}/oauth/token?password=admin&username=admin&grant_type=password",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic cG9ueTpwb255c2VjcmV0",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"globals.tokenUser = void 0;",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"globals.tokenUser = jsonData.access_token;",
+									"",
+									"tests[\"globals.tokenUser\"] = globals.tokenUser;",
 									""
 								]
 							}
@@ -43,7 +196,7 @@
 								"showPassword": false
 							}
 						},
-						"url": "{{basePath}}:{{authPort}}/oauth/token?password=admin&username=admin&grant_type=password&scope=openid&client_secret=ponysecret&client_id=pony",
+						"url": "{{basePath}}:{{authPort}}/oauth/token?password=user&username=user&grant_type=password",
 						"method": "POST",
 						"header": [
 							{
@@ -88,6 +241,80 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n\t\"login\": \"pony{{$randomInt}}\",\n\t\"password\": \"pony\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "List accounts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"globals.token = void 0;",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"globals.token = jsonData.access_token;",
+									"",
+									"tests[\"globals.token\"] = globals.token;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{authPort}}/accounts",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer {{tokenAdmin}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "List accounts not connected",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"globals.token = void 0;",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"globals.token = jsonData.access_token;",
+									"",
+									"tests[\"globals.token\"] = globals.token;",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{authPort}}/accounts",
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
 						},
 						"description": ""
 					},
@@ -195,17 +422,12 @@
 						}
 					],
 					"request": {
-						"url": "{{basePath}}:{{cartPort}}/carts?random=r",
+						"url": "{{basePath}}:{{cartPort}}/carts",
 						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
 								"value": "application/json",
-								"description": ""
-							},
-							{
-								"key": "Authorization",
-								"value": "bearer {{token}}",
 								"description": ""
 							}
 						],
@@ -240,11 +462,6 @@
 								"key": "Content-Type",
 								"value": "application/json",
 								"description": ""
-							},
-							{
-								"key": "Authorization",
-								"value": "bearer {{token}}",
-								"description": ""
 							}
 						],
 						"body": {
@@ -278,10 +495,114 @@
 								"key": "Content-Type",
 								"value": "application/json",
 								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"pony\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "List carts as admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{cartPort}}/carts",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
 							},
 							{
 								"key": "Authorization",
-								"value": "bearer {{token}}",
+								"value": "bearer {{tokenAdmin}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"pony\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "List carts as user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 403\"] = responseCode.code === 403;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{cartPort}}/carts",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{tokenUser}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"pony\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "List carts as anonymous",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 401\"] = responseCode.code === 401;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{cartPort}}/carts",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
 								"description": ""
 							}
 						],
@@ -640,7 +961,7 @@
 							},
 							{
 								"key": "Authorization",
-								"value": "bearer {{token}}",
+								"value": "bearer {{tokenAdmin}}",
 								"description": ""
 							}
 						],

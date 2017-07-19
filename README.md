@@ -15,13 +15,18 @@ Quick start
 - cd docker
 - docker-compose up
 
+Getting Started (DEV Front)
+-------------
+- ./mvnw clean install
+- docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
-Getting Started (DEV)
+Getting Started (DEV Back)
 -------------
 ###Server order :
 
 - Configuration server
 - Eureka server
+- Gateway server
 - Auth server
 - Product server
 - Cart server
