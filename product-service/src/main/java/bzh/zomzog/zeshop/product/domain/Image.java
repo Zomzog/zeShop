@@ -1,12 +1,14 @@
 package bzh.zomzog.zeshop.product.domain;
 
+import lombok.ToString;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
  * Created by Zomzog on 30/06/2017.
  */
+@ToString
 @Entity
 @Table(name = "image")
 public class Image implements Serializable {
@@ -21,10 +23,6 @@ public class Image implements Serializable {
 
     @Column(name = "name", length = 256, nullable = false)
     private String name;
-
-    @ManyToOne(optional = false)
-    @NotNull
-    private Product product;
 
     public Long getId() {
         return this.id;
@@ -47,19 +45,4 @@ public class Image implements Serializable {
         this.name = name;
         return this;
     }
-
-    public Product getProduct() {
-        return this.product;
-    }
-
-    public void setProduct(final Product product) {
-        this.product = product;
-    }
-
-    public Image product(final Product product) {
-        this.product = product;
-        return this;
-    }
-
-
 }

@@ -1,7 +1,6 @@
 package bzh.zomzog.zeshop.product;
 
 import bzh.zomzog.zeshop.product.domain.Image;
-import bzh.zomzog.zeshop.product.domain.Product;
 import bzh.zomzog.zeshop.product.exception.StorageFileNotFoundException;
 import bzh.zomzog.zeshop.product.repository.ImageRepository;
 import bzh.zomzog.zeshop.product.repository.ProductRepository;
@@ -9,7 +8,6 @@ import bzh.zomzog.zeshop.product.service.ImageService;
 import bzh.zomzog.zeshop.product.service.ProductService;
 import bzh.zomzog.zeshop.product.service.StorageService;
 import bzh.zomzog.zeshop.product.web.rest.ImageResource;
-import bzh.zomzog.zeshop.product.web.rest.ProductResource;
 import bzh.zomzog.zeshop.product.web.rest.error.ExceptionTranslator;
 import org.junit.After;
 import org.junit.Before;
@@ -67,10 +65,8 @@ public class ImageResourceTest {
     private ExceptionTranslator exceptionTranslator;
 
     private Image image;
-    private Product product;
 
     private MockMvc mockMvcImage;
-    private MockMvc mockMvcProduct;
 
     @Before
     public void setup() {
@@ -79,28 +75,18 @@ public class ImageResourceTest {
         this.mockMvcImage = MockMvcBuilders.standaloneSetup(imageResource)
                 .setCustomArgumentResolvers(this.pageableArgumentResolver)
                 .setControllerAdvice(this.exceptionTranslator)
-                //.setMessageConverters(this.jacksonMessageConverter)
-                .build();
-        final ProductResource productResource = new ProductResource(this.productService);
-        this.mockMvcProduct = MockMvcBuilders.standaloneSetup(productResource)
-                .setCustomArgumentResolvers(this.pageableArgumentResolver)
-                .setControllerAdvice(this.exceptionTranslator)
-                //.setMessageConverters(this.jacksonMessageConverter)
                 .build();
     }
 
     @Before
     public void init() {
-        this.product = this.productRepository.save(ProductResourceTest.createEntity());
-
         this.image = new Image()
-                .name("name")
-                .product(this.product);
+                .name("name");
     }
 
     @After
     public void teardown() {
-        this.productRepository.delete(this.product.getId());
+
     }
 
     @Test
@@ -108,14 +94,14 @@ public class ImageResourceTest {
         final MockMultipartFile multipartFile =
                 new MockMultipartFile("file", "test.txt", "text/plain", "Spring Framework".getBytes());
 
-        final MvcResult result = this.mockMvcProduct.perform(fileUpload("/products/{id}/images", this.product.getId()).file(multipartFile))
+        final MvcResult result = this.mockMvcImage.perform(fileUpload("/images").file(multipartFile))
                 .andExpect(status().isCreated())
                 .andReturn();
 
         final MockHttpServletResponse response = result.getResponse();
 
         assertThat(response.getHeader(HttpHeaders.LOCATION))
-                .matches("/api/products/4/images/[0-9]*");
+                .matches("/api/images/[0-9]*");
 
         then(this.storageService).should().store(any(MultipartFile.class), anyString());
     }

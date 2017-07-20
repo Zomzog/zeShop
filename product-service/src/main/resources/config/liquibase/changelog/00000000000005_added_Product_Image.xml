@@ -16,10 +16,24 @@
         Added the entity Product.
     -->
     <changeSet id="00000000000005" author="zomzog">
+
+        <createTable tableName="product_image">
+            <column name="product_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
         <addForeignKeyConstraint baseColumnNames="product_id"
-                                 baseTableName="image"
+                                 baseTableName="product_image"
                                  constraintName="fk_image_product_id"
                                  referencedColumnNames="id"
                                  referencedTableName="product"/>
+        <addForeignKeyConstraint baseColumnNames="image_id"
+                                 baseTableName="product_image"
+                                 constraintName="fk_product_image_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="image"/>
     </changeSet>
 </databaseChangeLog>

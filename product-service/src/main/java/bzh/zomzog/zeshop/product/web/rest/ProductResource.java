@@ -1,9 +1,6 @@
 package bzh.zomzog.zeshop.product.web.rest;
 
-import bzh.zomzog.zeshop.exception.BadParameterException;
-import bzh.zomzog.zeshop.product.exception.StorageException;
 import bzh.zomzog.zeshop.product.service.ProductService;
-import bzh.zomzog.zeshop.product.service.dto.ImageDTO;
 import bzh.zomzog.zeshop.product.service.dto.product.ProductDTO;
 import bzh.zomzog.zeshop.web.rest.utils.HeaderUtil;
 import bzh.zomzog.zeshop.web.rest.utils.PaginationUtil;
@@ -17,7 +14,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -127,12 +123,5 @@ public class ProductResource {
         this.log.debug("REST request to delete Product : {}", id);
         this.productService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
-
-    @PostMapping("/products/{id}/images")
-    public ResponseEntity<ImageDTO> addImageToProduct(@PathVariable final Long id, @RequestParam("file") final MultipartFile file) throws StorageException, URISyntaxException, BadParameterException {
-        this.log.debug("REST request to add image {} Product : {}", file.getOriginalFilename(), id);
-        final ImageDTO result = this.productService.addImageToProduct(id, file);
-        return ResponseEntity.created(new URI("/api/products/" + id + "/images/" + result.getId())).body(result);
     }
 }

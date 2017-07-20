@@ -24,7 +24,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -39,11 +38,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -357,57 +353,10 @@ public class ProductResourceTest {
     }
 
     @Test
-    public void addImages() throws Exception {
-        // Initialize the database
-        this.product = this.productRepository.saveAndFlush(this.product);
-        final String filename = "test.txt";
-
-        final MockMultipartFile multipartFile =
-                new MockMultipartFile("file", filename, "text/plain", "Spring Framework".getBytes());
-
-        // Get the product
-        this.restProductMockMvc.perform(fileUpload("/products/{id}/images", this.product.getId()).file(multipartFile))
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.id").isNotEmpty())
-                .andExpect(jsonPath("$.name").value(not(filename)))
-                .andExpect(jsonPath("$.productId").isNotEmpty());
-
-        final Product last = this.productRepository.findOneWithEagerRelationships(this.product.getId());
-        assertThat(last.getImages().size()).isEqualTo(1);
-        final Image image = last.getImages().iterator().next();
-        assertThat(image.getId()).isNotNull();
-        assertThat(image.getName()).isNotNull();
-        assertThat(image.getName()).isNotEqualTo(multipartFile.getName());
-        assertThat(image.getName()).isNotEqualTo(multipartFile.getOriginalFilename());
-
-        then(this.storageService).should().store(eq(multipartFile), anyString());
-    }
-
-    @Test
-    public void addImagesToNonExistingProduct() throws Exception {
-        // Initialize the database
-        final String filename = "test.txt";
-        final long imageCountBeforeUpdate = this.imageRepository.count();
-
-        final MockMultipartFile multipartFile =
-                new MockMultipartFile("file", filename, "text/plain", "Spring Framework".getBytes());
-
-        // Get the product
-        this.restProductMockMvc.perform(fileUpload("/products/{id}/images", Integer.MAX_VALUE).file(multipartFile))
-                .andExpect(status().isBadRequest());
-
-
-        assertThat(this.imageRepository.count()).isEqualTo(imageCountBeforeUpdate);
-
-        verify(this.storageService, never()).store(anyObject(), anyString());
-    }
-
-    @Test
     public void updateWithOneImageRemoved() throws Exception {
         // Initialize the database
-        final Image image1 = new Image().name("image1").product(this.product);
-        final Image image2 = new Image().name("image2").product(this.product);
+        final Image image1 = this.imageRepository.save(new Image().name("image1"));
+        final Image image2 = this.imageRepository.save(new Image().name("image2"));
         this.product.getImages().add(image1);
         this.product.getImages().add(image2);
         this.product = this.productRepository.saveAndFlush(this.product);
@@ -427,7 +376,7 @@ public class ProductResourceTest {
                 .andExpect(jsonPath("$.images").value(hasSize(1)))
                 .andExpect(jsonPath("$.images.[*].name").value(hasItem("image2")));
 
-        assertThat(this.imageRepository.count()).isEqualTo(imageCountBeforeUpdate - 1);
+        assertThat(this.imageRepository.count()).isEqualTo(imageCountBeforeUpdate);
     }
 }
 
