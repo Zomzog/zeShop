@@ -17,8 +17,6 @@ public class ImageDTO implements Serializable {
     @Size(min = 1, max = 256)
     private String name;
 
-    private Long productId;
-
     public Long getId() {
         return this.id;
     }
@@ -35,12 +33,5 @@ public class ImageDTO implements Serializable {
         this.name = name;
     }
 
-    public Long getProductId() {
-        return this.productId;
-    }
-
-    public void setProductId(final Long productId) {
-        this.productId = productId;
-    }
 
 }

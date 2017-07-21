@@ -26,9 +26,7 @@ public class CartDTO implements Serializable {
 
     private Set<CartProductDTO> products = new HashSet<>();
 
-    private Long userId;
-
-    private String userLogin;
+    private String userName;
 
     public Long getId() {
         return this.id;
@@ -62,20 +60,11 @@ public class CartDTO implements Serializable {
         this.products = products;
     }
 
-    public Long getUserId() {
-        return this.userId;
+    public String getUserName() {
+        return this.userName;
     }
 
-    public void setUserId(final Long userId) {
-        this.userId = userId;
+    public void setUserName(final String userName) {
+        this.userName = userName;
     }
-
-    public String getUserLogin() {
-        return this.userLogin;
-    }
-
-    public void setUserLogin(final String userLogin) {
-        this.userLogin = userLogin;
-    }
-
 }

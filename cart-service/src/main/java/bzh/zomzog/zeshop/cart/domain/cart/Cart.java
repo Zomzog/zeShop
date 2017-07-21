@@ -30,7 +30,8 @@ public class Cart implements Serializable {
     @OneToMany(mappedBy = "cart", orphanRemoval = true, cascade = CascadeType.ALL)
     private final Set<CartProduct> products = new HashSet<>();
 
-    private Long userId;
+    @NotNull
+    private String userName;
 
     @PrePersist
     void createdDate() {
@@ -56,6 +57,11 @@ public class Cart implements Serializable {
 
     public Cart updatedDate(final ZonedDateTime updatedDate) {
         this.updatedDate = updatedDate;
+        return this;
+    }
+
+    public Cart userName(final String userName) {
+        this.userName = userName;
         return this;
     }
 
@@ -101,18 +107,12 @@ public class Cart implements Serializable {
         this.updatedDate = updatedDate;
     }
 
-    /**
-     * @return the userId
-     */
-    public Long getUserId() {
-        return this.userId;
+    public String getUserName() {
+        return this.userName;
     }
 
-    /**
-     * @param userId the userId to set
-     */
-    public void setUserId(final Long userId) {
-        this.userId = userId;
+    public void setUserName(final String userName) {
+        this.userName = userName;
     }
 
     /**
@@ -133,7 +133,7 @@ public class Cart implements Serializable {
                 + (this.createdDate != null ? "createdDate=" + this.createdDate + ", " : "")
                 + (this.updatedDate != null ? "updatedDate=" + this.updatedDate + ", " : "")
                 + "products=" + this.products + ", "
-                + (this.userId != null ? "userId=" + this.userId : "")
+                + (this.userName != null ? "userName=" + this.userName : "")
                 + "]";
     }
 

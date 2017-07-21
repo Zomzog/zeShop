@@ -6,7 +6,7 @@ services:
     ports:
       - "8888:8888"
     environment:
-      - JAVA_OPTS=-Xmx52m
+      - JAVA_OPTS=-Xmx64m
     restart: always
   discovery:
     image: zomzog/eureka-service
@@ -17,7 +17,7 @@ services:
     ports:
       - "8761:8761"
     environment:
-      - JAVA_OPTS=-Xmx52m
+      - JAVA_OPTS=-Xmx64m
     restart: always
   carts:
     image: zomzog/cart-service
@@ -28,7 +28,7 @@ services:
       - configserver
       - discovery
     environment:
-      - JAVA_OPTS=-Xmx52m
+      - JAVA_OPTS=-Xmx64m
     restart: always
   products:
     image: zomzog/product-service
@@ -39,7 +39,7 @@ services:
       - configserver
       - discovery
     environment:
-      - JAVA_OPTS=-Xmx52m
+      - JAVA_OPTS=-Xmx64m
     restart: always
   auth:
     image: zomzog/auth-service
@@ -50,7 +50,7 @@ services:
       - configserver
       - discovery
     environment:
-      - JAVA_OPTS=-Xmx52m
+      - JAVA_OPTS=-Xmx64m
     restart: always
   gateway:
     image: zomzog/gateway-service
@@ -63,5 +63,5 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - JAVA_OPTS=-Xmx52m
+      - JAVA_OPTS=-Xmx64m
     restart: always

@@ -4,6 +4,7 @@ import bzh.zomzog.zeshop.cart.service.CartService;
 import bzh.zomzog.zeshop.cart.service.dto.cart.CartDTO;
 import bzh.zomzog.zeshop.configuration.AuthoritiesConstants;
 import bzh.zomzog.zeshop.exception.BadParameterException;
+import bzh.zomzog.zeshop.util.SecurityUtils;
 import bzh.zomzog.zeshop.web.rest.utils.HeaderUtil;
 import bzh.zomzog.zeshop.web.rest.utils.PaginationUtil;
 import bzh.zomzog.zeshop.web.rest.utils.ResponseUtil;
@@ -52,6 +53,7 @@ public class CartResource {
         if (cartDTO.getId() != null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        cartDTO.setUserName(SecurityUtils.getCurrentUserLogin());
         final CartDTO result = this.cartService.save(cartDTO);
         return ResponseEntity.created(new URI("/carts/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString())).body(result);
@@ -67,11 +69,12 @@ public class CartResource {
      * couldnt be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/carts")
-    public ResponseEntity<CartDTO> updateCart(@Valid @RequestBody final CartDTO cartDTO) throws URISyntaxException, BadParameterException {
+    @PreAuthorize("#cartDTO.userName == authentication.name")
+    @PutMapping("/carts/{id}")
+    public ResponseEntity<CartDTO> updateCart(@Valid @RequestBody final CartDTO cartDTO, @PathVariable final Long id) throws URISyntaxException, BadParameterException {
         this.log.debug("REST request to update Cart : {}", cartDTO);
-        if (cartDTO.getId() == null) {
-            return createCart(cartDTO);
+        if (cartDTO.getId() != id) {
+            throw new BadParameterException("cart", "id", id.toString());
         }
         final CartDTO result = this.cartService.update(cartDTO);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, cartDTO.getId().toString()))
@@ -103,7 +106,7 @@ public class CartResource {
      * cartDTO, or with status 404 (Not Found)
      */
     @GetMapping("/carts/{id}")
-    public ResponseEntity<CartDTO> getCart(@PathVariable final Long id) {
+    public ResponseEntity<CartDTO> getCart(@PathVariable final Long id) throws BadParameterException {
         this.log.debug("REST request to get Cart : {}", id);
         final CartDTO cartDTO = this.cartService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(cartDTO));
@@ -116,7 +119,7 @@ public class CartResource {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/carts/{id}")
-    public ResponseEntity<Void> deleteCart(@PathVariable final Long id) {
+    public ResponseEntity<Void> deleteCart(@PathVariable final Long id) throws BadParameterException {
         this.log.debug("REST request to delete Cart : {}", id);
         this.cartService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();

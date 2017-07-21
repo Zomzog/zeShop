@@ -11,10 +11,12 @@ import bzh.zomzog.zeshop.cart.service.dto.cart.CartProductDTO;
 import bzh.zomzog.zeshop.cart.service.dto.product.ProductCustomizationDataDTO;
 import bzh.zomzog.zeshop.cart.service.mapper.cart.CartMapper;
 import bzh.zomzog.zeshop.exception.BadParameterException;
+import bzh.zomzog.zeshop.util.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,9 +79,9 @@ public class CartService {
      * @return the entity
      */
     @Transactional(readOnly = true)
-    public CartDTO findOne(final Long id) {
+    public CartDTO findOne(final Long id) throws BadParameterException {
         this.log.debug("Request to get Cart : {}", id);
-        final Cart cart = this.cartRepository.findOneWithEagerRelationships(id);
+        final Cart cart = getCartById(id);
         final CartDTO cartDTO = this.cartMapper.cartToCartDTO(cart);
         return cartDTO;
     }
@@ -89,8 +91,9 @@ public class CartService {
      *
      * @param id the id of the entity
      */
-    public void delete(final Long id) {
+    public void delete(final Long id) throws BadParameterException {
         this.log.debug("Request to delete Cart : {}", id);
+        getCartById(id);
         this.cartRepository.delete(id);
     }
 
@@ -102,12 +105,13 @@ public class CartService {
      */
     public CartDTO update(final CartDTO cartDTO) throws BadParameterException {
         this.log.debug("Request to save Product : {}", cartDTO);
+
+        Cart cart = getCartById(cartDTO.getId());
+
         // Check if all products exists
         for (final CartProductDTO cartProduct : cartDTO.getProducts()) {
             checkProductIsValid(cartProduct);
         }
-
-        Cart cart = this.cartRepository.findOne(cartDTO.getId());
         cart = this.cartMapper.update(cartDTO, cart);
         linkCartProductWithCart(cart);
 
@@ -163,10 +167,7 @@ public class CartService {
      * @throws BadParameterException
      */
     public CartDTO addToCart(final Long cartId, final Long productId) throws BadParameterException {
-        final Cart cart = this.cartRepository.findOne(cartId);
-        if (null == cart) {
-            throw new BadParameterException("cart", "id", cartId.toString());
-        }
+        final Cart cart = getCartById(cartId);
         final Optional<Product> product = this.productService.get(productId);
         if (!product.isPresent()) {
             throw new BadParameterException("product", "id", productId.toString());
@@ -197,6 +198,22 @@ public class CartService {
             for (final ProductCustomizationData custo : cartProduct.getCustomizations()) {
                 custo.setCartProduct(cartProduct);
             }
+        }
+        return cart;
+    }
+
+    /**
+     * Search the cart and check if the current user is owner of the cart
+     *
+     * @param cartId cart's id
+     */
+    private Cart getCartById(final Long cartId) throws BadParameterException {
+        final Cart cart = this.cartRepository.findOne(cartId);
+        if (null == cart) {
+            throw new BadParameterException("cart", "id", cartId.toString());
+        }
+        if (!cart.getUserName().equals(SecurityUtils.getCurrentUserLogin())) {
+            throw new AccessDeniedException("Not your cart!");
         }
         return cart;
     }

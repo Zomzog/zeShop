@@ -19,21 +19,8 @@
 							"script": {
 								"type": "text/javascript",
 								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"",
-									"globals.tokenAdmin = void 0;",
-									"",
 									"tests[\"Status code is 200\"] = responseCode.code === 200;",
-									"",
-									"globals.tokenAdmin = jsonData.access_token;",
-									"",
-									"tests[\"globals.tokenAdmin\"] = globals.tokenAdmin;",
-									"",
-									"",
-									"",
-									"globals.token = void 0;",
-									"globals.token = jsonData.access_token;",
-									"tests[\"globals.token\"] = globals.token;"
+									""
 								]
 							}
 						}
@@ -54,51 +41,6 @@
 							{
 								"key": "Authorization",
 								"value": "Basic cG9ueTpwb255c2VjcmV0",
-								"description": ""
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "authorize",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"type": "text/javascript",
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"",
-									"globals.tokenAdmin = void 0;",
-									"",
-									"tests[\"Status code is 200\"] = responseCode.code === 200;",
-									"",
-									"globals.tokenAdmin = jsonData.access_token;",
-									"",
-									"tests[\"globals.tokenAdmin\"] = globals.tokenAdmin;",
-									"",
-									"",
-									"",
-									"globals.token = void 0;",
-									"globals.token = jsonData.access_token;",
-									"tests[\"globals.token\"] = globals.token;"
-								]
-							}
-						}
-					],
-					"request": {
-						"url": "{{basePath}}:{{authPort}}/oauth/authorize",
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{tokenAdmin}}",
 								"description": ""
 							}
 						],
@@ -256,13 +198,7 @@
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);",
 									"",
-									"globals.token = void 0;",
-									"",
 									"tests[\"Status code is 200\"] = responseCode.code === 200;",
-									"",
-									"globals.token = jsonData.access_token;",
-									"",
-									"tests[\"globals.token\"] = globals.token;",
 									""
 								]
 							}
@@ -295,14 +231,7 @@
 								"type": "text/javascript",
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);",
-									"",
-									"globals.token = void 0;",
-									"",
 									"tests[\"Status code is 200\"] = responseCode.code === 200;",
-									"",
-									"globals.token = jsonData.access_token;",
-									"",
-									"tests[\"globals.token\"] = globals.token;",
 									""
 								]
 							}
@@ -429,11 +358,92 @@
 								"key": "Content-Type",
 								"value": "application/json",
 								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{tokenUser}}",
+								"description": ""
 							}
 						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n\t\"name\": \"pony\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{cartPort}}/carts/{{cartId}}",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{tokenUser}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": {{cartId}},\n  \"createdDate\": 1500586862.344,\n  \"updatedDate\": 1500587233.826,\n  \"products\": [\n    {\n      \"id\": 1,\n      \"cartId\": 1,\n      \"productId\": 5,\n      \"customizations\": [],\n      \"quantity\": 1,\n      \"addedDate\": 1500587233.829\n    }\n  ],\n  \"userName\": \"user\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update cart of another user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 403\"] = responseCode.code === 403;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{cartPort}}/carts/{{cartId}}",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{tokenAdmin}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": {{cartId}},\n  \"createdDate\": 1500586862.344,\n  \"updatedDate\": 1500587233.826,\n  \"products\": [\n    {\n      \"id\": 1,\n      \"cartId\": 1,\n      \"productId\": 5,\n      \"customizations\": [],\n      \"quantity\": 1,\n      \"addedDate\": 1500587233.829\n    }\n  ],\n  \"userName\": \"user\"\n}"
 						},
 						"description": ""
 					},
@@ -462,6 +472,49 @@
 								"key": "Content-Type",
 								"value": "application/json",
 								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{tokenUser}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Add product to cart of other user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 403\"] = responseCode.code === 403;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{cartPort}}/carts/{{cartId}}/products/{{productId}}",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{tokenAdmin}}",
+								"description": ""
 							}
 						],
 						"body": {
@@ -482,7 +535,7 @@
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);",
 									"",
-									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+									"tests[\"Status code is 400\"] = responseCode.code === 400;"
 								]
 							}
 						}
@@ -494,6 +547,49 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{tokenUser}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"pony\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{cartPort}}/carts/{{cartId}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{tokenUser}}",
 								"description": ""
 							}
 						],
@@ -613,6 +709,82 @@
 						"description": ""
 					},
 					"response": []
+				},
+				{
+					"name": "Delete cart of another user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"tests[\"Status code is 403\"] = responseCode.code === 403;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{cartPort}}/carts/{{cartId}}",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{tokenAdmin}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"pony\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"globals.cartId = void 0",
+									"tests[\"cartId removed\"] = globals.cartId === void 0;"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{basePath}}:{{cartPort}}/carts/{{cartId}}",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "bearer {{tokenUser}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"pony\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
 				}
 			]
 		},
@@ -671,39 +843,6 @@
 					"request": {
 						"url": "{{basePath}}:{{configPort}}/auth-service/default",
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"description": ""
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"description": ""
-					},
-					"response": []
-				},
-				{
-					"name": "Refresh config",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"type": "text/javascript",
-								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"",
-									"tests[\"Status code is 200\"] = responseCode.code === 200;"
-								]
-							}
-						}
-					],
-					"request": {
-						"url": "{{basePath}}:{{configPort}}/refresh",
-						"method": "POST",
 						"header": [
 							{
 								"key": "Authorization",
@@ -867,7 +1006,9 @@
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);",
 									"",
-									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"tests[\"4 application registred\"] = jsonData.applications.application.length == 4;"
 								]
 							}
 						}
@@ -879,6 +1020,11 @@
 							{
 								"key": "Authorization",
 								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
 								"description": ""
 							}
 						],

@@ -1,19 +1,18 @@
 package bzh.zomzog.zeshop.cart.service.mapper.cart;
 
-import java.util.List;
-
+import bzh.zomzog.zeshop.cart.domain.cart.Cart;
+import bzh.zomzog.zeshop.cart.service.dto.cart.CartDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 
-import bzh.zomzog.zeshop.cart.domain.cart.Cart;
-import bzh.zomzog.zeshop.cart.service.dto.cart.CartDTO;
+import java.util.List;
 
 /**
  * Mapper for the entity Cart and its DTO CartDTO.
  */
-@Mapper(componentModel = "spring", uses = { CartProductMapper.class })
+@Mapper(componentModel = "spring", uses = {CartProductMapper.class})
 public interface CartMapper {
 
     CartDTO cartToCartDTO(Cart cart);
@@ -25,8 +24,6 @@ public interface CartMapper {
             @Mapping(target = "updatedDate", ignore = true), //
     })
     Cart cartDTOToCart(CartDTO cartDTO);
-
-    List<Cart> cartDTOsToCarts(List<CartDTO> cartDTOs);
 
     @Mappings({ //
             @Mapping(target = "createdDate", ignore = true), //

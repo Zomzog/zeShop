@@ -15,6 +15,7 @@ import bzh.zomzog.zeshop.cart.web.rest.CartResource;
 import bzh.zomzog.zeshop.cart.web.rest.error.ExceptionTranslator;
 import bzh.zomzog.zeshop.exception.MockFeignException;
 import bzh.zomzog.zeshop.web.rest.TestUtil;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -65,6 +67,7 @@ public class CartResourceTest {
     private static final Long SECOND_PRODUCT_ID = 2L;
 
     private static final Long FIRST_PRODUCT_CUSTOMIZATION_ID = 1L;
+    private static final String DEFAULT_USERNAME = "user";
 
     private final MockFeignException productNotFoundException = new MockFeignException(404, "status 404 reading ProductClient#getProduct(long)");
     private final MockFeignException productInternalError = new MockFeignException(500, "internal error");
@@ -113,7 +116,7 @@ public class CartResourceTest {
      * if they test an entity which requires the current entity.
      */
     public static Cart createEntity() {
-        final Cart cart = new Cart().createdDate(DEFAULT_CREATED_DATE).updatedDate(DEFAULT_UPDATED_DATE);
+        final Cart cart = new Cart().createdDate(DEFAULT_CREATED_DATE).updatedDate(DEFAULT_UPDATED_DATE).userName("user");
         return cart;
     }
 
@@ -128,8 +131,16 @@ public class CartResourceTest {
         this.product2 = new Product().id(FIRST_PRODUCT_ID);
     }
 
+    @After
+    public void teardown() {
+        if (null != this.cart.getId()) {
+            this.cartRepository.delete(this.cart.getId());
+        }
+    }
+
     @Test
     @Transactional
+    @WithMockUser
     public void createCart() throws Exception {
         final ZonedDateTime now = ZonedDateTime.now();
         final int databaseSizeBeforeCreate = this.cartRepository.findAll().size();
@@ -154,6 +165,7 @@ public class CartResourceTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void createCartWithProductWithNoCart() throws Exception {
         final int databaseSizeBeforeCreate = this.cartRepository.findAll().size();
         this.cartProduct.setCart(null);
@@ -174,6 +186,7 @@ public class CartResourceTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void createCartWithExistingId() throws Exception {
         // Create the Cart with an existing ID
         this.cartRepository.saveAndFlush(this.cart);
@@ -191,7 +204,7 @@ public class CartResourceTest {
         final List<Cart> cartList = this.cartRepository.findAll();
         assertThat(cartList).hasSize(databaseSizeBeforeCreate);
         // Teardown
-        this.cartRepository.delete(this.cart.getId());
+
     }
 
     @Test
@@ -205,7 +218,7 @@ public class CartResourceTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(this.cart.getId().intValue())));
         // Teardown
-        this.cartRepository.delete(this.cart.getId());
+
     }
 
     @Test
@@ -219,7 +232,7 @@ public class CartResourceTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.id").value(this.cart.getId().intValue()));
         // Teardown
-        this.cartRepository.delete(this.cart.getId());
+
     }
 
     @Test
@@ -230,6 +243,7 @@ public class CartResourceTest {
     }
 
     @Test
+    @WithMockUser
     public void updateCart() throws Exception {
         // Init mocks
         BDDMockito.given(this.productClient.getProduct(FIRST_PRODUCT_ID)).willReturn(this.product1);
@@ -247,7 +261,7 @@ public class CartResourceTest {
         updatedCart.getProducts().add(new CartProduct().productId(SECOND_PRODUCT_ID).quantity(1L));
         final CartDTO cartDTO = this.cartMapper.cartToCartDTO(updatedCart);
 
-        this.restCartMockMvc.perform(put("/carts").contentType(TestUtil.APPLICATION_JSON_UTF8)
+        this.restCartMockMvc.perform(put("/carts/{id}", this.cart.getId()).contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(cartDTO))).andExpect(status().isOk());
 
         // Validate the Cart in the database
@@ -260,11 +274,12 @@ public class CartResourceTest {
         assertThat(testCart.getUpdatedDate()).isNotEqualTo(UPDATED_UPDATED_DATE);
         assertThat(testCart.getUpdatedDate()).isAfter(now);
         // Teardown
-        this.cartRepository.delete(this.cart.getId());
+
     }
 
 
     @Test
+    @WithMockUser
     public void updateCartWithCustomizedPorduct() throws Exception {
         // Init mocks
         this.product2.getCustomizationFields().add(this.custo1.id(FIRST_PRODUCT_CUSTOMIZATION_ID));
@@ -293,7 +308,7 @@ public class CartResourceTest {
 
         final CartDTO cartDTO = this.cartMapper.cartToCartDTO(updatedCart);
 
-        this.restCartMockMvc.perform(put("/carts").contentType(TestUtil.APPLICATION_JSON_UTF8)
+        this.restCartMockMvc.perform(put("/carts/{id}", this.cart.getId()).contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(cartDTO))).andExpect(status().isOk());
 
         // Validate the Cart in the database
@@ -307,10 +322,11 @@ public class CartResourceTest {
         assertThat(pcd.getValue()).isEqualTo("PONY");
 
         // Teardown
-        this.cartRepository.delete(this.cart.getId());
+
     }
 
     @Test
+    @WithMockUser
     public void updateCartWithInvalidCustomizedPorduct() throws Exception {
         // Init mocks
         BDDMockito.given(this.productClient.getProduct(FIRST_PRODUCT_ID)).willReturn(new Product().id(FIRST_PRODUCT_ID));
@@ -335,15 +351,16 @@ public class CartResourceTest {
 
         final CartDTO cartDTO = this.cartMapper.cartToCartDTO(updatedCart);
 
-        this.restCartMockMvc.perform(put("/carts").contentType(TestUtil.APPLICATION_JSON_UTF8)
+        this.restCartMockMvc.perform(put("/carts/{id}", this.cart.getId()).contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(cartDTO))).andExpect(status().isBadRequest());
 
         // Teardown
-        this.cartRepository.delete(this.cart.getId());
+
     }
 
     @Test
     @Transactional
+    @WithMockUser
     public void updateNonExistingCart() throws Exception {
         final int databaseSizeBeforeUpdate = this.cartRepository.findAll().size();
 
@@ -352,15 +369,16 @@ public class CartResourceTest {
 
         // If the entity doesn't have an ID, it will be created instead of just
         // being updated
-        this.restCartMockMvc.perform(put("/carts").contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(cartDTO))).andExpect(status().isCreated());
+        this.restCartMockMvc.perform(put("/carts/{id}", Integer.MAX_VALUE).contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(cartDTO))).andExpect(status().isBadRequest());
 
         // Validate the Cart in the database
         final List<Cart> cartList = this.cartRepository.findAll();
-        assertThat(cartList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(cartList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
+    @WithMockUser
     public void updateCartWithNonExistingPorduct() throws Exception {
         // Init mocks
         BDDMockito.given(this.productClient.getProduct(FIRST_PRODUCT_ID)).willReturn(new Product().id(FIRST_PRODUCT_ID));
@@ -375,7 +393,7 @@ public class CartResourceTest {
         updatedCart.getProducts().add(new CartProduct().productId(SECOND_PRODUCT_ID).quantity(1L));
         final CartDTO cartDTO = this.cartMapper.cartToCartDTO(updatedCart);
 
-        this.restCartMockMvc.perform(put("/carts").contentType(TestUtil.APPLICATION_JSON_UTF8)
+        this.restCartMockMvc.perform(put("/carts/{id}", this.cart.getId()).contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(cartDTO))).andExpect(status().isBadRequest());
 
         // Validate the Cart in the database
@@ -384,10 +402,11 @@ public class CartResourceTest {
         assertThat(testCart.getProducts()).hasSize(1);
 
         // Teardown
-        this.cartRepository.delete(this.cart.getId());
+
     }
 
     @Test
+    @WithMockUser
     public void updateCartErrorCallProductService() throws Exception {
         // Init mocks
         BDDMockito.given(this.productClient.getProduct(FIRST_PRODUCT_ID)).willReturn(new Product().id(FIRST_PRODUCT_ID));
@@ -402,7 +421,7 @@ public class CartResourceTest {
         updatedCart.getProducts().add(new CartProduct().productId(SECOND_PRODUCT_ID).quantity(1L));
         final CartDTO cartDTO = this.cartMapper.cartToCartDTO(updatedCart);
 
-        this.restCartMockMvc.perform(put("/carts").contentType(TestUtil.APPLICATION_JSON_UTF8)
+        this.restCartMockMvc.perform(put("/carts/{id}", this.cart.getId()).contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(cartDTO))).andExpect(status().isInternalServerError());
 
         // Validate the Cart in the database
@@ -411,7 +430,35 @@ public class CartResourceTest {
         assertThat(testCart.getProducts()).hasSize(1);
 
         // Teardown
-        this.cartRepository.delete(this.cart.getId());
+
+    }
+
+
+    @Test
+    @WithMockUser("pony")
+    public void updateCartOfAnotherUser() throws Exception {
+        // Init mocks
+        BDDMockito.given(this.productClient.getProduct(FIRST_PRODUCT_ID)).willReturn(this.product1);
+        BDDMockito.given(this.productClient.getProduct(SECOND_PRODUCT_ID)).willReturn(this.product2);
+
+
+        // Initialize the database
+        this.cartRepository.saveAndFlush(this.cart);
+
+        // Update the cart
+        final Cart updatedCart = this.cartRepository.findOneWithEagerRelationships(this.cart.getId());
+        final CartDTO cartDTO = this.cartMapper.cartToCartDTO(updatedCart);
+
+        this.restCartMockMvc.perform(put("/carts/{Id}", this.cart.getId()).contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(cartDTO))).andExpect(status().isForbidden());
+
+        // Validate the Cart in the database
+        final Cart testCart = this.cartRepository.findOneWithEagerRelationships(updatedCart.getId());
+        assertThat(testCart.getUpdatedDate()).isEqualTo(this.cart.getUpdatedDate());
+        assertThat(testCart.getProducts()).hasSize(1);
+
+        // Teardown
+
     }
 
     @Test
@@ -438,7 +485,7 @@ public class CartResourceTest {
         assertThat(testCart.getProducts()).hasSize(2);
 
         // Teardown
-        this.cartRepository.delete(this.cart.getId());
+
     }
 
 
@@ -488,11 +535,12 @@ public class CartResourceTest {
         assertThat(testCart.getProducts()).hasSize(1);
 
         // Teardown
-        this.cartRepository.delete(this.cart.getId());
+
     }
 
     @Test
     @Transactional
+    @WithMockUser
     public void deleteCart() throws Exception {
         // Initialize the database
         this.cartRepository.saveAndFlush(this.cart);
@@ -506,6 +554,8 @@ public class CartResourceTest {
         // Validate the database is empty
         assertThat(this.cartRepository.count()).isEqualTo(databaseSizeBeforeDelete - 1);
 
+        // Teardown
+        this.cart.id(null);
     }
 
     @Test

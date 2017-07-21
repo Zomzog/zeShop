@@ -1,9 +1,9 @@
 package bzh.zomzog.zeshop.auth.security;
 
+import bzh.zomzog.zeshop.configuration.Constants;
+import bzh.zomzog.zeshop.util.SecurityUtils;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
-
-import bzh.zomzog.zeshop.configuration.Constants;
 
 /**
  * Implementation of AuditorAware based on Spring Security.

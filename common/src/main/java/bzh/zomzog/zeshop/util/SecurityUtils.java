@@ -1,11 +1,10 @@
-package bzh.zomzog.zeshop.auth.security;
+package bzh.zomzog.zeshop.util;
 
+import bzh.zomzog.zeshop.configuration.AuthoritiesConstants;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import bzh.zomzog.zeshop.configuration.AuthoritiesConstants;
 
 /**
  * Utility class for Spring Security.
@@ -45,22 +44,17 @@ public final class SecurityUtils {
         final Authentication authentication = securityContext.getAuthentication();
         if (authentication != null) {
             return authentication.getAuthorities().stream()
-                    .noneMatch(
-                            grantedAuthority -> grantedAuthority.getAuthority().equals(AuthoritiesConstants.ANONYMOUS));
+                    .noneMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthoritiesConstants.ANONYMOUS));
         }
         return false;
     }
 
     /**
      * If the current user has a specific authority (security role).
-     *
      * <p>
-     * The name of this method comes from the isUserInRole() method in the
-     * Servlet API
-     * </p>
+     * <p>The name of this method comes from the isUserInRole() method in the Servlet API</p>
      *
-     * @param authority
-     *            the authority to check
+     * @param authority the authority to check
      * @return true if the current user has the authority, false otherwise
      */
     public static boolean isCurrentUserInRole(final String authority) {

@@ -167,7 +167,7 @@ public class CartProduct implements Serializable {
     @Override
     public String toString() {
         return "CartProduct [" + (this.id != null ? "id=" + this.id + ", " : "")
-                + (this.cart != null ? "cart=" + this.cart + ", " : "")
+                + (this.cart != null ? "cartId=" + this.cart.getId() + ", " : "")
                 + (this.productId != null ? "productId=" + this.productId + ", " : "")
                 + "customizations=" + this.customizations + ", "
                 + (this.quantity != null ? "quantity=" + this.quantity + ", " : "")
