@@ -1,15 +1,14 @@
 package bzh.zomzog.zeshop.auth.service.dto;
 
+import bzh.zomzog.zeshop.configuration.Constants;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import bzh.zomzog.zeshop.configuration.Constants;
-
 /**
  * DTO wich extend {@link AccountDTO} for creation
- * 
- * @author Zomzog
  *
+ * @author Zomzog
  */
 public class ManagedAccountDTO extends AccountDTO {
 
@@ -30,8 +29,7 @@ public class ManagedAccountDTO extends AccountDTO {
     }
 
     /**
-     * @param password
-     *            the password to set
+     * @param password the password to set
      */
     public void setPassword(final String password) {
         this.password = password;
@@ -60,18 +58,10 @@ public class ManagedAccountDTO extends AccountDTO {
         if (this == obj) {
             return true;
         }
-        if (!super.equals(obj)) {
-            return false;
-        }
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ManagedAccountDTO other = (ManagedAccountDTO) obj;
-        if (this.password == null) {
-            if (other.password != null) {
-                return false;
-            }
-        } else if (!this.password.equals(other.password)) {
+        if (!super.equals(obj)) {
             return false;
         }
         return true;

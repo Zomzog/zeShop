@@ -38,8 +38,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -157,13 +156,15 @@ public class ProductResourceTest {
         assertThat(testProduct.getCreatedDate()).isNotEqualTo(DEFAULT_CREATED_DATE);
         assertThat(testProduct.getCreatedDate()).isAfter(now);
         assertThat(testProduct.getUpdatedDate()).isNull();
+
+        // Teardown
+        this.productRepository.delete(testProduct.getId());
     }
 
     @Test
     @Transactional
     public void createProductWithCustomisation() throws Exception {
         final int databaseSizeBeforeCreate = this.productRepository.findAll().size();
-        final ZonedDateTime now = ZonedDateTime.now();
         // Create the Product
         final ProductDTO productDTO = this.productMapper.productToProductDTO(this.product);
         final ProductCustomizationFieldDTO pcf1 = new ProductCustomizationFieldDTO();
@@ -196,6 +197,8 @@ public class ProductResourceTest {
                 .filter(pcf -> pcf.getName().equals(pcf3.getName()) && pcf.getType().equals(pcf3.getType()))
                 .collect(Collectors.toList())).hasSize(1);
 
+        // Teardown
+        this.productRepository.delete(testProduct.getId());
     }
 
     @Test
@@ -249,6 +252,9 @@ public class ProductResourceTest {
                 .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY)))
                 .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())))
                 .andExpect(jsonPath("$.[*].available").value(hasItem(DEFAULT_AVAILABLE)));
+
+        // Teardown
+        this.productRepository.delete(this.product.getId());
     }
 
     @Test
@@ -266,6 +272,8 @@ public class ProductResourceTest {
                 .andExpect(jsonPath("$.quantity").value(DEFAULT_QUANTITY))
                 .andExpect(jsonPath("$.price").value(DEFAULT_PRICE.doubleValue()))
                 .andExpect(jsonPath("$.available").value(DEFAULT_AVAILABLE));
+        // Teardown
+        this.productRepository.delete(this.product.getId());
     }
 
     @Test
@@ -310,6 +318,9 @@ public class ProductResourceTest {
         assertThat(testProduct.getCreatedDate()).isNotEqualTo(UPDATED_CREATED_DATE);
         assertThat(testProduct.getUpdatedDate()).isNotEqualTo(UPDATED_UPDATED_DATE);
         assertThat(testProduct.getUpdatedDate()).isAfter(now);
+
+        // Teardown
+        this.productRepository.delete(testProduct.getId());
     }
 
     @Test
@@ -377,6 +388,42 @@ public class ProductResourceTest {
                 .andExpect(jsonPath("$.images.[*].name").value(hasItem("image2")));
 
         assertThat(this.imageRepository.count()).isEqualTo(imageCountBeforeUpdate);
+
+        // Teardown
+        this.productRepository.delete(this.product.getId());
+    }
+
+    @Test
+    public void updateWithUpdateCustomizationField() throws Exception {
+        // Initialize the database
+        this.product.getCustomizationFields().add(new ProductCustomizationField()
+                .name("pony")
+                .product(this.product)
+                .type(ProductCustomizationType.BOOLEAN));
+        this.product = this.productRepository.saveAndFlush(this.product);
+
+        // Create the Product
+        // Update first
+        this.product.getCustomizationFields().iterator().next().type(ProductCustomizationType.TEXT);
+        // Add new
+        this.product.getCustomizationFields().add(new ProductCustomizationField()
+                .name("custom")
+                .type(ProductCustomizationType.CUSTOM));
+        final ProductDTO productDTO = this.productMapper.productToProductDTO(this.product);
+
+        // If the entity doesn't have an ID, it will be created instead of just
+        // being updated
+        this.restProductMockMvc.perform(put("/products").contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(productDTO)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.id").value(this.product.getId().intValue()))
+                .andExpect(jsonPath("$.customizationFields").value(hasSize(2)))
+                .andExpect(jsonPath("$.customizationFields.[*].name").value(hasItems("pony", "custom")))
+                .andExpect(jsonPath("$.customizationFields.[*].type").value(hasItems(ProductCustomizationType.TEXT.toString(), ProductCustomizationType.CUSTOM.toString())));
+
+        // Teardown
+        this.productRepository.delete(this.product.getId());
     }
 }
 

@@ -15,7 +15,7 @@ public class ProductCustomizationData implements Serializable {
      * Serial Id
      */
     private static final long serialVersionUID = 5097545428325340620L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -94,5 +94,6 @@ public class ProductCustomizationData implements Serializable {
     public void setValue(final String value) {
         this.value = value;
     }
+
 
 }

@@ -67,11 +67,6 @@ public class Product implements Serializable {
         this.updatedDate = ZonedDateTime.now();
     }
 
-    public Product id(final Long id) {
-        this.id = id;
-        return this;
-    }
-
     public Product name(final String name) {
         this.name = name;
         return this;
@@ -199,24 +194,10 @@ public class Product implements Serializable {
     }
 
     /**
-     * @param createdDate the createdDate to set
-     */
-    public void setCreatedDate(final ZonedDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    /**
      * @return the updatedDate
      */
     public ZonedDateTime getUpdatedDate() {
         return this.updatedDate;
-    }
-
-    /**
-     * @param updatedDate the updatedDate to set
-     */
-    public void setUpdatedDate(final ZonedDateTime updatedDate) {
-        this.updatedDate = updatedDate;
     }
 
     /**

@@ -59,11 +59,6 @@ public class CartProduct implements Serializable {
         this.updatedDate = ZonedDateTime.now();
     }
 
-    public CartProduct id(final Long id) {
-        this.id = id;
-        return this;
-    }
-
     public CartProduct productId(final Long productId) {
         this.productId = productId;
         return this;
@@ -76,11 +71,6 @@ public class CartProduct implements Serializable {
 
     public CartProduct quantity(final Long quantity) {
         this.quantity = quantity;
-        return this;
-    }
-
-    public CartProduct addedDate(final ZonedDateTime addedDate) {
-        this.addedDate = addedDate;
         return this;
     }
 

@@ -159,6 +159,8 @@ public class CartResourceTest {
         assertThat(testCart.getCreatedDate()).isAfter(now);
         assertThat(testCart.getUpdatedDate()).isAfter(now);
         assertThat(testCart.getProducts()).hasSize(1);
+        final CartProduct product = testCart.getProducts().iterator().next();
+        assertThat(product.getProductId()).isEqualTo(this.product1.getId());
         // Teardown
         this.cartRepository.delete(testCart.getId());
     }

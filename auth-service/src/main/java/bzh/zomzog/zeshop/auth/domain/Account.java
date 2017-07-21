@@ -63,11 +63,6 @@ public class Account extends AbstractAuditingEntity {
     public Account() {
     }
 
-    public Account(final String login, final String password) {
-        this.login = login;
-        this.password = password;
-    }
-
     /**
      * @return the id
      */
