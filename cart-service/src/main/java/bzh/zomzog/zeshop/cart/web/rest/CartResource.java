@@ -4,6 +4,7 @@ import bzh.zomzog.zeshop.cart.service.CartService;
 import bzh.zomzog.zeshop.cart.service.dto.cart.CartDTO;
 import bzh.zomzog.zeshop.configuration.AuthoritiesConstants;
 import bzh.zomzog.zeshop.exception.BadParameterException;
+import bzh.zomzog.zeshop.exception.NotFoundException;
 import bzh.zomzog.zeshop.util.SecurityUtils;
 import bzh.zomzog.zeshop.web.rest.utils.HeaderUtil;
 import bzh.zomzog.zeshop.web.rest.utils.PaginationUtil;
@@ -71,7 +72,7 @@ public class CartResource {
      */
     @PreAuthorize("#cartDTO.userName == authentication.name")
     @PutMapping("/carts/{id}")
-    public ResponseEntity<CartDTO> updateCart(@Valid @RequestBody final CartDTO cartDTO, @PathVariable final Long id) throws URISyntaxException, BadParameterException {
+    public ResponseEntity<CartDTO> updateCart(@Valid @RequestBody final CartDTO cartDTO, @PathVariable final Long id) throws URISyntaxException, BadParameterException, NotFoundException {
         this.log.debug("REST request to update Cart : {}", cartDTO);
         if (cartDTO.getId() != id) {
             throw new BadParameterException("cart", "id", id.toString());
@@ -106,7 +107,7 @@ public class CartResource {
      * cartDTO, or with status 404 (Not Found)
      */
     @GetMapping("/carts/{id}")
-    public ResponseEntity<CartDTO> getCart(@PathVariable final Long id) throws BadParameterException {
+    public ResponseEntity<CartDTO> getCart(@PathVariable final Long id) throws BadParameterException, NotFoundException {
         this.log.debug("REST request to get Cart : {}", id);
         final CartDTO cartDTO = this.cartService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(cartDTO));
@@ -119,7 +120,7 @@ public class CartResource {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/carts/{id}")
-    public ResponseEntity<Void> deleteCart(@PathVariable final Long id) throws BadParameterException {
+    public ResponseEntity<Void> deleteCart(@PathVariable final Long id) throws BadParameterException, NotFoundException {
         this.log.debug("REST request to delete Cart : {}", id);
         this.cartService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
@@ -127,7 +128,7 @@ public class CartResource {
 
     @PutMapping("/carts/{cartId}/products/{productId}")
     public ResponseEntity<CartDTO> addToCart(@PathVariable final Long cartId, @PathVariable final Long productId)
-            throws URISyntaxException, BadParameterException {
+            throws URISyntaxException, BadParameterException, NotFoundException {
         this.log.debug("REST request to add to  Cart : {} product {}", cartId, productId);
         final CartDTO result = this.cartService.addToCart(cartId, productId);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, cartId.toString()))

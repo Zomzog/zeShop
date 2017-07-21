@@ -11,6 +11,7 @@ import bzh.zomzog.zeshop.cart.service.dto.cart.CartProductDTO;
 import bzh.zomzog.zeshop.cart.service.dto.product.ProductCustomizationDataDTO;
 import bzh.zomzog.zeshop.cart.service.mapper.cart.CartMapper;
 import bzh.zomzog.zeshop.exception.BadParameterException;
+import bzh.zomzog.zeshop.exception.NotFoundException;
 import bzh.zomzog.zeshop.util.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +80,7 @@ public class CartService {
      * @return the entity
      */
     @Transactional(readOnly = true)
-    public CartDTO findOne(final Long id) throws BadParameterException {
+    public CartDTO findOne(final Long id) throws NotFoundException {
         this.log.debug("Request to get Cart : {}", id);
         final Cart cart = getCartById(id);
         final CartDTO cartDTO = this.cartMapper.cartToCartDTO(cart);
@@ -91,7 +92,7 @@ public class CartService {
      *
      * @param id the id of the entity
      */
-    public void delete(final Long id) throws BadParameterException {
+    public void delete(final Long id) throws NotFoundException {
         this.log.debug("Request to delete Cart : {}", id);
         getCartById(id);
         this.cartRepository.delete(id);
@@ -103,7 +104,7 @@ public class CartService {
      * @param cartDTO the entity to save
      * @return the persisted entity
      */
-    public CartDTO update(final CartDTO cartDTO) throws BadParameterException {
+    public CartDTO update(final CartDTO cartDTO) throws NotFoundException, BadParameterException {
         this.log.debug("Request to save Product : {}", cartDTO);
 
         Cart cart = getCartById(cartDTO.getId());
@@ -166,7 +167,7 @@ public class CartService {
      * @return
      * @throws BadParameterException
      */
-    public CartDTO addToCart(final Long cartId, final Long productId) throws BadParameterException {
+    public CartDTO addToCart(final Long cartId, final Long productId) throws NotFoundException, BadParameterException {
         final Cart cart = getCartById(cartId);
         final Optional<Product> product = this.productService.get(productId);
         if (!product.isPresent()) {
@@ -207,10 +208,11 @@ public class CartService {
      *
      * @param cartId cart's id
      */
-    private Cart getCartById(final Long cartId) throws BadParameterException {
+    private Cart getCartById(final Long cartId) throws NotFoundException {
         final Cart cart = this.cartRepository.findOne(cartId);
         if (null == cart) {
-            throw new BadParameterException("cart", "id", cartId.toString());
+//            throw new BadParameterException("cart", "id", cartId.toString());
+            throw new NotFoundException("Cart not found");
         }
         if (!cart.getUserName().equals(SecurityUtils.getCurrentUserLogin())) {
             throw new AccessDeniedException("Not your cart!");

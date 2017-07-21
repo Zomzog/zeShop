@@ -209,6 +209,7 @@ public class CartResourceTest {
 
     @Test
     @Transactional
+    @WithMockUser("admin")
     public void getAllCarts() throws Exception {
         // Initialize the database
         this.cartRepository.saveAndFlush(this.cart);
@@ -223,6 +224,7 @@ public class CartResourceTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void getCart() throws Exception {
         // Initialize the database
         this.cartRepository.saveAndFlush(this.cart);
@@ -237,6 +239,7 @@ public class CartResourceTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void getNonExistingCart() throws Exception {
         // Get the cart
         this.restCartMockMvc.perform(get("/carts/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -463,6 +466,7 @@ public class CartResourceTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void addToCart() throws Exception {
         BDDMockito.given(this.productClient.getProduct(Matchers.anyLong())).willReturn(new Product().id(SECOND_PRODUCT_ID));
         final ZonedDateTime now = ZonedDateTime.now();
@@ -501,7 +505,7 @@ public class CartResourceTest {
                 .perform(put("/carts/{cartId}/products/{productId}", Integer.MAX_VALUE,
                         Integer.MAX_VALUE)
                         .contentType(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
 
         // Validate the Cart in the database
         final List<Cart> cartList = this.cartRepository.findAll();
@@ -512,6 +516,7 @@ public class CartResourceTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void addToCartNotExistingProduct() throws Exception {
         BDDMockito.given(this.productClient.getProduct(Matchers.anyLong())).willThrow(this.productNotFoundException);
         // Initialize the database
