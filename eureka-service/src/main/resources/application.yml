@@ -1,1 +1,11 @@
-
+zeshop:
+  common:
+    swagger:
+      base-package: bzh.zomzog.zeshop.eureka
+      api:
+        name: Eureka service
+        description: Eureka service API
+        version: @project.version@
+      contact:
+        name: Zomzog
+        email: zomzog@zomzog.fr

@@ -10,5 +10,15 @@ spring:
         git:
           uri: https://github.com/Zomzog/zeShopConfig.git
 
-
+zeshop:
+  common:
+    swagger:
+      base-package: bzh.zomzog.zeshop.configuration
+      api:
+        name: Configuration service
+        description: Configuration service API
+        version: @project.version@
+      contact:
+        name: Zomzog
+        email: zomzog@zomzog.fr
 

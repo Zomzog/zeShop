@@ -1,5 +1,6 @@
 package bzh.zomzog.zeshop.auth.domain;
 
+import bzh.zomzog.zeshop.web.rest.TestUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;

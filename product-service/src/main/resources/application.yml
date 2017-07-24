@@ -22,3 +22,15 @@ spring:
 liquibase:
   change-log: classpath:config/liquibase/master.xml
   contexts: dev
+
+zeshop:
+  common:
+    swagger:
+      base-package: bzh.zomzog.zeshop.product
+      api:
+        name: Product service
+        description: Product service API
+        version: @project.version@
+      contact:
+        name: Zomzog
+        email: zomzog@zomzog.fr

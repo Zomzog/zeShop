@@ -11,6 +11,7 @@ import bzh.zomzog.zeshop.auth.service.dto.ManagedAccountDTO;
 import bzh.zomzog.zeshop.auth.service.mapper.AccountMapper;
 import bzh.zomzog.zeshop.auth.web.rest.error.ExceptionTranslator;
 import bzh.zomzog.zeshop.common.configuration.AuthoritiesConstants;
+import bzh.zomzog.zeshop.web.rest.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

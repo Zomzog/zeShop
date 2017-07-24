@@ -1,4 +1,4 @@
-package bzh.zomzog.zeshop.config;
+package bzh.zomzog.zeshop.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +21,7 @@ public class SwaggerConfiguration {
 
     @Bean
     public UiConfiguration uiConfig() {
-        return new UiConfiguration("validatorUrl", "list", "alpha", "schema",
+        return new UiConfiguration(null, "list", "alpha", "schema",
                 UiConfiguration.Constants.DEFAULT_SUBMIT_METHODS, false, true, 60000L);
     }
 
@@ -32,10 +32,11 @@ public class SwaggerConfiguration {
         @Override
         public List<SwaggerResource> get() {
             final List<SwaggerResource> resources = new ArrayList<>();
-            //resources.add(swaggerResource("account-service", "/api/account/v2/api-docs", "2.0"));
-            resources.add(swaggerResource("cart-service", "/api/cart-service/v2/api-docs", "2.0"));
-            resources.add(swaggerResource("product-service", "/api/product-service/v2/api-docs", "2.0"));
-            //resources.add(swaggerResource("transfer-service", "/api/transfer/v2/api-docs", "2.0"));
+            resources.add(swaggerResource("auth", "/api/auth-service/v2/api-docs", "2.0"));
+            resources.add(swaggerResource("cart", "/api/cart-service/v2/api-docs", "2.0"));
+            resources.add(swaggerResource("product", "/api/product-service/v2/api-docs", "2.0"));
+            resources.add(swaggerResource("gateway", "/v2/api-docs", "2.0"));
+
             return resources;
         }
 

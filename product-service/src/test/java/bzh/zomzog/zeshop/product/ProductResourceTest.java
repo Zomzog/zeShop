@@ -13,6 +13,7 @@ import bzh.zomzog.zeshop.product.service.dto.product.ProductDTO;
 import bzh.zomzog.zeshop.product.service.mapper.product.ProductMapper;
 import bzh.zomzog.zeshop.product.web.rest.ProductResource;
 import bzh.zomzog.zeshop.product.web.rest.error.ExceptionTranslator;
+import bzh.zomzog.zeshop.web.rest.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

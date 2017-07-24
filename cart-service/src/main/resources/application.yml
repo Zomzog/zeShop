@@ -23,3 +23,14 @@ liquibase:
   change-log: classpath:config/liquibase/master.xml
   contexts: dev
 
+zeshop:
+  common:
+    swagger:
+      base-package: bzh.zomzog.zeshop.cart
+      api:
+        name: Cart service
+        description: Cart service API
+        version: @project.version@
+      contact:
+        name: Zomzog
+        email: zomzog@zomzog.fr

@@ -1,0 +1,12 @@
+
+zeshop:
+  common:
+    swagger:
+      api:
+        name: Gateway service
+        description: Gateway service API
+        version: @project.version@
+      base-package: bzh.zomzog.zeshop.gateway
+      contact:
+        name: Zomzog
+        email: zomzog@zomzog.fr

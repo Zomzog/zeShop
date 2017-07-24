@@ -52,7 +52,6 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
         if(this.env.acceptsProfiles(ConfigurationConstants.SPRING_PROFILE_DEVELOPMENT)){
             http
                 .authorizeRequests()
-                    .antMatchers("/swagger-ui.html").permitAll()
                     .antMatchers("/h2-console/**").permitAll();
         }
         // @formatter:on
