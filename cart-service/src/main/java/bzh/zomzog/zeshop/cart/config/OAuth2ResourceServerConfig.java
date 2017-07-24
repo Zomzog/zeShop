@@ -1,9 +1,11 @@
 package bzh.zomzog.zeshop.cart.config;
 
 import bzh.zomzog.zeshop.configuration.AuthoritiesConstants;
+import bzh.zomzog.zeshop.configuration.ConfigurationConstants;
 import org.apache.commons.io.IOUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,7 +22,10 @@ import java.io.IOException;
 @EnableResourceServer
 public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
-    public OAuth2ResourceServerConfig() {
+    private final Environment env;
+
+    public OAuth2ResourceServerConfig(final Environment env) {
+        this.env = env;
     }
 
     @Override
@@ -43,10 +48,13 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
                     .antMatchers("/carts/**").authenticated()
                     .antMatchers("/management/health").permitAll()
                     .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
-                    .antMatchers("/swagger-resources/configuration/ui").permitAll()
-                    // FIXEME Remove that
+                    .antMatchers("/swagger-resources/configuration/ui").permitAll();
+        if(this.env.acceptsProfiles(ConfigurationConstants.SPRING_PROFILE_DEVELOPMENT)){
+            http
+                .authorizeRequests()
+                    .antMatchers("/swagger-ui.html").permitAll()
                     .antMatchers("/h2-console/**").permitAll();
-
+        }
         // @formatter:on
     }
 
