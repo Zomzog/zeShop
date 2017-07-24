@@ -1,4 +1,4 @@
-package bzh.zomzog.zeshop;
+package bzh.zomzog.zeshop.eureka;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
