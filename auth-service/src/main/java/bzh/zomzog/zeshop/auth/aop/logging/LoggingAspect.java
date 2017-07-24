@@ -1,7 +1,6 @@
 package bzh.zomzog.zeshop.auth.aop.logging;
 
-import java.util.Arrays;
-
+import bzh.zomzog.zeshop.common.configuration.ConfigurationConstants;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -12,11 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 
-import bzh.zomzog.zeshop.configuration.ConfigurationConstants;
+import java.util.Arrays;
 
 /**
  * Aspect for logging execution of service and repository Spring components.
- *
+ * <p>
  * By default, it only runs with the "dev" profile.
  */
 @Aspect

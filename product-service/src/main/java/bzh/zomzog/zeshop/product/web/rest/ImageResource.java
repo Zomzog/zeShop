@@ -1,7 +1,7 @@
 package bzh.zomzog.zeshop.product.web.rest;
 
-import bzh.zomzog.zeshop.exception.BadParameterException;
-import bzh.zomzog.zeshop.exception.NotFoundException;
+import bzh.zomzog.zeshop.common.exception.BadParameterException;
+import bzh.zomzog.zeshop.common.exception.NotFoundException;
 import bzh.zomzog.zeshop.product.exception.StorageException;
 import bzh.zomzog.zeshop.product.exception.StorageFileNotFoundException;
 import bzh.zomzog.zeshop.product.service.ImageService;

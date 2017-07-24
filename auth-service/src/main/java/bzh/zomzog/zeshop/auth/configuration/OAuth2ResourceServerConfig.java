@@ -1,6 +1,6 @@
 package bzh.zomzog.zeshop.auth.configuration;
 
-import bzh.zomzog.zeshop.configuration.AuthoritiesConstants;
+import bzh.zomzog.zeshop.common.configuration.AuthoritiesConstants;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;

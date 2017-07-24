@@ -1,6 +1,6 @@
 package bzh.zomzog.zeshop.auth.exception;
 
-import bzh.zomzog.zeshop.exception.FunctionalException;
+import bzh.zomzog.zeshop.common.exception.FunctionalException;
 
 /**
  * Exception fro login already in use

@@ -5,7 +5,7 @@ import bzh.zomzog.zeshop.auth.domain.Account;
 import bzh.zomzog.zeshop.auth.domain.Authority;
 import bzh.zomzog.zeshop.auth.exception.UserNotActivatedException;
 import bzh.zomzog.zeshop.auth.repository.AccountRepository;
-import bzh.zomzog.zeshop.configuration.AuthoritiesConstants;
+import bzh.zomzog.zeshop.common.configuration.AuthoritiesConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

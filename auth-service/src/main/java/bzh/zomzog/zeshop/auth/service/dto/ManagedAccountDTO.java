@@ -1,6 +1,6 @@
 package bzh.zomzog.zeshop.auth.service.dto;
 
-import bzh.zomzog.zeshop.configuration.Constants;
+import bzh.zomzog.zeshop.common.configuration.Constants;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

@@ -1,6 +1,6 @@
 package bzh.zomzog.zeshop.auth.domain;
 
-import bzh.zomzog.zeshop.domain.AbstractAuditingEntity;
+import bzh.zomzog.zeshop.common.domain.AbstractAuditingEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.BatchSize;
 

@@ -1,10 +1,10 @@
 package bzh.zomzog.zeshop.product.web.rest;
 
+import bzh.zomzog.zeshop.common.web.rest.utils.HeaderUtil;
+import bzh.zomzog.zeshop.common.web.rest.utils.PaginationUtil;
+import bzh.zomzog.zeshop.common.web.rest.utils.ResponseUtil;
 import bzh.zomzog.zeshop.product.service.ProductService;
 import bzh.zomzog.zeshop.product.service.dto.product.ProductDTO;
-import bzh.zomzog.zeshop.web.rest.utils.HeaderUtil;
-import bzh.zomzog.zeshop.web.rest.utils.PaginationUtil;
-import bzh.zomzog.zeshop.web.rest.utils.ResponseUtil;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

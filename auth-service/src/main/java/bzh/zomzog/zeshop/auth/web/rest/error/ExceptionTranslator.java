@@ -1,5 +1,9 @@
 package bzh.zomzog.zeshop.auth.web.rest.error;
 
+import bzh.zomzog.zeshop.auth.exception.LoginAlreadyInUseException;
+import bzh.zomzog.zeshop.common.web.rest.errors.CommonExceptionTranslator;
+import bzh.zomzog.zeshop.common.web.rest.errors.ErrorConstants;
+import bzh.zomzog.zeshop.common.web.rest.errors.ErrorVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -7,11 +11,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import bzh.zomzog.zeshop.auth.exception.LoginAlreadyInUseException;
-import bzh.zomzog.zeshop.web.rest.errors.CommonExceptionTranslator;
-import bzh.zomzog.zeshop.web.rest.errors.ErrorConstants;
-import bzh.zomzog.zeshop.web.rest.errors.ErrorVM;
 
 /**
  * Controller advice to translate the server side exceptions to client-friendly

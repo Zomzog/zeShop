@@ -1,6 +1,6 @@
 package bzh.zomzog.zeshop.product.config;
 
-import bzh.zomzog.zeshop.configuration.AuthoritiesConstants;
+import bzh.zomzog.zeshop.common.configuration.AuthoritiesConstants;
 import org.apache.commons.io.IOUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

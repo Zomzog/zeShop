@@ -1,9 +1,9 @@
 package bzh.zomzog.zeshop.product.web.rest.error;
 
+import bzh.zomzog.zeshop.common.web.rest.errors.CommonExceptionTranslator;
+import bzh.zomzog.zeshop.common.web.rest.errors.ErrorConstants;
+import bzh.zomzog.zeshop.common.web.rest.errors.ErrorVM;
 import bzh.zomzog.zeshop.product.exception.StorageFileNotFoundException;
-import bzh.zomzog.zeshop.web.rest.errors.CommonExceptionTranslator;
-import bzh.zomzog.zeshop.web.rest.errors.ErrorConstants;
-import bzh.zomzog.zeshop.web.rest.errors.ErrorVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
