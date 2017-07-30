@@ -14,8 +14,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ZADMIN_ROUTES } from './routes';
 import { ZAdmin } from './zadmin.component';
 import { NavBarModule } from './core/navbar/navbar.component';
-import { Home } from './home/home.component';
-import { SignIn } from './sign-in/sign-in.component';
+import { HomeComponent } from './home/home.component';
+import { SignInComponent } from './sign-in/sign-in.component';
 
 import { OauthService } from './shared/oauth.service';
 import { CartService } from './shared/cartservice';
@@ -24,8 +24,8 @@ import { AuthInterceptor } from './shared/auth.interceptor';
 @NgModule({
   declarations: [
     ZAdmin, 
-    SignIn,
-    Home
+    SignInComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

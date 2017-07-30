@@ -1,7 +1,7 @@
 import { OauthService } from './../../shared/oauth.service';
-import {Component, NgModule} from '@angular/core';
-import {MdButtonModule} from '@angular/material';
-import {RouterModule} from '@angular/router';
+import { Component, NgModule } from '@angular/core';
+import { MdButtonModule } from '@angular/material';
+import { RouterModule } from '@angular/router';
 
 
 @Component({
@@ -9,9 +9,13 @@ import {RouterModule} from '@angular/router';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavBar {
-  constructor(private oauthService: OauthService) {};
+export class NavBarComponent {
+  constructor(private oauthService: OauthService) { };
 
+  isAuthenticated(): boolean {
+    //return this.oauthService.isAuthenticated();
+    return false;
+  }
   logout() {
     this.oauthService.logout();
   }
@@ -19,7 +23,7 @@ export class NavBar {
 
 @NgModule({
   imports: [MdButtonModule, RouterModule],
-  exports: [NavBar],
-  declarations: [NavBar],
+  exports: [NavBarComponent],
+  declarations: [NavBarComponent],
 })
-export class NavBarModule {}
+export class NavBarModule { }

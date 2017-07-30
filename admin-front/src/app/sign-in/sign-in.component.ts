@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.scss']
 })
-export class SignIn implements OnInit {
+export class SignInComponent implements OnInit {
 
   error = "";
   loading = false;

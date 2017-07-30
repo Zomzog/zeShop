@@ -8,7 +8,7 @@ import {RouterModule} from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class Home implements OnInit {
+export class HomeComponent implements OnInit {
 
   carts : Cart[];
   constructor(private cartService: CartService) { }
@@ -21,7 +21,7 @@ export class Home implements OnInit {
 
 @NgModule({
   imports: [RouterModule],
-  exports: [Home],
-  declarations: [Home],
+  exports: [HomeComponent],
+  declarations: [HomeComponent],
 })
 export class HomeModule { }
