@@ -8,8 +8,6 @@ import { OauthService } from './oauth.service';
 export class AuthInterceptor implements HttpInterceptor {
 
     constructor(private auth: OauthService) {
-      let pony = 1;
-      this.auth.token = "fu...";
     }
 
 

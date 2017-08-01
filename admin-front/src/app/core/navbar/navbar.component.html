@@ -7,7 +7,6 @@
     <div class="mat-button-focus-overlay"></div>
   </a>-->
   <div class="flex-spacer"></div>
-  <a *ngIf="!isAuthenticated()" id="singIn" md-button routerLink="signIn">Sign in</a>
-  <!--<a id="singIn" md-button routerLink="signIn">Sign in</a>-->
-  <!--<a id="singOut" md-button (click)="logout()">Sign out</a>-->
+  <a *ngIf="!isAuthenticated()" id="singIn" md-button routerLink="signIn">Sign in {{isAuthenticated()}}</a>
+  <a *ngIf="isAuthenticated()" id="singOut" md-button (click)="logout()">Sign out</a>
 </nav>

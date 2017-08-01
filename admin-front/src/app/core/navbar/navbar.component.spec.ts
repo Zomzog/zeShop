@@ -13,14 +13,22 @@ describe('NavbarComponent', () => {
   let fixture: ComponentFixture<NavBarComponent>;  
   let de:      DebugElement;
   let el:      HTMLElement;
-  let oauthService: OauthService;
+  var isAuthenticated: any;
+  let oauthServiceMock: any;
 
   beforeEach(async(() => {
-    TestBed.configureTestingModule({
+    isAuthenticated = false;
+    oauthServiceMock = {
+      isAuthenticated: jasmine.createSpy('isAuthenticated')
+      .and.callFake(function(){
+        return isAuthenticated;
+      })
+    }
+    TestBed.configureTestingModule({ 
       declarations: [NavBarComponent],
 
       providers: [
-        { provide: OauthService, useValue: MockOauthService }
+        { provide: OauthService, useValue: oauthServiceMock }
       ]
 
     })
@@ -29,7 +37,6 @@ describe('NavbarComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NavBarComponent);
-    oauthService = fixture.debugElement.injector.get(OauthService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -38,12 +45,14 @@ describe('NavbarComponent', () => {
     expect(component).toBeTruthy();
   });
   it('sign in must be show', () => {
+    fixture.detectChanges();
     de = fixture.debugElement.query(By.css('#singIn'));
-    expect(de).not.toBeNull();
+    expect(de === null).toBe(false);
   });
   it('sign in must be hide when user is logged in', () => { 
-    oauthService.token = "pony";
+    isAuthenticated = true;
+    fixture.detectChanges();
     de = fixture.debugElement.query(By.css('#singIn'));
-    expect(de).toBeUndefined();
+    expect(de === null).toBe(true);
   });
 });

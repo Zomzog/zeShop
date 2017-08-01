@@ -1,3 +1,4 @@
+import { BrowserModule } from '@angular/platform-browser';
 import { OauthService } from './../../shared/oauth.service';
 import { Component, NgModule } from '@angular/core';
 import { MdButtonModule } from '@angular/material';
@@ -13,8 +14,7 @@ export class NavBarComponent {
   constructor(private oauthService: OauthService) { };
 
   isAuthenticated(): boolean {
-    //return this.oauthService.isAuthenticated();
-    return false;
+    return this.oauthService.isAuthenticated();
   }
   logout() {
     this.oauthService.logout();
@@ -22,7 +22,7 @@ export class NavBarComponent {
 }
 
 @NgModule({
-  imports: [MdButtonModule, RouterModule],
+  imports: [BrowserModule, MdButtonModule, RouterModule],
   exports: [NavBarComponent],
   declarations: [NavBarComponent],
 })

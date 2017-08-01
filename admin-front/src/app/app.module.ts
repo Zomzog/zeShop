@@ -12,7 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { ZADMIN_ROUTES } from './routes';
-import { ZAdmin } from './zadmin.component';
+import { ZAdminComponent } from './zadmin.component';
 import { NavBarModule } from './core/navbar/navbar.component';
 import { HomeComponent } from './home/home.component';
 import { SignInComponent } from './sign-in/sign-in.component';
@@ -23,7 +23,7 @@ import { AuthInterceptor } from './shared/auth.interceptor';
 
 @NgModule({
   declarations: [
-    ZAdmin, 
+    ZAdminComponent, 
     SignInComponent,
     HomeComponent
   ],
@@ -48,6 +48,6 @@ import { AuthInterceptor } from './shared/auth.interceptor';
       useClass: AuthInterceptor,
       multi: true,
     }],
-  bootstrap: [ZAdmin]
+  bootstrap: [ZAdminComponent]
 })
 export class AppModule { }

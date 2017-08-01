@@ -5,6 +5,6 @@ import { Component } from '@angular/core';
   templateUrl: './zadmin.component.html',
   styleUrls: ['./zadmin.component.scss']
 })
-export class ZAdmin {
+export class ZAdminComponent {
   title = 'zadmin';
 }
