@@ -39,7 +39,7 @@
         <mapstruct.version>1.1.0.Final</mapstruct.version>
         <validation-api.version>1.1.0.Final</validation-api.version>
         <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
-        <maven-model.version>3.1.1</maven-model.version>
+        <maven-model.version>3.5.0</maven-model.version>
 
         <commons-lang3.version>3.5</commons-lang3.version>
         <commons-io.version>2.4</commons-io.version>
