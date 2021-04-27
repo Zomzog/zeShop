@@ -42,7 +42,7 @@
         <maven-model.version>3.5.0</maven-model.version>
 
         <commons-lang3.version>3.5</commons-lang3.version>
-        <commons-io.version>2.4</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <spring-cloud.version>Dalston.RELEASE</spring-cloud.version>
         <!--<springfox.version>2.7.0</springfox.version>-->
         <springfox.version>2.6.1</springfox.version>
